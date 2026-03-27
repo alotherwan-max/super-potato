@@ -3,825 +3,1534 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ITIL v4 — Learn</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>ITIL 4 Foundation Study Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+3:wght@300;400;500;600&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0e0f13;
-    --surface: #16181f;
-    --surface2: #1e2029;
-    --border: #2a2d3a;
-    --accent: #5b8cf7;
-    --accent2: #7c5cbf;
-    --gold: #f0b429;
-    --green: #34d399;
-    --red: #f87171;
-    --text: #e8eaf0;
-    --muted: #7b7f94;
-    --serif: 'DM Serif Display', serif;
-    --sans: 'DM Sans', sans-serif;
-    --mono: 'DM Mono', monospace;
-  }
+:root {
+  --bg: #faf8f4;
+  --surface: #ffffff;
+  --surface2: #f3f0ea;
+  --border: #e0d9ce;
+  --ink: #1a1714;
+  --ink2: #4a4540;
+  --muted: #8a8278;
+  --accent: #c0392b;
+  --accent2: #1a5276;
+  --gold: #b7860b;
+  --green: #1e6b3c;
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans: 'Source Sans 3', sans-serif;
+  --mono: 'Source Code Pro', monospace;
+}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.7;
+  min-height: 100vh;
+}
 
-  /* ── HEADER ── */
-  header {
-    padding: 24px 32px 0;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 0;
-  }
+/* HEADER */
+header {
+  background: var(--ink);
+  color: var(--bg);
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
 
-  .logo {
-    font-family: var(--serif);
-    font-size: 22px;
-    letter-spacing: -0.5px;
-    color: var(--text);
-  }
+.logo {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: #fff;
+  padding: 16px 0;
+  white-space: nowrap;
+}
 
-  .logo span { color: var(--accent); }
+.logo span { color: #e8855a; }
 
-  nav {
-    display: flex;
-    gap: 4px;
-    margin-left: auto;
-    flex-wrap: wrap;
-  }
+nav { display: flex; gap: 2px; margin-left: auto; flex-wrap: wrap; }
 
-  nav button {
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-family: var(--sans);
-    font-size: 13px;
-    font-weight: 500;
-    padding: 10px 16px;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: all 0.2s;
-    white-space: nowrap;
-  }
+nav button {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.55);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 20px 14px;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
 
-  nav button:hover { color: var(--text); }
-  nav button.active { color: var(--accent); border-bottom-color: var(--accent); }
+nav button:hover { color: rgba(255,255,255,0.85); }
+nav button.active { color: #fff; border-bottom-color: #e8855a; }
 
-  /* ── MAIN ── */
-  main {
-    flex: 1;
-    padding: 32px;
-    max-width: 960px;
-    margin: 0 auto;
-    width: 100%;
-  }
+/* LAYOUT */
+main { max-width: 1000px; margin: 0 auto; padding: 40px 28px; }
 
-  .view { display: none; }
-  .view.active { display: block; }
+.view { display: none; }
+.view.active { display: block; }
 
-  h1 {
-    font-family: var(--serif);
-    font-size: 36px;
-    line-height: 1.15;
-    margin-bottom: 8px;
-  }
+/* TYPOGRAPHY */
+h1 {
+  font-family: var(--serif);
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
 
-  h2 {
-    font-family: var(--serif);
-    font-size: 22px;
-    margin-bottom: 16px;
-  }
+h2 {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 600;
+  margin: 36px 0 16px;
+  color: var(--ink);
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+}
 
-  .subtitle {
-    color: var(--muted);
-    font-size: 15px;
-    margin-bottom: 32px;
-    line-height: 1.6;
-  }
+h3 {
+  font-size: 11px;
+  font-family: var(--mono);
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
 
-  /* ── CARDS GRID ── */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 16px;
-    margin-bottom: 40px;
-  }
+.lead {
+  color: var(--ink2);
+  font-size: 16px;
+  margin-bottom: 32px;
+  line-height: 1.75;
+  max-width: 720px;
+}
 
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    cursor: pointer;
-    transition: border-color 0.2s, transform 0.15s;
-    position: relative;
-    overflow: hidden;
-  }
+/* CARDS */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 16px; margin: 24px 0; }
 
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-  }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 22px;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.15s;
+  position: relative;
+  border-left: 4px solid transparent;
+}
 
-  .card.blue::before { background: var(--accent); }
-  .card.purple::before { background: var(--accent2); }
-  .card.gold::before { background: var(--gold); }
-  .card.green::before { background: var(--green); }
+.card.red { border-left-color: var(--accent); }
+.card.blue { border-left-color: var(--accent2); }
+.card.gold { border-left-color: var(--gold); }
+.card.green { border-left-color: var(--green); }
 
-  .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.1); transform: translateY(-1px); }
 
-  .card-icon { font-size: 26px; margin-bottom: 10px; }
-  .card-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
-  .card-desc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+.card-label { font-size: 10px; font-family: var(--mono); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+.card.red .card-label { color: var(--accent); }
+.card.blue .card-label { color: var(--accent2); }
+.card.gold .card-label { color: var(--gold); }
+.card.green .card-label { color: var(--green); }
 
-  /* ── CONCEPT DETAIL ── */
-  .back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    font-family: var(--sans);
-    font-size: 13px;
-    padding: 7px 14px;
-    border-radius: 8px;
-    cursor: pointer;
-    margin-bottom: 24px;
-    transition: color 0.2s, border-color 0.2s;
-  }
+.card-title { font-family: var(--serif); font-size: 17px; font-weight: 600; margin-bottom: 8px; line-height: 1.3; }
+.card-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
 
-  .back-btn:hover { color: var(--text); border-color: var(--accent); }
+/* DEFINITION BOXES */
+.def-box {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--gold);
+  border-radius: 4px;
+  padding: 18px 20px;
+  margin: 16px 0;
+  font-size: 14px;
+  line-height: 1.7;
+}
 
-  .concept-header {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 20px;
-  }
+.def-box strong { color: var(--gold); font-family: var(--mono); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; display: block; margin-bottom: 6px; }
 
-  .concept-header p { color: var(--muted); font-size: 14px; line-height: 1.7; margin-top: 8px; }
+/* ACCORDION */
+.accordion { margin: 8px 0; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; background: var(--surface); }
 
-  .tag {
-    display: inline-block;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 3px 10px;
-    font-size: 12px;
-    color: var(--muted);
-    margin: 4px 4px 0 0;
-    font-family: var(--mono);
-  }
+.acc-header {
+  width: 100%;
+  background: var(--surface);
+  border: none;
+  padding: 16px 20px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  transition: background 0.15s;
+}
 
-  .items-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 16px;
-  }
+.acc-header:hover { background: var(--surface2); }
 
-  .item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px 20px;
-  }
+.acc-arrow { margin-left: auto; color: var(--muted); font-size: 12px; transition: transform 0.2s; }
+.accordion.open .acc-arrow { transform: rotate(180deg); }
 
-  .item-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; color: var(--accent); }
-  .item-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+.acc-body { display: none; padding: 0 20px 18px; font-size: 13.5px; color: var(--ink2); line-height: 1.75; border-top: 1px solid var(--border); }
+.accordion.open .acc-body { display: block; }
 
-  /* ── QUIZ ── */
-  .quiz-wrap { max-width: 680px; }
+.acc-body p { margin: 10px 0; }
+.acc-body ul { padding-left: 18px; margin: 8px 0; }
+.acc-body li { margin: 5px 0; }
+.acc-body .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+.acc-tag { background: var(--surface2); border: 1px solid var(--border); border-radius: 3px; padding: 3px 10px; font-size: 12px; font-family: var(--mono); color: var(--ink2); }
 
-  .progress-bar {
-    background: var(--surface2);
-    border-radius: 99px;
-    height: 6px;
-    margin-bottom: 28px;
-    overflow: hidden;
-  }
+/* BACK BTN */
+.back-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: none; border: 1px solid var(--border);
+  color: var(--muted); font-family: var(--sans); font-size: 13px;
+  padding: 7px 14px; border-radius: 3px; cursor: pointer;
+  margin-bottom: 28px; transition: all 0.15s;
+}
+.back-btn:hover { color: var(--ink); border-color: var(--ink2); }
 
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    border-radius: 99px;
-    transition: width 0.4s ease;
-  }
+/* QUIZ */
+.quiz-wrap { max-width: 700px; }
 
-  .q-number { font-size: 12px; color: var(--muted); font-family: var(--mono); margin-bottom: 8px; }
-  .q-text { font-size: 18px; font-weight: 500; margin-bottom: 24px; line-height: 1.5; }
+.progress-row { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+.progress-bar { flex: 1; background: var(--border); border-radius: 99px; height: 5px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.4s ease; }
+.progress-label { font-size: 12px; font-family: var(--mono); color: var(--muted); white-space: nowrap; }
 
-  .options { display: flex; flex-direction: column; gap: 10px; }
+.q-category { font-size: 10px; font-family: var(--mono); letter-spacing: 1.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+.q-text { font-family: var(--serif); font-size: 20px; font-weight: 600; margin-bottom: 24px; line-height: 1.45; }
 
-  .option {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 18px;
-    cursor: pointer;
-    font-size: 14px;
-    font-family: var(--sans);
-    color: var(--text);
-    text-align: left;
-    transition: all 0.18s;
-    line-height: 1.5;
-  }
+.options { display: flex; flex-direction: column; gap: 8px; }
 
-  .option:hover:not(:disabled) { border-color: var(--accent); background: var(--surface2); }
-  .option.correct { border-color: var(--green); background: rgba(52,211,153,0.08); color: var(--green); }
-  .option.wrong { border-color: var(--red); background: rgba(248,113,113,0.08); color: var(--red); }
-  .option:disabled { cursor: default; }
+.option {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  padding: 13px 18px;
+  cursor: pointer;
+  font-size: 14px;
+  font-family: var(--sans);
+  color: var(--ink);
+  text-align: left;
+  transition: all 0.15s;
+  line-height: 1.5;
+}
 
-  .feedback {
-    margin-top: 16px;
-    padding: 14px 18px;
-    border-radius: 10px;
-    font-size: 14px;
-    line-height: 1.6;
-    display: none;
-  }
+.option:hover:not(:disabled) { border-color: var(--accent2); background: var(--surface2); }
+.option.correct { border-color: var(--green); background: rgba(30,107,60,0.07); color: var(--green); font-weight: 600; }
+.option.wrong { border-color: var(--accent); background: rgba(192,57,43,0.07); color: var(--accent); }
+.option:disabled { cursor: default; }
 
-  .feedback.show { display: block; }
-  .feedback.correct { background: rgba(52,211,153,0.1); border: 1px solid var(--green); color: var(--green); }
-  .feedback.wrong { background: rgba(248,113,113,0.1); border: 1px solid var(--red); color: var(--red); }
+.feedback {
+  margin-top: 14px; padding: 14px 18px; border-radius: 4px;
+  font-size: 13.5px; line-height: 1.7; display: none;
+}
+.feedback.show { display: block; }
+.feedback.correct { background: rgba(30,107,60,0.08); border: 1px solid var(--green); color: var(--green); }
+.feedback.wrong { background: rgba(192,57,43,0.08); border: 1px solid var(--accent); color: #9b2335; }
+.feedback .ref { font-family: var(--mono); font-size: 11px; margin-top: 8px; opacity: 0.75; }
 
-  .next-btn {
-    margin-top: 20px;
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    padding: 12px 28px;
-    font-family: var(--sans);
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    display: none;
-    transition: opacity 0.2s;
-  }
+.next-btn {
+  margin-top: 18px; background: var(--ink); color: #fff;
+  border: none; border-radius: 4px; padding: 12px 28px;
+  font-family: var(--sans); font-size: 14px; font-weight: 600;
+  cursor: pointer; display: none; transition: opacity 0.2s;
+}
+.next-btn:hover { opacity: 0.85; }
+.next-btn.show { display: inline-block; }
 
-  .next-btn:hover { opacity: 0.88; }
-  .next-btn.show { display: inline-block; }
+.score-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 6px; padding: 48px 40px; text-align: center;
+}
+.score-num { font-family: var(--serif); font-size: 72px; font-weight: 700; color: var(--accent); line-height: 1; margin: 12px 0; }
+.score-label { font-size: 15px; color: var(--muted); margin-bottom: 28px; }
+.score-msg { font-family: var(--serif); font-size: 20px; margin-bottom: 28px; }
+.retry-btn { background: var(--ink); color: #fff; border: none; border-radius: 4px; padding: 12px 28px; font-family: var(--sans); font-size: 14px; font-weight: 600; cursor: pointer; }
 
-  .score-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 40px;
-    text-align: center;
-  }
+/* CHEAT SHEET */
+.cs-block { margin-bottom: 32px; }
 
-  .score-num {
-    font-family: var(--serif);
-    font-size: 64px;
-    color: var(--accent);
-    line-height: 1;
-    margin: 16px 0;
-  }
+.cs-table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin-top: 8px; }
+.cs-table tr { border-bottom: 1px solid var(--border); }
+.cs-table tr:last-child { border-bottom: none; }
+.cs-table td { padding: 10px 12px; vertical-align: top; line-height: 1.6; }
+.cs-table td:first-child { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--accent2); width: 32%; }
+.cs-table td:last-child { color: var(--ink2); }
+.cs-table td em { color: var(--muted); font-style: normal; font-size: 12px; }
 
-  .score-label { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+.pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.pill { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; padding: 5px 14px; font-size: 13px; color: var(--ink2); font-family: var(--mono); }
+.pill.r { border-color: var(--accent); color: var(--accent); }
+.pill.b { border-color: var(--accent2); color: var(--accent2); }
+.pill.g { border-color: var(--gold); color: var(--gold); }
+.pill.gr { border-color: var(--green); color: var(--green); }
 
-  .retry-btn {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-radius: 10px;
-    padding: 12px 28px;
-    font-family: var(--sans);
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: border-color 0.2s;
-  }
+/* NOTICE */
+.notice { background: rgba(183,134,11,0.08); border: 1px solid rgba(183,134,11,0.3); border-radius: 4px; padding: 12px 16px; font-size: 13px; color: var(--gold); margin-bottom: 24px; }
 
-  .retry-btn:hover { border-color: var(--accent); }
-
-  /* ── CHEAT SHEET ── */
-  .cheat-section { margin-bottom: 32px; }
-  .cheat-section h3 {
-    font-size: 11px;
-    font-family: var(--mono);
-    color: var(--accent);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .cheat-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
-
-  .cheat-table td {
-    padding: 9px 12px;
-    border-bottom: 1px solid var(--border);
-    vertical-align: top;
-    line-height: 1.55;
-  }
-
-  .cheat-table td:first-child {
-    font-weight: 600;
-    color: var(--gold);
-    width: 35%;
-    font-family: var(--mono);
-    font-size: 12px;
-  }
-
-  .cheat-table td:last-child { color: var(--muted); }
-
-  .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
-
-  .pill {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 99px;
-    padding: 5px 14px;
-    font-size: 12px;
-    color: var(--muted);
-  }
-
-  .pill.blue { border-color: var(--accent); color: var(--accent); }
-  .pill.purple { border-color: var(--accent2); color: var(--accent2); }
-  .pill.gold { border-color: var(--gold); color: var(--gold); }
-  .pill.green { border-color: var(--green); color: var(--green); }
-
-  /* mobile */
-  @media (max-width: 600px) {
-    header { padding: 16px; }
-    main { padding: 20px 16px; }
-    h1 { font-size: 26px; }
-    nav button { padding: 8px 10px; font-size: 12px; }
-  }
+/* MOBILE */
+@media (max-width: 640px) {
+  header { padding: 0 16px; }
+  nav button { padding: 16px 9px; font-size: 11px; }
+  main { padding: 24px 16px; }
+  h1 { font-size: 28px; }
+  .score-num { font-size: 56px; }
+}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">ITIL<span>v4</span></div>
+  <div class="logo">ITIL<span>4</span> Foundation</div>
   <nav>
-    <button class="active" onclick="showView('overview')">Overview</button>
+    <button class="active" onclick="showView('home')">Home</button>
     <button onclick="showView('svs')">SVS</button>
-    <button onclick="showView('practices')">34 Practices</button>
-    <button onclick="showView('guiding')">7 Principles</button>
+    <button onclick="showView('svc')">Value Chain</button>
+    <button onclick="showView('practices')">Practices</button>
+    <button onclick="showView('principles')">Principles</button>
+    <button onclick="showView('dimensions')">Dimensions</button>
     <button onclick="showView('quiz')">Quiz</button>
-    <button onclick="showView('cheatsheet')">Cheat Sheet</button>
+    <button onclick="showView('ref')">Reference</button>
   </nav>
 </header>
 
 <main>
 
-  <!-- ══ OVERVIEW ══ -->
-  <div id="view-overview" class="view active">
-    <h1>Master ITIL v4</h1>
-    <p class="subtitle">ITIL 4 is the modern IT service management framework. It shifts from rigid processes to flexible practices, centred on co-creating value with customers. Explore the key building blocks below.</p>
+<!-- ══════════════════════════════════════════════════
+     HOME
+══════════════════════════════════════════════════ -->
+<div id="view-home" class="view active">
+  <h1>ITIL 4 Foundation</h1>
+  <p class="lead">A structured, exam-accurate study guide based on the official ITIL 4 Foundation publication (AXELOS). All definitions, terminology, and concepts are sourced directly from the official syllabus.</p>
 
-    <div class="grid">
-      <div class="card blue" onclick="showView('svs')">
-        <div class="card-icon">⚙️</div>
-        <div class="card-title">Service Value System (SVS)</div>
-        <div class="card-desc">The overarching model — how all components and activities work together to enable value creation.</div>
-      </div>
-      <div class="card purple" onclick="showView('svs')">
-        <div class="card-icon">🔄</div>
-        <div class="card-title">Service Value Chain (SVC)</div>
-        <div class="card-desc">Six activities that form a flexible operating model for creating, delivering, and continually improving services.</div>
-      </div>
-      <div class="card gold" onclick="showView('practices')">
-        <div class="card-icon">🛠️</div>
-        <div class="card-title">34 Management Practices</div>
-        <div class="card-desc">Grouped into General, Service, and Technical Management. Replaces the old "processes" approach.</div>
-      </div>
-      <div class="card green" onclick="showView('guiding')">
-        <div class="card-icon">🧭</div>
-        <div class="card-title">7 Guiding Principles</div>
-        <div class="card-desc">Universal recommendations that guide decisions regardless of context or situation.</div>
-      </div>
-      <div class="card blue" onclick="showView('quiz')">
-        <div class="card-icon">🎯</div>
-        <div class="card-title">Practice Quiz</div>
-        <div class="card-desc">Test your ITIL 4 Foundation knowledge with exam-style questions and instant feedback.</div>
-      </div>
-      <div class="card purple" onclick="showView('cheatsheet')">
-        <div class="card-icon">📋</div>
-        <div class="card-title">Quick Reference</div>
-        <div class="card-desc">All key terms, acronyms, and definitions in one compact cheat sheet.</div>
-      </div>
+  <div class="notice">⚠ All content follows the official ITIL 4 Foundation syllabus. Definitions are quoted or closely paraphrased from the AXELOS ITIL 4 Foundation publication.</div>
+
+  <h3>Core Framework</h3>
+  <div class="grid">
+    <div class="card red" onclick="showView('svs')">
+      <div class="card-label">Component 1</div>
+      <div class="card-title">Service Value System (SVS)</div>
+      <div class="card-desc">The overarching model showing how all components and activities work together to facilitate value creation.</div>
     </div>
+    <div class="card blue" onclick="showView('svc')">
+      <div class="card-label">Component 2</div>
+      <div class="card-title">Service Value Chain (SVC)</div>
+      <div class="card-desc">Six interconnected activities forming the operating model at the heart of the SVS.</div>
+    </div>
+    <div class="card gold" onclick="showView('practices')">
+      <div class="card-label">Component 3</div>
+      <div class="card-title">34 Management Practices</div>
+      <div class="card-desc">Sets of organisational resources designed for performing work or accomplishing objectives.</div>
+    </div>
+    <div class="card green" onclick="showView('principles')">
+      <div class="card-label">Component 4</div>
+      <div class="card-title">7 Guiding Principles</div>
+      <div class="card-desc">Recommendations that guide an organisation in all circumstances, regardless of changes to goals or management structure.</div>
+    </div>
+  </div>
 
-    <div class="concept-header">
-      <h2>The 4 Dimensions</h2>
-      <p>ITIL 4 says every service and practice must consider four dimensions to avoid siloed thinking. Think of them as lenses.</p>
-      <div class="items-list">
-        <div class="item"><div class="item-title">1 — Organisations & People</div><div class="item-desc">Culture, roles, responsibilities, and how people collaborate. A great process fails without the right people.</div></div>
-        <div class="item"><div class="item-title">2 — Information & Technology</div><div class="item-desc">Data, knowledge, tools, and systems needed to deliver services. Includes AI, cloud, and automation.</div></div>
-        <div class="item"><div class="item-title">3 — Partners & Suppliers</div><div class="item-desc">Third-party organisations that contribute to service delivery — vendors, outsourcers, cloud providers.</div></div>
-        <div class="item"><div class="item-title">4 — Value Streams & Processes</div><div class="item-desc">How activities are organised and sequenced to create value. Focuses on flow and eliminating waste.</div></div>
+  <h2>Key Definitions — Start Here</h2>
+
+  <div class="def-box">
+    <strong>Service (Official Definition)</strong>
+    A means of enabling value co-creation by facilitating outcomes that customers want to achieve, without the customer having to manage specific costs and risks.
+  </div>
+
+  <div class="def-box">
+    <strong>Value (Official Definition)</strong>
+    The perceived benefits, usefulness, and importance of something. Value is co-created through an active collaboration between providers and consumers, as well as other organisations that are part of the relevant service relationships.
+  </div>
+
+  <div class="def-box">
+    <strong>Service Management (Official Definition)</strong>
+    A set of specialised organisational capabilities for enabling value for customers in the form of services.
+  </div>
+
+  <div class="def-box">
+    <strong>IT Service Management (ITSM)</strong>
+    The implementation and management of quality IT services that meet the needs of the business. ITSM is performed by IT service providers through an appropriate mix of people, process, and information technology.
+  </div>
+
+  <h2>Utility and Warranty — Critical Distinction</h2>
+  <p style="color:var(--ink2);margin-bottom:12px">Both are required for a service to deliver value. This is a frequent exam topic.</p>
+
+  <div class="def-box" style="border-left-color:var(--accent)">
+    <strong>Utility — "Fit for Purpose"</strong>
+    The functionality offered by a product or service to meet a particular need. Utility can be summarised as what the service does. A service must either support the performance of the consumer or remove constraints from the consumer to be considered to have utility.
+  </div>
+
+  <div class="def-box" style="border-left-color:var(--accent2)">
+    <strong>Warranty — "Fit for Use"</strong>
+    Assurance that a product or service will meet agreed requirements. Warranty relates to how the service performs. It typically addresses areas such as availability, capacity, security levels, and continuity. A service can have utility without warranty and will not deliver value.
+  </div>
+
+  <h2>Stakeholder Types</h2>
+
+  <div class="accordion">
+    <button class="acc-header" onclick="toggleAcc(this)">
+      <span>Customer</span><span class="acc-arrow">▼</span>
+    </button>
+    <div class="acc-body">
+      <p><strong>Official definition:</strong> A person who defines the requirements for a service and takes responsibility for the outcomes of service consumption.</p>
+      <p>Customers may be internal (within the same organisation as the provider) or external. The customer is responsible for defining what constitutes value and authorising the budget for the service.</p>
+      <p><em>Exam tip:</em> The customer defines requirements and pays — they are not necessarily the day-to-day user of the service.</p>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <button class="acc-header" onclick="toggleAcc(this)">
+      <span>User</span><span class="acc-arrow">▼</span>
+    </button>
+    <div class="acc-body">
+      <p><strong>Official definition:</strong> A person who uses services.</p>
+      <p>Users interact with the service on a day-to-day basis. A user and a customer can be the same person (e.g. a sole trader who procures and uses cloud storage) or different (e.g. employees who use IT services that their employer has procured).</p>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <button class="acc-header" onclick="toggleAcc(this)">
+      <span>Sponsor</span><span class="acc-arrow">▼</span>
+    </button>
+    <div class="acc-body">
+      <p><strong>Official definition:</strong> A person who authorises budget for service consumption.</p>
+      <p>In practice, the sponsor, customer, and user may all be the same person, or they can be distinct roles. In large organisations they are usually separate — a CFO (sponsor) approves budgets, a department head (customer) defines requirements, and employees (users) use the service daily.</p>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <button class="acc-header" onclick="toggleAcc(this)">
+      <span>Service Provider</span><span class="acc-arrow">▼</span>
+    </button>
+    <div class="acc-body">
+      <p><strong>Official definition:</strong> A role performed by an organisation in a service relationship to provide services to consumers.</p>
+      <p>Providers can be internal (shared services, IT department) or external (cloud provider, managed service provider). An organisation may simultaneously be a provider to some parties and a consumer of others.</p>
+    </div>
+  </div>
+
+  <h2>Outputs, Outcomes, Costs, and Risks</h2>
+
+  <div class="def-box">
+    <strong>Output</strong>
+    A tangible or intangible deliverable of an activity. Example: a report, an application, a resolved ticket.
+  </div>
+  <div class="def-box">
+    <strong>Outcome</strong>
+    A result for a stakeholder enabled by one or more outputs. Example: the business is able to process orders faster because the application was deployed. Outcomes are what the customer actually cares about.
+  </div>
+  <div class="def-box">
+    <strong>Cost</strong>
+    The amount of money spent on a specific activity or resource. Costs can be removed from the consumer (a benefit) or imposed on the consumer (a constraint). Service providers absorb costs consumers do not want to manage themselves.
+  </div>
+  <div class="def-box">
+    <strong>Risk</strong>
+    A possible event that could cause harm or loss, or make it more difficult to achieve objectives. Risks can be removed from the consumer (a benefit) or imposed on the consumer (a constraint). Consumers accept some risks in exchange for the value a service delivers.
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════
+     SVS
+══════════════════════════════════════════════════ -->
+<div id="view-svs" class="view">
+  <button class="back-btn" onclick="showView('home')">← Back</button>
+  <h1>Service Value System</h1>
+  <p class="lead">The ITIL 4 Service Value System (SVS) describes how all the components and activities of an organisation work together as a system to enable value creation. The SVS has inputs — opportunity and demand — and outputs — value.</p>
+
+  <div class="def-box">
+    <strong>Official SVS Definition</strong>
+    The ITIL SVS describes how all the components and activities of an organisation work together as a system to enable value creation. Each organisation's SVS is connected to other organisations, forming ecosystems which can in turn enable value for those organisations, their customers, and other stakeholders.
+  </div>
+
+  <h2>The 5 Components of the SVS</h2>
+
+  <div class="accordion">
+    <button class="acc-header" onclick="toggleAcc(this)">
+      <span>1 — Guiding Principles</span><span class="acc-arrow">▼</span>
+    </button>
+    <div class="acc-body">
+      <p>Recommendations that guide an organisation in all circumstances, regardless of changes to its goals, strategies, type of work, or management structure. The guiding principles are universal and enduring.</p>
+      <p>There are <strong>7 guiding principles</strong>. They are not prescriptive rules — they are considered recommendations. An organisation should consider which principles are relevant and how to apply them in a given situation. See the Principles tab for full detail.</p>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <button class="acc-header" onclick="toggleAcc(this)">
+      <span>2 — Governance</span><span class="acc-arrow">▼</span>
+    </button>
+    <div class="acc-body">
+      <p><strong>Official definition:</strong> The means by which an organisation is directed and controlled.</p>
+      <p>Governance includes the activities of <strong>Evaluate, Direct, and Monitor (EDM)</strong>:</p>
+      <ul>
+        <li><strong>Evaluate:</strong> The governing body evaluates the organisation, its strategy, its portfolios, and its relationships with other parties.</li>
+        <li><strong>Direct:</strong> The governing body assigns responsibility for, and directs preparation and implementation of, strategy and policies.</li>
+        <li><strong>Monitor:</strong> The governing body monitors performance of the organisation and its practices, products, and services.</li>
+      </ul>
+      <p><em>Exam tip:</em> Governance sits above management. The governing body (e.g. board of directors) evaluates, directs, and monitors — it does not do the day-to-day work.</p>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <button class="acc-header" onclick="toggleAcc(this)">
+      <span>3 — Service Value Chain (SVC)</span><span class="acc-arrow">▼</span>
+    </button>
+    <div class="acc-body">
+      <p>An operating model that outlines the key activities required to respond to demand and facilitate value realisation through the creation and management of products and services.</p>
+      <p>The SVC has six activities. They are not a linear process — they combine flexibly into <strong>value streams</strong> that define a specific sequence of activities for a given scenario. See the Value Chain tab for full detail.</p>
+      <div class="tag-row">
+        <span class="acc-tag">Plan</span><span class="acc-tag">Improve</span><span class="acc-tag">Engage</span>
+        <span class="acc-tag">Design & Transition</span><span class="acc-tag">Obtain/Build</span><span class="acc-tag">Deliver & Support</span>
       </div>
     </div>
   </div>
 
-  <!-- ══ SVS ══ -->
-  <div id="view-svs" class="view">
-    <button class="back-btn" onclick="showView('overview')">← Back</button>
-    <h1>Service Value System</h1>
-    <p class="subtitle">The SVS shows how all parts of the organisation work together to enable value creation. It has five components.</p>
-
-    <div class="items-list">
-      <div class="item">
-        <div class="item-title">🧭 Guiding Principles</div>
-        <div class="item-desc">Seven recommendations that guide every decision. They are universal and enduring — applied regardless of changes in goals or management structure.</div>
-      </div>
-      <div class="item">
-        <div class="item-title">🏛️ Governance</div>
-        <div class="item-desc">The means by which an organisation is directed and controlled. Includes evaluate, direct, and monitor (EDM). Ensures activities stay aligned with organisational strategy.</div>
-      </div>
-      <div class="item">
-        <div class="item-title">🔄 Service Value Chain (SVC)</div>
-        <div class="item-desc">The core operating model — six interconnected activities: <strong>Plan, Improve, Engage, Design &amp; Transition, Obtain/Build, Deliver &amp; Support</strong>. They combine flexibly into "value streams" for specific scenarios.</div>
-        <div style="margin-top:10px">
-          <span class="tag">Plan</span>
-          <span class="tag">Improve</span>
-          <span class="tag">Engage</span>
-          <span class="tag">Design & Transition</span>
-          <span class="tag">Obtain/Build</span>
-          <span class="tag">Deliver & Support</span>
-        </div>
-      </div>
-      <div class="item">
-        <div class="item-title">🛠️ Practices</div>
-        <div class="item-desc">34 management practices provide the capabilities needed to carry out work. Each practice supports one or more SVC activities.</div>
-      </div>
-      <div class="item">
-        <div class="item-title">📈 Continual Improvement</div>
-        <div class="item-desc">An ongoing activity (not a one-time event) to improve services, practices, and the SVS itself. Uses the 7-step Continual Improvement Model.</div>
-      </div>
-    </div>
-
-    <div class="concept-header" style="margin-top:24px">
-      <h2>Key Concepts</h2>
-      <p><strong>Demand → SVS → Value.</strong> Opportunity and demand enter the SVS, which produces value for stakeholders including customers, users, suppliers, and the organisation itself.</p>
-      <br>
-      <p><strong>Value</strong> is co-created with customers — ITIL 4 dropped the idea that a provider delivers value "to" a customer. Both parties contribute.</p>
-      <br>
-      <p><strong>Service</strong>: A means of enabling value co-creation by facilitating outcomes that customers want to achieve, without them managing specific costs and risks.</p>
+  <div class="accordion">
+    <button class="acc-header" onclick="toggleAcc(this)">
+      <span>4 — Practices</span><span class="acc-arrow">▼</span>
+    </button>
+    <div class="acc-body">
+      <p><strong>Official definition of a Practice:</strong> A set of organisational resources designed for performing work or accomplishing an objective.</p>
+      <p>ITIL 4 includes <strong>34 management practices</strong> grouped into three categories:</p>
+      <ul>
+        <li><strong>14 General Management Practices</strong> — adopted and adapted from general business management domains</li>
+        <li><strong>17 Service Management Practices</strong> — developed in IT service management and ITSM communities</li>
+        <li><strong>3 Technical Management Practices</strong> — adapted from technology management domains</li>
+      </ul>
+      <p><em>Note:</em> ITIL 4 uses the term "practice" rather than "process." A practice includes processes, but also people, tools, information, skills, and other resources.</p>
     </div>
   </div>
 
-  <!-- ══ PRACTICES ══ -->
-  <div id="view-practices" class="view">
-    <button class="back-btn" onclick="showView('overview')">← Back</button>
-    <h1>34 Management Practices</h1>
-    <p class="subtitle">Practices replace the old "processes." Each is a set of organisational resources designed to perform work or accomplish an objective. ITIL 4 Foundation focuses on 18 of these.</p>
-
-    <h2>General Management (14)</h2>
-    <div class="items-list" style="margin-bottom:28px">
-      <div class="item"><div class="item-title">Continual Improvement</div><div class="item-desc">Aligning practices and services with changing business needs through ongoing improvement of products, services, and practices.</div></div>
-      <div class="item"><div class="item-title">Information Security Management</div><div class="item-desc">Protecting the information needed to conduct business — confidentiality, integrity, and availability (CIA).</div></div>
-      <div class="item"><div class="item-title">Relationship Management</div><div class="item-desc">Establishing and nurturing links between the organisation and its stakeholders at strategic and tactical levels.</div></div>
-      <div class="item"><div class="item-title">Supplier Management</div><div class="item-desc">Ensuring that suppliers and their performances are managed appropriately to support the provision of quality products and services.</div></div>
-      <div class="item"><div class="item-title">+ 10 more</div><div class="item-desc">Architecture Mgmt, Knowledge Mgmt, Measurement & Reporting, Organisational Change Mgmt, Portfolio Mgmt, Project Mgmt, Risk Mgmt, Service Financial Mgmt, Strategy Mgmt, Workforce & Talent Mgmt.</div></div>
-    </div>
-
-    <h2>Service Management (17) — Core Focus</h2>
-    <div class="items-list" style="margin-bottom:28px">
-      <div class="item"><div class="item-title">Change Enablement ★</div><div class="item-desc">Maximising successful IT changes by assessing risks properly. Types: Standard (pre-approved), Normal (go through CAB), Emergency (fast-tracked). Note: ITIL 4 renamed from "Change Management."</div></div>
-      <div class="item"><div class="item-title">Incident Management ★</div><div class="item-desc">Minimising the negative impact of incidents by restoring normal service operation as quickly as possible.</div></div>
-      <div class="item"><div class="item-title">Problem Management ★</div><div class="item-desc">Reduces the likelihood and impact of incidents by identifying actual and potential causes. Three phases: Problem Identification, Problem Control, Error Control.</div></div>
-      <div class="item"><div class="item-title">Service Desk ★</div><div class="item-desc">The single point of contact between the provider and users. Captures demand for incident resolution and service requests. Can be local, centralised, virtual, or follow-the-sun.</div></div>
-      <div class="item"><div class="item-title">Service Level Management ★</div><div class="item-desc">Sets clear business-based targets for service performance. Creates SLAs. Distinguishes between SLA (with customer), OLA (internal), and UC (underpinning contract with supplier).</div></div>
-      <div class="item"><div class="item-title">Service Request Management ★</div><div class="item-desc">Supports the agreed quality of a service by handling all predefined, user-initiated service requests effectively and efficiently.</div></div>
-      <div class="item"><div class="item-title">IT Asset Management</div><div class="item-desc">Plans and manages the full lifecycle of all IT assets to help maximise value and control costs.</div></div>
-      <div class="item"><div class="item-title">Monitoring & Event Management</div><div class="item-desc">Systematically observes services and components, and records and reports changes of state — events. Types: Informational, Warning, Exception.</div></div>
-      <div class="item"><div class="item-title">Release Management</div><div class="item-desc">Makes new and changed services and features available for use.</div></div>
-      <div class="item"><div class="item-title">Service Catalogue Management</div><div class="item-desc">Provides a single source of consistent information on all services and service offerings.</div></div>
-      <div class="item"><div class="item-title">Service Configuration Management</div><div class="item-desc">Ensures accurate and reliable information about the configuration of services and the CIs (Configuration Items) that support them. Maintained in the CMDB.</div></div>
-      <div class="item"><div class="item-title">Service Design</div><div class="item-desc">Designs products and services that are fit for purpose, fit for use, and can be delivered by the organisation and its ecosystem of partners and suppliers.</div></div>
-      <div class="item"><div class="item-title">Service Validation & Testing</div><div class="item-desc">Ensures that new or changed products and services meet defined requirements.</div></div>
-    </div>
-
-    <h2>Technical Management (3)</h2>
-    <div class="items-list">
-      <div class="item"><div class="item-title">Deployment Management</div><div class="item-desc">Moves new or changed hardware, software, documentation, processes, or any other component to live environments. Distinct from Release Management.</div></div>
-      <div class="item"><div class="item-title">Infrastructure & Platform Management</div><div class="item-desc">Oversees the infrastructure and platforms used by an organisation, enabling monitoring of technology solutions available.</div></div>
-      <div class="item"><div class="item-title">Software Development & Management</div><div class="item-desc">Ensures applications meet internal and external stakeholder needs, in terms of functionality, reliability, maintainability, and auditability.</div></div>
+  <div class="accordion">
+    <button class="acc-header" onclick="toggleAcc(this)">
+      <span>5 — Continual Improvement</span><span class="acc-arrow">▼</span>
+    </button>
+    <div class="acc-body">
+      <p>A recurring organisational activity performed at all levels to ensure that an organisation's performance continually meets stakeholders' expectations. Continual Improvement applies to the SVS as a whole — its components, as well as to the organisation's products, services, and relationships.</p>
+      <p>ITIL 4 provides the <strong>Continual Improvement Model</strong> (7 steps) to structure improvement initiatives:</p>
+      <ul>
+        <li>1. What is the vision?</li>
+        <li>2. Where are we now?</li>
+        <li>3. Where do we want to be?</li>
+        <li>4. How do we get there?</li>
+        <li>5. Take action</li>
+        <li>6. Did we get there?</li>
+        <li>7. How do we keep the momentum going?</li>
+      </ul>
+      <p><em>Exam tip:</em> Continual Improvement is both an SVS component AND one of the 34 management practices. This dual role is deliberate — it is a practice that is also embedded in the overall system.</p>
     </div>
   </div>
 
-  <!-- ══ GUIDING PRINCIPLES ══ -->
-  <div id="view-guiding" class="view">
-    <button class="back-btn" onclick="showView('overview')">← Back</button>
-    <h1>7 Guiding Principles</h1>
-    <p class="subtitle">These principles guide every decision and action across the organisation. They are universal — not prescriptive rules but mindsets to apply in every context.</p>
+  <h2>Inputs and Outputs of the SVS</h2>
+  <div class="def-box">
+    <strong>Inputs</strong>
+    <strong>Opportunity:</strong> Options or possibilities to add value for stakeholders or otherwise improve the organisation.<br><br>
+    <strong>Demand:</strong> Need or desire for products and services from internal and external customers.
+  </div>
+  <div class="def-box">
+    <strong>Output</strong>
+    <strong>Value:</strong> The perceived benefits, usefulness, and importance of something. Value is always determined by the consumer, not the provider.
+  </div>
 
-    <div class="items-list">
-      <div class="item"><div class="item-title">1 — Focus on Value</div><div class="item-desc">Everything the organisation does should link back, directly or indirectly, to value for itself, its customers, and other stakeholders. Always ask: who benefits, and how?</div></div>
-      <div class="item"><div class="item-title">2 — Start Where You Are</div><div class="item-desc">Do not start from scratch. Consider what already exists and can be leveraged. Assess current state objectively before deciding what to change.</div></div>
-      <div class="item"><div class="item-title">3 — Progress Iteratively with Feedback</div><div class="item-desc">Resist the urge to do everything at once. Organise work into smaller, manageable sections. Use feedback to course-correct before the next iteration.</div></div>
-      <div class="item"><div class="item-title">4 — Collaborate and Promote Visibility</div><div class="item-desc">Work together across boundaries. Share information openly. Hidden work creates risk; visible work builds trust and enables better decisions.</div></div>
-      <div class="item"><div class="item-title">5 — Think and Work Holistically</div><div class="item-desc">No service or practice works in isolation. Consider the end-to-end impact of decisions across the four dimensions and the SVS.</div></div>
-      <div class="item"><div class="item-title">6 — Keep it Simple and Practical</div><div class="item-desc">If a step adds no value, eliminate it. Use the minimum number of steps necessary. Avoid process for process's sake.</div></div>
-      <div class="item"><div class="item-title">7 — Optimise and Automate</div><div class="item-desc">Optimise first (ensure the process works well), then automate. Technology should amplify human effort, not replace poorly-designed processes.</div></div>
+  <h2>Organisational Agility and the SVS</h2>
+  <p style="color:var(--ink2);margin-bottom:8px">The SVS explicitly supports many work approaches including Agile, DevOps, and Lean. ITIL 4 does not conflict with these — it is designed to integrate with them. The concept of <strong>organisational agility</strong> is the ability of an organisation to move and adapt quickly, flexibly, and decisively.</p>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════
+     SERVICE VALUE CHAIN
+══════════════════════════════════════════════════ -->
+<div id="view-svc" class="view">
+  <button class="back-btn" onclick="showView('home')">← Back</button>
+  <h1>Service Value Chain</h1>
+  <p class="lead">The Service Value Chain (SVC) is an operating model that outlines the key activities required to respond to demand and facilitate value realisation. It sits at the heart of the SVS.</p>
+
+  <div class="def-box">
+    <strong>Value Stream (Official Definition)</strong>
+    A series of steps an organisation undertakes to create and deliver products and services to a service consumer. A value stream is a combination of the organisation's activities in the service value chain.
+  </div>
+
+  <p style="color:var(--ink2);margin-bottom:24px">The six SVC activities are not a linear sequence. They interconnect and combine in different orders depending on the scenario. Each activity transforms inputs into outputs using various practices.</p>
+
+  <h2>The Six Activities</h2>
+
+  <div class="accordion">
+    <button class="acc-header" onclick="toggleAcc(this)">
+      <span>Plan</span><span class="acc-arrow">▼</span>
+    </button>
+    <div class="acc-body">
+      <p><strong>Purpose:</strong> To ensure a shared understanding of the vision, current status, and improvement direction for all four dimensions and all products and services across the organisation.</p>
+      <p><strong>Key inputs:</strong> Policies and requirements from governance, demand and opportunities, value chain performance information, improvement initiatives and plans, improvement status reports.</p>
+      <p><strong>Key outputs:</strong> Strategic, tactical, and operational plans; portfolio decisions; architectures and policies; improvement opportunities.</p>
+      <p><em>Exam tip:</em> Plan feeds all other SVC activities. It ensures alignment between the overall SVS direction and what each activity is working toward.</p>
     </div>
   </div>
 
-  <!-- ══ QUIZ ══ -->
-  <div id="view-quiz" class="view">
-    <button class="back-btn" onclick="showView('overview')">← Back</button>
-    <h1>Practice Quiz</h1>
-    <p class="subtitle">15 Foundation-level questions. Immediate feedback on each answer.</p>
-
-    <div class="quiz-wrap" id="quiz-container"></div>
-  </div>
-
-  <!-- ══ CHEAT SHEET ══ -->
-  <div id="view-cheatsheet" class="view">
-    <button class="back-btn" onclick="showView('overview')">← Back</button>
-    <h1>Cheat Sheet</h1>
-    <p class="subtitle">Everything you need to remember — distilled.</p>
-
-    <div class="cheat-section">
-      <h3>Core Definitions</h3>
-      <table class="cheat-table">
-        <tr><td>Service</td><td>Means of enabling value co-creation by facilitating outcomes customers want, without managing specific costs/risks.</td></tr>
-        <tr><td>Value</td><td>The perceived benefits, usefulness, and importance of something. Co-created with customers.</td></tr>
-        <tr><td>Product</td><td>A configuration of resources that can potentially deliver value to a customer.</td></tr>
-        <tr><td>Service Offering</td><td>A formal description of services, including goods, access, and actions.</td></tr>
-        <tr><td>Utility</td><td>Functionality offered — "fit for purpose."</td></tr>
-        <tr><td>Warranty</td><td>Assurance it meets agreed requirements — "fit for use."</td></tr>
-        <tr><td>Outcome</td><td>A result for a stakeholder enabled by one or more outputs.</td></tr>
-        <tr><td>Output</td><td>A tangible or intangible deliverable of an activity.</td></tr>
-        <tr><td>Risk</td><td>A possible event that could cause harm or loss, or make it harder to achieve objectives.</td></tr>
-        <tr><td>Cost</td><td>Amount of money spent on a specific activity or resource.</td></tr>
-        <tr><td>Incident</td><td>Unplanned interruption or reduction in quality of an IT service.</td></tr>
-        <tr><td>Problem</td><td>Cause of one or more incidents.</td></tr>
-        <tr><td>Known Error</td><td>A problem that has been analysed and has not been resolved.</td></tr>
-        <tr><td>Workaround</td><td>Solution that reduces or eliminates the impact of an incident or problem without resolving it.</td></tr>
-        <tr><td>Service Request</td><td>Request from a user for information, advice, or a standard change.</td></tr>
-        <tr><td>Change</td><td>Addition, modification, or removal of anything that could affect IT services.</td></tr>
-        <tr><td>CI</td><td>Configuration Item — any component managed to deliver an IT service.</td></tr>
-        <tr><td>CMDB</td><td>Configuration Management Database — stores CI data and relationships.</td></tr>
-      </table>
-    </div>
-
-    <div class="cheat-section">
-      <h3>SVS Components</h3>
-      <div class="pill-row">
-        <span class="pill blue">Guiding Principles</span>
-        <span class="pill blue">Governance</span>
-        <span class="pill blue">Service Value Chain</span>
-        <span class="pill blue">Practices</span>
-        <span class="pill blue">Continual Improvement</span>
-      </div>
-    </div>
-
-    <div class="cheat-section">
-      <h3>Service Value Chain Activities (PIEDDO)</h3>
-      <div class="pill-row">
-        <span class="pill purple">Plan</span>
-        <span class="pill purple">Improve</span>
-        <span class="pill purple">Engage</span>
-        <span class="pill purple">Design & Transition</span>
-        <span class="pill purple">Obtain / Build</span>
-        <span class="pill purple">Deliver & Support</span>
-      </div>
-    </div>
-
-    <div class="cheat-section">
-      <h3>7 Guiding Principles (FWP CVK SO)</h3>
-      <table class="cheat-table">
-        <tr><td>1. Focus on Value</td><td>Always link to stakeholder value</td></tr>
-        <tr><td>2. Start Where You Are</td><td>Reuse what exists; assess before changing</td></tr>
-        <tr><td>3. Progress Iteratively</td><td>Small steps + feedback loops</td></tr>
-        <tr><td>4. Collaborate & Visibility</td><td>Cross-silo work; share information openly</td></tr>
-        <tr><td>5. Think Holistically</td><td>End-to-end; avoid siloed decisions</td></tr>
-        <tr><td>6. Keep it Simple</td><td>Remove steps that add no value</td></tr>
-        <tr><td>7. Optimise & Automate</td><td>Optimise first, then automate</td></tr>
-      </table>
-    </div>
-
-    <div class="cheat-section">
-      <h3>4 Dimensions</h3>
-      <div class="pill-row">
-        <span class="pill gold">Organisations & People</span>
-        <span class="pill gold">Information & Technology</span>
-        <span class="pill gold">Partners & Suppliers</span>
-        <span class="pill gold">Value Streams & Processes</span>
-      </div>
-    </div>
-
-    <div class="cheat-section">
-      <h3>Change Types</h3>
-      <table class="cheat-table">
-        <tr><td>Standard</td><td>Pre-authorised, low risk, well understood. No CAB needed.</td></tr>
-        <tr><td>Normal</td><td>Follows full change process, reviewed by Change Authority / CAB.</td></tr>
-        <tr><td>Emergency</td><td>Must be implemented urgently. Expedited assessment by ECAB.</td></tr>
-      </table>
-    </div>
-
-    <div class="cheat-section">
-      <h3>Service Level Agreements</h3>
-      <table class="cheat-table">
-        <tr><td>SLA</td><td>Service Level Agreement — between provider and customer</td></tr>
-        <tr><td>OLA</td><td>Operational Level Agreement — internal teams</td></tr>
-        <tr><td>UC</td><td>Underpinning Contract — with external supplier</td></tr>
-      </table>
-    </div>
-
-    <div class="cheat-section">
-      <h3>Stakeholder Roles</h3>
-      <table class="cheat-table">
-        <tr><td>Customer</td><td>Defines requirements, pays for the service.</td></tr>
-        <tr><td>User</td><td>Uses the service day-to-day (may differ from customer).</td></tr>
-        <tr><td>Sponsor</td><td>Authorises the budget for the service.</td></tr>
-      </table>
+  <div class="accordion">
+    <button class="acc-header" onclick="toggleAcc(this)">
+      <span>Improve</span><span class="acc-arrow">▼</span>
+    </button>
+    <div class="acc-body">
+      <p><strong>Purpose:</strong> To ensure continual improvement of products, services, and practices across all value chain activities and the four dimensions of service management.</p>
+      <p><strong>Key inputs:</strong> Product and service performance information, stakeholders' feedback, performance information and improvement opportunities from all SVC activities.</p>
+      <p><strong>Key outputs:</strong> Improvement initiatives and plans, value chain and practice performance information, improvement status reports, contract and agreement requirements.</p>
+      <p><em>Exam tip:</em> Improve is also present in every other SVC activity — continual improvement is not a separate phase, it runs in parallel with everything else.</p>
     </div>
   </div>
+
+  <div class="accordion">
+    <button class="acc-header" onclick="toggleAcc(this)">
+      <span>Engage</span><span class="acc-arrow">▼</span>
+    </button>
+    <div class="acc-body">
+      <p><strong>Purpose:</strong> To provide a good understanding of stakeholder needs, transparency, and continual engagement and good relationships with all stakeholders.</p>
+      <p><strong>Key inputs:</strong> Product and service portfolio (provided by Plan), high-level demand for services and products (from customers), detailed requirements (from customers), requests and feedback from customers/users.</p>
+      <p><strong>Key outputs:</strong> Consolidated demands and opportunities (to Plan), requirements (to Design & Transition and Obtain/Build), user support tasks (to Deliver & Support), contracts and agreements (to Obtain/Build).</p>
+      <p><em>Exam tip:</em> Engage is the primary interface between the SVS and external stakeholders — customers, users, and partners. It is how demand enters the SVC.</p>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <button class="acc-header" onclick="toggleAcc(this)">
+      <span>Design & Transition</span><span class="acc-arrow">▼</span>
+    </button>
+    <div class="acc-body">
+      <p><strong>Purpose:</strong> To ensure that products and services continually meet stakeholder expectations for quality, costs, and time to market.</p>
+      <p><strong>Key inputs:</strong> Portfolio decisions and architectures (from Plan), requirements (from Engage), improvement initiatives (from Improve), knowledge and information about new/changed products from Obtain/Build.</p>
+      <p><strong>Key outputs:</strong> Requirements and specifications (to Obtain/Build), contract and agreement requirements (to Engage), new and changed products and services (to Deliver & Support).</p>
+      <p><em>Exam tip:</em> Design & Transition covers both the design of services AND their transition into live operation. In ITIL v3 these were separate phases; in ITIL 4 they are combined into one SVC activity.</p>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <button class="acc-header" onclick="toggleAcc(this)">
+      <span>Obtain/Build</span><span class="acc-arrow">▼</span>
+    </button>
+    <div class="acc-body">
+      <p><strong>Purpose:</strong> To ensure that service components are available when and where they are needed, and meet agreed specifications.</p>
+      <p><strong>Key inputs:</strong> Architectures and policies (from Plan), contracts and agreements with internal and external suppliers (from Engage), requirements and specifications (from Design & Transition), improvement initiatives (from Improve).</p>
+      <p><strong>Key outputs:</strong> Service components (to Deliver & Support and Design & Transition), knowledge and information about new/changed service components (to all activities), contract and agreement requirements (to Engage).</p>
+      <p><em>Exam tip:</em> Obtain/Build handles the acquisition (buy) or creation (build) of service components. This is where development work and supplier procurement sit.</p>
+    </div>
+  </div>
+
+  <div class="accordion">
+    <button class="acc-header" onclick="toggleAcc(this)">
+      <span>Deliver & Support</span><span class="acc-arrow">▼</span>
+    </button>
+    <div class="acc-body">
+      <p><strong>Purpose:</strong> To ensure that services are delivered and supported according to agreed specifications and stakeholders' expectations.</p>
+      <p><strong>Key inputs:</strong> New and changed products and services (from Design & Transition), service components (from Obtain/Build), improvement initiatives (from Improve), user support tasks (from Engage), knowledge and information about new/changed service components (from Obtain/Build).</p>
+      <p><strong>Key outputs:</strong> Services delivered to customers and users, information on the completion of user support tasks (to Engage), product and service performance information (to Engage and Improve), improvement opportunities (to Improve), contract and agreement requirements (to Engage).</p>
+      <p><em>Exam tip:</em> This is the activity most associated with the Service Desk, Incident Management, and day-to-day support operations.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════
+     PRACTICES
+══════════════════════════════════════════════════ -->
+<div id="view-practices" class="view">
+  <button class="back-btn" onclick="showView('home')">← Back</button>
+  <h1>34 Management Practices</h1>
+  <p class="lead">A practice is a set of organisational resources designed for performing work or accomplishing an objective. The ITIL 4 Foundation exam focuses on 18 of the 34 practices. The most heavily examined are marked ★.</p>
+
+  <h2>General Management Practices (14)</h2>
+  <p style="color:var(--ink2);margin-bottom:16px">Adopted and adapted from general business management domains for use in service management environments.</p>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>★ Continual Improvement</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Purpose:</strong> To align the organisation's practices and services with changing business needs through the ongoing identification and improvement of services, service components, practices, or any element involved in the efficient and effective management of products and services.</p>
+    <p><strong>Scope:</strong> Applies at all levels — strategic, tactical, and operational. Every person and team is responsible for contributing to continual improvement.</p>
+    <p><strong>Continual Improvement Register (CIR):</strong> A database or document used to track and manage improvement ideas from identification through to final action. All improvement ideas should be logged in the CIR.</p>
+    <p><em>Exam tip:</em> "Continual" not "Continuous" — it is deliberate and structured, not constant and uninterrupted.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>★ Information Security Management</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Purpose:</strong> To protect the information needed by the organisation to conduct its business. This includes understanding and managing risks to the confidentiality, integrity, and availability of information, as well as other aspects such as authentication and non-repudiation.</p>
+    <p><strong>Key concepts:</strong></p>
+    <ul>
+      <li><strong>Confidentiality:</strong> Information is not made available to unauthorised individuals or processes.</li>
+      <li><strong>Integrity:</strong> Information is complete and accurate and protected from unauthorised modification.</li>
+      <li><strong>Availability:</strong> Information is accessible and usable when required.</li>
+      <li><strong>Authentication:</strong> Users are who they say they are.</li>
+      <li><strong>Non-repudiation:</strong> A party cannot deny the authenticity of their signature on a document.</li>
+    </ul>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>★ Relationship Management</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Purpose:</strong> To establish and nurture the links between the organisation and its stakeholders at strategic and tactical levels. It identifies, analyses, monitors, and continually improves the relationships with and between stakeholders.</p>
+    <p>Key output: <strong>Customer engagement</strong> — building long-term, mutually beneficial relationships rather than transactional exchanges.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>★ Supplier Management</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Purpose:</strong> To ensure that the organisation's suppliers and their performances are managed appropriately to support the seamless provision of quality products and services. This includes creating closer, more collaborative relationships with key suppliers to uncover and realise new value and reduce the risk of failure.</p>
+    <p><strong>Supplier categorisation:</strong> Suppliers may be categorised by spend, strategic importance, or risk — determining the level of management and oversight applied.</p>
+    <p><strong>Underpinning Contract (UC):</strong> A formal agreement with an external supplier that underpins an SLA. Managed by Supplier Management.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>Other General Management Practices (10)</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <ul>
+      <li><strong>Architecture Management:</strong> Understanding all elements in an organisation and how they interrelate, enabling the organisation to achieve current and future objectives.</li>
+      <li><strong>Knowledge Management:</strong> Maintaining and improving the effective, efficient, and convenient use of information and knowledge across the organisation. Key tool: the SKMS (Service Knowledge Management System).</li>
+      <li><strong>Measurement & Reporting:</strong> Supports good decision-making and continual improvement by decreasing levels of uncertainty. Metrics must support desired outcomes, not just activity.</li>
+      <li><strong>Organisational Change Management:</strong> Ensures changes in an organisation are implemented smoothly and successfully, and lasting benefits are achieved. Addresses the human aspects of change.</li>
+      <li><strong>Portfolio Management:</strong> Ensures the organisation has the right mix of programmes, projects, products, and services to execute its strategy within funding and resource constraints.</li>
+      <li><strong>Project Management:</strong> Ensures all projects are successfully delivered. Includes planning, delegation, monitoring, and control of all aspects of a project.</li>
+      <li><strong>Risk Management:</strong> Ensures the organisation understands and effectively handles risks. Value, outcomes, costs, and risks are at the heart of ITIL 4's approach.</li>
+      <li><strong>Service Financial Management:</strong> Supports the organisation's strategies and plans for service management by ensuring that the financial aspects of services, products, and components are understood and managed.</li>
+      <li><strong>Strategy Management:</strong> Formulates the goals of the organisation and adopts courses of action and allocation of resources necessary to achieve those goals.</li>
+      <li><strong>Workforce & Talent Management:</strong> Ensures the organisation has the right people with the appropriate skills and knowledge in the correct roles to support business objectives.</li>
+    </ul>
+  </div></div>
+
+  <h2>Service Management Practices (17)</h2>
+  <p style="color:var(--ink2);margin-bottom:16px">Developed in IT service management and ITSM communities. These are the most heavily tested in the Foundation exam.</p>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>★ Change Enablement</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Purpose:</strong> To maximise the number of successful IT changes by ensuring that risks have been properly assessed, authorising changes to proceed, and managing the change schedule.</p>
+    <p><em>Note: ITIL 4 renamed this from "Change Management" to "Change Enablement" to reflect the shift toward enabling change rather than controlling it.</em></p>
+    <p><strong>Change:</strong> The addition, modification, or removal of anything that could have a direct or indirect effect on services.</p>
+    <p><strong>Change Authority:</strong> A person or group responsible for authorising a change. The authority level depends on the type and risk of change.</p>
+    <p><strong>Change Schedule:</strong> A document that shows the planned changes and their proposed implementation dates, as well as the current status of changes.</p>
+    <p><strong>Three Change Types:</strong></p>
+    <ul>
+      <li><strong>Standard change:</strong> A change to a service or other CI where the approach is pre-authorised by change authority, is low risk, is relatively common, and follows a procedure or work instruction. Standard changes do not need individual assessment each time.</li>
+      <li><strong>Normal change:</strong> A change that is not a standard change or an emergency change. Assessed via the normal change management process and requires authorisation before implementation. May be reviewed by a Change Advisory Board (CAB).</li>
+      <li><strong>Emergency change:</strong> A change that must be implemented as soon as possible; for example, to resolve an incident or implement a security patch. The assessment and authorisation process is expedited. May be reviewed by an Emergency Change Advisory Board (ECAB).</li>
+    </ul>
+    <p><strong>CAB (Change Advisory Board):</strong> A group of people that supports the assessment, prioritisation, authorisation, and scheduling of changes. Not all changes go to a CAB — only those where its involvement adds value.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>★ Incident Management</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Purpose:</strong> To minimise the negative impact of incidents by restoring normal service operation as quickly as possible.</p>
+    <p><strong>Incident:</strong> An unplanned interruption to a service or reduction in the quality of a service.</p>
+    <p><strong>Major Incident:</strong> An incident with significant business impact, requiring an immediate coordinated resolution. A separate procedure is used for major incidents, with shorter timescales and greater urgency.</p>
+    <p><strong>Key activities:</strong></p>
+    <ul>
+      <li>Logging and classifying incidents</li>
+      <li>Prioritising based on impact and urgency</li>
+      <li>Investigating and diagnosing</li>
+      <li>Resolving and recovering</li>
+      <li>Closing the incident</li>
+    </ul>
+    <p><em>Exam tip:</em> Incident Management restores service — it does not necessarily fix the underlying cause. Fixing root causes is Problem Management's responsibility.</p>
+    <p><strong>Workaround:</strong> A solution that reduces or eliminates the impact of an incident or problem for which a full resolution is not yet available.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>★ Problem Management</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Purpose:</strong> To reduce the likelihood and impact of incidents by identifying actual and potential causes of incidents, and managing workarounds and known errors.</p>
+    <p><strong>Problem:</strong> A cause, or potential cause, of one or more incidents.</p>
+    <p><strong>Known Error:</strong> A problem that has been analysed and has not been resolved.</p>
+    <p><strong>Three phases of Problem Management:</strong></p>
+    <ul>
+      <li><strong>Problem identification:</strong> Identifying problems reactively (from recurring incidents) and proactively (before incidents occur).</li>
+      <li><strong>Problem control:</strong> Analysing problems and documenting workarounds and known errors.</li>
+      <li><strong>Error control:</strong> Managing known errors. Regularly reassessing the status of known errors, assessing the impact of the workaround, and deciding when to raise a change request to resolve the problem permanently.</li>
+    </ul>
+    <p><em>Exam tip:</em> Problems and incidents have separate lifecycles. A problem can remain open while related incidents are closed. Problems are not always resolved — sometimes a workaround is sufficient.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>★ Service Desk</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Purpose:</strong> To capture demand for incident resolution and service requests. It should also be the entry point and single point of contact for the service provider with all its users.</p>
+    <p><em>Note: The Service Desk is a practice, not just a team or tool.</em></p>
+    <p><strong>Service Desk structures:</strong></p>
+    <ul>
+      <li><strong>Local:</strong> Co-located with users. Good for high-touch or specialised support, but expensive to run at scale.</li>
+      <li><strong>Centralised:</strong> A single service desk serving the whole organisation. More efficient and consistent.</li>
+      <li><strong>Virtual:</strong> Staff located in multiple locations but presenting as a single entity using technology. Enables follow-the-sun support.</li>
+      <li><strong>Follow-the-sun:</strong> Combines teams from different time zones to provide 24-hour coverage.</li>
+    </ul>
+    <p><strong>Skills required:</strong> Empathy, emotional intelligence, incident analysis, effective communication, understanding of business priorities, collaboration skills.</p>
+    <p><em>Exam tip:</em> The Service Desk is the single point of contact (SPOC) for users. It logs both incidents and service requests.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>★ Service Level Management</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Purpose:</strong> To set clear business-based targets for service levels, and to ensure that delivery of services is properly assessed, monitored, and managed against these targets.</p>
+    <p><strong>Service Level Agreement (SLA):</strong> A documented agreement between a service provider and a customer that identifies both services required and the expected level of service. SLAs should be written in business terms, not technical jargon.</p>
+    <p><strong>Operational Level Agreement (OLA):</strong> An agreement between a service provider and another part of the same organisation that assists with the provision of services. (Internal.)</p>
+    <p><strong>Underpinning Contract (UC):</strong> A legally binding agreement between a service provider and a third-party supplier. (External.)</p>
+    <p><strong>Watermelon SLA:</strong> An SLA that appears green on the outside (metrics are met) but is red on the inside (customers are unhappy). This occurs when metrics don't reflect actual customer experience. Service Level Management should use both quantitative metrics and qualitative feedback.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>★ Service Request Management</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Purpose:</strong> To support the agreed quality of a service by handling all predefined, user-initiated service requests in an effective and user-friendly manner.</p>
+    <p><strong>Service request:</strong> A request from a user or a user's authorised representative that initiates a service action which has been agreed as a normal part of service delivery.</p>
+    <p>Examples: request for a new laptop, password reset, request for information, request for a standard change.</p>
+    <p><em>Exam tip:</em> Service requests are <strong>not</strong> incidents. They are pre-approved and do not represent a failure. They should be fulfilled via known, documented procedures.</p>
+    <p><strong>Key principle:</strong> Service requests should be fulfilled as efficiently as possible. Fulfilment steps should be standardised and automated where possible to maximise efficiency.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>★ Monitoring and Event Management</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Purpose:</strong> To systematically observe services and service components, and record and report selected changes of state identified as events.</p>
+    <p><strong>Event:</strong> Any change of state that has significance for the management of a service or other CI.</p>
+    <p><strong>Three event types:</strong></p>
+    <ul>
+      <li><strong>Informational:</strong> Does not require action. Recorded for reference (e.g. a user successfully logged in).</li>
+      <li><strong>Warning:</strong> Indicates a threshold is approaching or unusual behaviour is occurring. May need attention before it becomes an incident.</li>
+      <li><strong>Exception:</strong> Indicates that normal operation has been breached. Typically triggers incident management. (e.g. a server is down.)</li>
+    </ul>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>★ IT Asset Management</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Purpose:</strong> To plan and manage the full lifecycle of all IT assets, to help the organisation maximise value, control costs, manage risks, support decision-making about purchase, re-use, retirement, and disposal of assets, and meet regulatory and contractual requirements.</p>
+    <p><strong>IT Asset:</strong> Any financially valuable component that can contribute to the delivery of an IT product or service.</p>
+    <p><em>Exam tip:</em> IT Asset Management manages the financial and contractual aspects of assets throughout their lifecycle. It differs from Service Configuration Management, which focuses on the relationships between CIs.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>★ Service Configuration Management</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Purpose:</strong> To ensure that accurate and reliable information about the configuration of services, and the CIs that support them, is available when and where it is needed.</p>
+    <p><strong>Configuration Item (CI):</strong> Any component that needs to be managed in order to deliver an IT service. CIs may include hardware, software, networks, buildings, people, and formal documentation.</p>
+    <p><strong>Configuration Management Database (CMDB):</strong> A database used to store configuration records throughout their lifecycle. The CMDB also maintains the relationships between CIs.</p>
+    <p><strong>Configuration Management System (CMS):</strong> A set of tools, data, and information used to support Service Configuration Management. The CMS may include one or more CMDBs.</p>
+    <p><strong>Configuration Record:</strong> A record containing the details of a CI. Each CI should have a configuration record.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>★ Release Management</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Purpose:</strong> To make new and changed services and features available for use.</p>
+    <p><strong>Release:</strong> A version of a service or other CI, or a collection of CIs, that is made available for use.</p>
+    <p><em>Exam tip — Release vs Deployment:</em> These are distinct practices in ITIL 4.</p>
+    <ul>
+      <li><strong>Release Management</strong> decides when and what is made available to customers/users.</li>
+      <li><strong>Deployment Management</strong> physically moves components into live environments.</li>
+    </ul>
+    <p>A release may involve multiple deployments; not every deployment results in a visible release.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>Other Service Management Practices</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <ul>
+      <li><strong>Availability Management:</strong> Ensuring services deliver agreed levels of availability to meet customer needs. Measures availability as a percentage of agreed service time.</li>
+      <li><strong>Business Analysis:</strong> Analysing business and its needs, and facilitating appropriate solutions to problems.</li>
+      <li><strong>Capacity and Performance Management:</strong> Ensuring services achieve agreed and expected performance, satisfying current and future demand in a cost-effective way.</li>
+      <li><strong>Service Catalogue Management:</strong> Provides a single source of consistent information on all services and service offerings available from the provider.</li>
+      <li><strong>Service Continuity Management:</strong> Ensuring availability and performance of a service is maintained at sufficient levels in the event of a disaster (BCDR focus).</li>
+      <li><strong>Service Design:</strong> Designing products and services that are fit for purpose, fit for use, and can be delivered by the organisation and its ecosystem of partners and suppliers.</li>
+      <li><strong>Service Validation and Testing:</strong> Ensuring that new or changed products and services meet defined requirements.</li>
+    </ul>
+  </div></div>
+
+  <h2>Technical Management Practices (3)</h2>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>Deployment Management</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Purpose:</strong> To move new or changed hardware, software, documentation, processes, or any other component to live environments. May also be involved in deploying to other environments for testing or staging.</p>
+    <p>Deployment Management works closely with Release Management and Change Enablement but is technically distinct from both.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>Infrastructure and Platform Management</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Purpose:</strong> To oversee the infrastructure and platforms used by an organisation. This enables the monitoring of technology solutions available, including solutions offered by third parties.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>Software Development and Management</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Purpose:</strong> To ensure that applications meet internal and external stakeholder needs, in terms of functionality, reliability, maintainability, compliance, and auditability.</p>
+  </div></div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════
+     GUIDING PRINCIPLES
+══════════════════════════════════════════════════ -->
+<div id="view-principles" class="view">
+  <button class="back-btn" onclick="showView('home')">← Back</button>
+  <h1>7 Guiding Principles</h1>
+  <p class="lead">Guiding principles are recommendations that can guide an organisation in all circumstances, regardless of changes to its goals, strategies, type of work, or management structure. A guiding principle is universal and enduring.</p>
+
+  <div class="def-box">
+    <strong>Important Exam Point</strong>
+    Guiding principles are recommendations, not rules. An organisation should consider the relevance of each principle and how it applies to a given situation. Multiple principles may apply simultaneously and should be considered together. No principle stands alone.
+  </div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>1 — Focus on Value</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Everything the organisation does should link back, directly or indirectly, to value for itself, its customers, and other stakeholders.</strong></p>
+    <p>When adopting this principle, consider:</p>
+    <ul>
+      <li>Know how service consumers use each service and what the service helps them achieve.</li>
+      <li>Encourage a focus on value among all staff, even those not directly facing customers.</li>
+      <li>Value is defined by the consumer, not the provider. Always ask: what does value mean to this stakeholder?</li>
+      <li>Focus on value during every step of improvement initiatives — not just at the start.</li>
+    </ul>
+    <p><em>Common mistake:</em> Teams focus on output (what they deliver) rather than outcomes (what customers achieve). This principle addresses that gap.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>2 — Start Where You Are</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Do not start from scratch and build something new without considering what is already available to be leveraged.</strong></p>
+    <p>When adopting this principle, consider:</p>
+    <ul>
+      <li>Look at what exists as objectively as possible using direct observation before deciding what to build or change.</li>
+      <li>When examples of successful practices are found in the current state, determine if these can be expanded to a wider scale.</li>
+      <li>Apply risk management skills: the current state may contain the seeds of a better state.</li>
+      <li>Recognise that measurement can distort what is seen. Assess what you observe, not just what is measured.</li>
+    </ul>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>3 — Progress Iteratively with Feedback</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Resist the temptation to do everything at once. Even huge initiatives must be accomplished iteratively.</strong></p>
+    <p>When adopting this principle, consider:</p>
+    <ul>
+      <li>Comprehend the whole but do something: understand the big picture but begin improvement through manageable iterations.</li>
+      <li>Use feedback before, throughout, and after each iteration to ensure actions are focused and appropriate.</li>
+      <li>Fast does not mean incomplete: iterations can be very short or longer, but must include a defined outcome and build toward the overall objective.</li>
+    </ul>
+    <p><em>Link to Agile:</em> This principle reflects Agile and DevOps thinking — short feedback loops, minimum viable products, and incremental delivery.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>4 — Collaborate and Promote Visibility</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Working together across boundaries produces results that have greater buy-in, more relevance to objectives, and increased likelihood of long-term success.</strong></p>
+    <p>When adopting this principle, consider:</p>
+    <ul>
+      <li>Collaboration does not mean consensus: not every decision requires full agreement from all parties, but people need to feel heard.</li>
+      <li>Communicate in a way the audience can hear: tailor communication style to the audience.</li>
+      <li>Decisions cannot be made on invisible data: insufficient visibility of work leads to poor decisions, increased risk, and poor outcomes.</li>
+      <li>Identify and manage hidden work — work that exists but is not captured in any system or plan.</li>
+    </ul>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>5 — Think and Work Holistically</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>No service or element used to provide a service stands alone. The outcomes achieved will suffer unless the organisation works in an integrated way to handle its activities as a whole.</strong></p>
+    <p>When adopting this principle, consider:</p>
+    <ul>
+      <li>Recognise the complexity of systems: a change in one area creates effects in others, sometimes unexpectedly.</li>
+      <li>Collaboration is needed to work holistically — this principle reinforces Principle 4.</li>
+      <li>Where possible, look for patterns in the needs of and interactions between system elements.</li>
+      <li>Automation can facilitate working holistically by connecting systems and reducing manual handoffs.</li>
+    </ul>
+    <p><em>Link to 4 Dimensions:</em> Holistic thinking requires considering all four dimensions for every service and practice.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>6 — Keep It Simple and Practical</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Always use the minimum number of steps necessary to accomplish an objective.</strong></p>
+    <p>When adopting this principle, consider:</p>
+    <ul>
+      <li>Ensure value: if a process, service, action, or metric fails to provide value or produce a useful outcome, eliminate it.</li>
+      <li>Simplicity is the ultimate sophistication: do not attempt to create a solution for every exception.</li>
+      <li>Do fewer things, but do them better: focus on outcomes, not activity.</li>
+      <li>Respect the time of the people involved: complex processes frustrate those who must follow them.</li>
+    </ul>
+    <p><em>Common trap:</em> Over-engineering processes. ITIL 4 explicitly discourages adding steps, approvals, or documentation unless they demonstrably add value.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>7 — Optimise and Automate</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p><strong>Organisations should maximise the value of the work carried out by their human and technical resources.</strong></p>
+    <p>When adopting this principle, consider:</p>
+    <ul>
+      <li><strong>Optimise first, then automate:</strong> Technology should be used to automate tasks only after the underlying process or procedure has been optimised. Automating a broken process makes the problem happen faster.</li>
+      <li>Use the other guiding principles when optimising: Focus on Value, Start Where You Are, Progress Iteratively with Feedback.</li>
+      <li>Automation should be used where human intervention adds no value — freeing humans to focus on higher-value work.</li>
+      <li>Be aware of the limits of automation: not everything should be automated.</li>
+    </ul>
+  </div></div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════
+     4 DIMENSIONS
+══════════════════════════════════════════════════ -->
+<div id="view-dimensions" class="view">
+  <button class="back-btn" onclick="showView('home')">← Back</button>
+  <h1>Four Dimensions of Service Management</h1>
+  <p class="lead">ITIL 4 identifies four dimensions that collectively are critical to the effective and efficient facilitation of value for customers and other stakeholders. All four dimensions must be considered for every service and every element of the SVS.</p>
+
+  <div class="def-box">
+    <strong>Official Framing</strong>
+    For services to be delivered and managed effectively, they must be considered from all four dimensions. Failure to adequately address any of the four dimensions leads to services that are undeliverable, or that do not meet expectations of quality or efficiency.
+  </div>
+
+  <div class="def-box" style="border-left-color:var(--accent2)">
+    <strong>PESTLE — External Factors Affecting All Dimensions</strong>
+    All four dimensions are influenced by external factors: Political, Economic, Social, Technological, Legal, and Environmental. These factors are largely outside the control of the SVS but must be accounted for when designing and improving services.
+  </div>
+
+  <h2>The Four Dimensions</h2>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>1 — Organisations and People</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p>This dimension encompasses the roles and responsibilities, formal organisational structures, culture, and required staffing and competencies — all of which are related to the creation, delivery, and improvement of a service.</p>
+    <p><strong>Key considerations:</strong></p>
+    <ul>
+      <li>The organisation must ensure that its structure and management supports its overall strategy and operating model.</li>
+      <li>Roles and responsibilities must be clear and understood.</li>
+      <li>The organisation's culture should support its objectives — values, attitudes, and behaviours that are demonstrated by leadership.</li>
+      <li>Everyone in the organisation should understand their contribution to creating value.</li>
+    </ul>
+    <p><em>Exam tip:</em> Culture is part of this dimension. A technically perfect process will fail without the right organisational culture and behaviours.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>2 — Information and Technology</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p>This dimension applies to both the management of services and the services themselves. It includes the information and knowledge used to deliver services, as well as the technologies required.</p>
+    <p><strong>For service management, this includes:</strong></p>
+    <ul>
+      <li>Service management information systems (ITSM tools, CMDB, SKMS)</li>
+      <li>Communication systems, workflow engines, analytics</li>
+      <li>Artificial intelligence and machine learning</li>
+      <li>Cloud and mobile platforms</li>
+    </ul>
+    <p><strong>Key questions for this dimension:</strong></p>
+    <ul>
+      <li>What information is managed by the services?</li>
+      <li>What information and knowledge is needed to deliver the services?</li>
+      <li>How will the information and knowledge assets be protected, managed, archived, and disposed of?</li>
+    </ul>
+    <p><em>Exam tip:</em> This dimension also includes information security considerations — confidentiality, integrity, and availability of data.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>3 — Partners and Suppliers</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p>This dimension encompasses an organisation's relationships with other organisations that are involved in the design, development, deployment, delivery, support, and/or continual improvement of services.</p>
+    <p><strong>Types of relationships:</strong></p>
+    <ul>
+      <li>Goods providers — hardware, software, other products</li>
+      <li>Service providers — managed services, cloud services, outsourcing</li>
+      <li>Partners — closer strategic relationships with mutual goals</li>
+    </ul>
+    <p><strong>The Service Integration and Management (SIAM) approach</strong> addresses how to manage multiple suppliers who all contribute to a single service ecosystem.</p>
+    <p><em>Exam tip:</em> Organisations must decide which activities to perform internally and which to source externally, based on strategy, risk, cost, and capability.</p>
+  </div></div>
+
+  <div class="accordion"><button class="acc-header" onclick="toggleAcc(this)"><span>4 — Value Streams and Processes</span><span class="acc-arrow">▼</span></button>
+  <div class="acc-body">
+    <p>This dimension defines the activities, workflows, controls, and procedures needed to achieve agreed objectives. It is concerned with how the various parts of the organisation work in an integrated and coordinated way to enable value creation through products and services.</p>
+    <p><strong>Value stream:</strong> A series of steps an organisation undertakes to create and deliver products and services to consumers. Value streams should be designed with the customer's perspective in mind.</p>
+    <p><strong>Process:</strong> A set of interrelated or interacting activities that transform inputs into outputs. Processes define the sequence and dependencies of activities, roles, responsibilities, and controls.</p>
+    <p><em>Exam tip:</em> ITIL 4 replaces "processes" with "practices" at the top level, but processes still exist within practices. This dimension specifically focuses on how processes and value streams are designed and operated.</p>
+  </div></div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════
+     QUIZ
+══════════════════════════════════════════════════ -->
+<div id="view-quiz" class="view">
+  <button class="back-btn" onclick="showView('home')">← Back</button>
+  <h1>Practice Quiz</h1>
+  <p class="lead">20 exam-style questions based strictly on the ITIL 4 Foundation syllabus. Each question includes the correct answer rationale and the relevant syllabus area.</p>
+  <div class="quiz-wrap" id="quiz-container"></div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════
+     REFERENCE
+══════════════════════════════════════════════════ -->
+<div id="view-ref" class="view">
+  <button class="back-btn" onclick="showView('home')">← Back</button>
+  <h1>Quick Reference</h1>
+  <p class="lead">All key definitions, acronyms, and distinctions in one place.</p>
+
+  <div class="cs-block">
+    <h3>Core Service Concepts</h3>
+    <table class="cs-table">
+      <tr><td>Service</td><td>A means of enabling value co-creation by facilitating outcomes that customers want to achieve, without the customer having to manage specific costs and risks.</td></tr>
+      <tr><td>Product</td><td>A configuration of an organisation's resources designed to offer value for a consumer.</td></tr>
+      <tr><td>Service Offering</td><td>A formal description of one or more services, designed to address the needs of a target consumer group. May include goods, access to resources, and service actions.</td></tr>
+      <tr><td>Utility</td><td>Functionality offered by a product or service to meet a need. <em>"Fit for purpose."</em></td></tr>
+      <tr><td>Warranty</td><td>Assurance that a product or service will meet agreed requirements. <em>"Fit for use."</em></td></tr>
+      <tr><td>Value</td><td>Perceived benefits, usefulness, and importance of something. Co-created between provider and consumer.</td></tr>
+      <tr><td>Outcome</td><td>A result for a stakeholder enabled by one or more outputs.</td></tr>
+      <tr><td>Output</td><td>A tangible or intangible deliverable of an activity.</td></tr>
+      <tr><td>Risk</td><td>A possible event that could cause harm or loss, or make it harder to achieve objectives.</td></tr>
+      <tr><td>Cost</td><td>Amount of money spent on a specific activity or resource.</td></tr>
+    </table>
+  </div>
+
+  <div class="cs-block">
+    <h3>Incidents, Problems, Events</h3>
+    <table class="cs-table">
+      <tr><td>Incident</td><td>An unplanned interruption to a service or reduction in the quality of a service.</td></tr>
+      <tr><td>Major Incident</td><td>An incident with significant business impact, requiring an immediate coordinated resolution. Uses a separate, expedited procedure.</td></tr>
+      <tr><td>Problem</td><td>A cause, or potential cause, of one or more incidents.</td></tr>
+      <tr><td>Known Error</td><td>A problem that has been analysed and has not been resolved.</td></tr>
+      <tr><td>Workaround</td><td>A solution that reduces or eliminates the impact of an incident or problem for which a full resolution is not yet available.</td></tr>
+      <tr><td>Event</td><td>Any change of state that has significance for the management of a service or other CI.</td></tr>
+      <tr><td>Service Request</td><td>A request from a user for something that is a normal part of service delivery (not an incident).</td></tr>
+    </table>
+  </div>
+
+  <div class="cs-block">
+    <h3>Change Types</h3>
+    <table class="cs-table">
+      <tr><td>Standard Change</td><td>Pre-authorised. Low risk. Follows a documented procedure. No individual assessment needed each time.</td></tr>
+      <tr><td>Normal Change</td><td>Assessed through the standard change management process. Requires authorisation before implementation. May go to CAB.</td></tr>
+      <tr><td>Emergency Change</td><td>Must be implemented urgently. Expedited assessment and authorisation. May go to ECAB.</td></tr>
+    </table>
+  </div>
+
+  <div class="cs-block">
+    <h3>Agreements and Contracts</h3>
+    <table class="cs-table">
+      <tr><td>SLA</td><td>Service Level Agreement. Between service provider and customer. Defines agreed service levels.</td></tr>
+      <tr><td>OLA</td><td>Operational Level Agreement. Between the service provider and another internal team. Underpins an SLA.</td></tr>
+      <tr><td>UC</td><td>Underpinning Contract. Legally binding agreement between service provider and external supplier.</td></tr>
+    </table>
+  </div>
+
+  <div class="cs-block">
+    <h3>Configuration and Assets</h3>
+    <table class="cs-table">
+      <tr><td>CI</td><td>Configuration Item. Any component managed to deliver an IT service.</td></tr>
+      <tr><td>CMDB</td><td>Configuration Management Database. Stores configuration records and relationships between CIs.</td></tr>
+      <tr><td>CMS</td><td>Configuration Management System. Broader set of tools that may include multiple CMDBs.</td></tr>
+      <tr><td>SKMS</td><td>Service Knowledge Management System. The complete set of tools and databases for managing knowledge.</td></tr>
+      <tr><td>IT Asset</td><td>Any financially valuable component that can contribute to the delivery of an IT product or service.</td></tr>
+    </table>
+  </div>
+
+  <div class="cs-block">
+    <h3>SVS Components</h3>
+    <div class="pill-row">
+      <span class="pill r">Guiding Principles</span>
+      <span class="pill r">Governance</span>
+      <span class="pill r">Service Value Chain</span>
+      <span class="pill r">Practices</span>
+      <span class="pill r">Continual Improvement</span>
+    </div>
+  </div>
+
+  <div class="cs-block">
+    <h3>Service Value Chain Activities</h3>
+    <div class="pill-row">
+      <span class="pill b">Plan</span>
+      <span class="pill b">Improve</span>
+      <span class="pill b">Engage</span>
+      <span class="pill b">Design & Transition</span>
+      <span class="pill b">Obtain/Build</span>
+      <span class="pill b">Deliver & Support</span>
+    </div>
+  </div>
+
+  <div class="cs-block">
+    <h3>7 Guiding Principles</h3>
+    <div class="pill-row">
+      <span class="pill g">Focus on Value</span>
+      <span class="pill g">Start Where You Are</span>
+      <span class="pill g">Progress Iteratively with Feedback</span>
+      <span class="pill g">Collaborate and Promote Visibility</span>
+      <span class="pill g">Think and Work Holistically</span>
+      <span class="pill g">Keep It Simple and Practical</span>
+      <span class="pill g">Optimise and Automate</span>
+    </div>
+  </div>
+
+  <div class="cs-block">
+    <h3>4 Dimensions</h3>
+    <div class="pill-row">
+      <span class="pill gr">Organisations and People</span>
+      <span class="pill gr">Information and Technology</span>
+      <span class="pill gr">Partners and Suppliers</span>
+      <span class="pill gr">Value Streams and Processes</span>
+    </div>
+  </div>
+
+  <div class="cs-block">
+    <h3>Governance — EDM Model</h3>
+    <div class="pill-row">
+      <span class="pill">Evaluate</span>
+      <span class="pill">Direct</span>
+      <span class="pill">Monitor</span>
+    </div>
+  </div>
+
+  <div class="cs-block">
+    <h3>Event Types</h3>
+    <table class="cs-table">
+      <tr><td>Informational</td><td>No action needed. Recorded for reference.</td></tr>
+      <tr><td>Warning</td><td>Threshold approaching. May need attention.</td></tr>
+      <tr><td>Exception</td><td>Normal operation breached. Triggers Incident Management.</td></tr>
+    </table>
+  </div>
+
+  <div class="cs-block">
+    <h3>Problem Management Phases</h3>
+    <table class="cs-table">
+      <tr><td>Problem Identification</td><td>Identifying problems reactively (from incidents) and proactively.</td></tr>
+      <tr><td>Problem Control</td><td>Analysing problems, documenting workarounds and known errors.</td></tr>
+      <tr><td>Error Control</td><td>Managing known errors, reassessing workarounds, raising changes to resolve.</td></tr>
+    </table>
+  </div>
+
+  <div class="cs-block">
+    <h3>Practice Categories</h3>
+    <table class="cs-table">
+      <tr><td>General Management (14)</td><td>Adapted from broader business management. E.g. Risk, Portfolio, Knowledge, Continual Improvement.</td></tr>
+      <tr><td>Service Management (17)</td><td>Developed in ITSM. E.g. Incident, Problem, Change, Service Desk, SLM, Service Request.</td></tr>
+      <tr><td>Technical Management (3)</td><td>Adapted from technology management. Deployment, Infrastructure & Platform, Software Development.</td></tr>
+    </table>
+  </div>
+</div>
 
 </main>
 
 <script>
-  // ── NAV ──
-  function showView(id) {
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.getElementById('view-' + id).classList.add('active');
-    document.querySelectorAll('nav button').forEach((b, i) => {
-      const views = ['overview','svs','practices','guiding','quiz','cheatsheet'];
-      b.classList.toggle('active', views[i] === id);
-    });
-    if (id === 'quiz') initQuiz();
-    window.scrollTo(0, 0);
+// NAV
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
+  const views = ['home','svs','svc','practices','principles','dimensions','quiz','ref'];
+  document.querySelectorAll('nav button').forEach((b, i) => {
+    b.classList.toggle('active', views[i] === id);
+  });
+  if (id === 'quiz') initQuiz();
+  window.scrollTo(0, 0);
+}
+
+// ACCORDION
+function toggleAcc(btn) {
+  const acc = btn.closest('.accordion');
+  acc.classList.toggle('open');
+}
+
+// QUIZ DATA — strictly ITIL 4 Foundation syllabus aligned
+const questions = [
+  {
+    cat: "Key Concepts",
+    q: "What is the ITIL 4 definition of a 'service'?",
+    opts: [
+      "A set of specialised organisational capabilities for enabling value for customers",
+      "A means of enabling value co-creation by facilitating outcomes that customers want to achieve, without the customer having to manage specific costs and risks",
+      "A configuration of organisational resources designed to offer value for a consumer",
+      "A documented agreement between a service provider and a customer that identifies services required and expected service levels"
+    ],
+    correct: 1,
+    explain: "Option A is the definition of 'Service Management.' Option C is the definition of 'Product.' Option D is the definition of 'SLA.' The official definition of 'Service' is Option B.",
+    ref: "ITIL 4 Foundation, Section 2.3.1"
+  },
+  {
+    cat: "Key Concepts",
+    q: "Which term describes the functionality offered by a product or service to meet a particular need — also called 'fit for purpose'?",
+    opts: ["Warranty","Outcome","Utility","Value"],
+    correct: 2,
+    explain: "Utility = 'fit for purpose' (what the service does). Warranty = 'fit for use' (how it performs in terms of availability, capacity, etc.). Both are required for a service to deliver value.",
+    ref: "ITIL 4 Foundation, Section 2.5.1"
+  },
+  {
+    cat: "Key Concepts",
+    q: "What is the difference between an 'outcome' and an 'output' in ITIL 4?",
+    opts: [
+      "An outcome is a tangible deliverable; an output is the result for a stakeholder",
+      "An output is a tangible or intangible deliverable of an activity; an outcome is a result for a stakeholder enabled by one or more outputs",
+      "Outcomes and outputs are synonymous in ITIL 4",
+      "An output is agreed in an SLA; an outcome is agreed in an OLA"
+    ],
+    correct: 1,
+    explain: "Outputs are what activities produce (e.g. a report, a deployed application). Outcomes are the results stakeholders achieve because of those outputs (e.g. faster order processing). Customers care about outcomes, not just outputs.",
+    ref: "ITIL 4 Foundation, Section 2.5"
+  },
+  {
+    cat: "SVS",
+    q: "Which of the following is NOT one of the five components of the ITIL 4 Service Value System?",
+    opts: ["Guiding Principles","Service Value Chain","Continual Improvement","Service Level Management"],
+    correct: 3,
+    explain: "The five SVS components are: Guiding Principles, Governance, Service Value Chain, Practices, and Continual Improvement. Service Level Management is one of the 34 practices, not an SVS component.",
+    ref: "ITIL 4 Foundation, Section 4.1"
+  },
+  {
+    cat: "SVS",
+    q: "What are the inputs to the ITIL 4 Service Value System?",
+    opts: [
+      "Incidents and service requests",
+      "Demand and opportunity",
+      "Policies and requirements from governance",
+      "Products and services"
+    ],
+    correct: 1,
+    explain: "The SVS has two inputs: Opportunity (options to add value for stakeholders) and Demand (need or desire for products and services). The output of the SVS is Value.",
+    ref: "ITIL 4 Foundation, Section 4.1"
+  },
+  {
+    cat: "Service Value Chain",
+    q: "What is the purpose of the 'Engage' activity in the Service Value Chain?",
+    opts: [
+      "To move new and changed services into live operation",
+      "To ensure that services are delivered according to agreed specifications",
+      "To provide a good understanding of stakeholder needs, transparency, and continual engagement with all stakeholders",
+      "To ensure continual improvement of products, services, and practices"
+    ],
+    correct: 2,
+    explain: "'Engage' is the primary interface with external stakeholders. It captures demand, handles customer relationships, and ensures stakeholder requirements flow into other SVC activities. 'Deliver & Support' handles option B. 'Improve' handles option D.",
+    ref: "ITIL 4 Foundation, Section 4.5.3"
+  },
+  {
+    cat: "Practices",
+    q: "What is the purpose of the 'Problem Management' practice?",
+    opts: [
+      "To minimise the negative impact of incidents by restoring normal service operation as quickly as possible",
+      "To reduce the likelihood and impact of incidents by identifying actual and potential causes of incidents, and managing workarounds and known errors",
+      "To ensure that changes to services are properly assessed, authorised, and scheduled",
+      "To capture demand for incident resolution and service requests"
+    ],
+    correct: 1,
+    explain: "Option A is the purpose of Incident Management. Option C is Change Enablement. Option D is the Service Desk. Problem Management focuses on root causes and preventing future incidents.",
+    ref: "ITIL 4 Foundation, Section 5.2.8"
+  },
+  {
+    cat: "Practices",
+    q: "A problem that has been analysed and has not been resolved is called a:",
+    opts: ["Major incident","Workaround","Known error","Change request"],
+    correct: 2,
+    explain: "Once a problem has been analysed and the root cause is understood, it becomes a 'known error.' A workaround is a temporary fix to reduce impact. These are distinct concepts in ITIL 4.",
+    ref: "ITIL 4 Foundation, Section 5.2.8"
+  },
+  {
+    cat: "Practices",
+    q: "Which change type must be assessed and authorised using an expedited process?",
+    opts: ["Standard change","Normal change","Emergency change","Routine change"],
+    correct: 2,
+    explain: "Emergency changes must be implemented urgently (e.g. to resolve a major incident or apply a critical security patch). They use an expedited assessment, often reviewed by the ECAB. Standard changes are pre-authorised. Normal changes follow the full process.",
+    ref: "ITIL 4 Foundation, Section 5.2.4"
+  },
+  {
+    cat: "Practices",
+    q: "What is the primary role of the Service Desk practice?",
+    opts: [
+      "To manage the full lifecycle of all incidents from logging to closure",
+      "To capture demand for incident resolution and service requests, and act as the single point of contact for users",
+      "To set and monitor service level targets agreed with customers",
+      "To manage suppliers and third-party service providers"
+    ],
+    correct: 1,
+    explain: "The Service Desk is the SPOC (Single Point of Contact) for users. It captures demand — both incidents and service requests. It does not manage the full lifecycle of incidents alone (that is Incident Management practice), but it is the entry point.",
+    ref: "ITIL 4 Foundation, Section 5.2.14"
+  },
+  {
+    cat: "Practices",
+    q: "A change to a service that is pre-authorised, low risk, and follows a fully documented procedure is BEST described as:",
+    opts: ["An emergency change","A normal change","A standard change","A major change"],
+    correct: 2,
+    explain: "Standard changes are pre-approved because their approach, risk level, and procedure are all well understood. They do not require individual assessment each time they occur. 'Major change' is not an ITIL 4 term.",
+    ref: "ITIL 4 Foundation, Section 5.2.4"
+  },
+  {
+    cat: "Guiding Principles",
+    q: "Which guiding principle recommends that organisations should 'optimise first, then automate'?",
+    opts: [
+      "Keep It Simple and Practical",
+      "Progress Iteratively with Feedback",
+      "Think and Work Holistically",
+      "Optimise and Automate"
+    ],
+    correct: 3,
+    explain: "'Optimise and Automate' states that organisations should first optimise a process or practice until it is working well, and only then consider automation. Automating a poorly designed process simply causes the problem to happen faster.",
+    ref: "ITIL 4 Foundation, Section 4.3.7"
+  },
+  {
+    cat: "Guiding Principles",
+    q: "A team is planning a large service improvement initiative. They want to implement all changes at once to minimise disruption. Which guiding principle are they NOT following?",
+    opts: [
+      "Focus on Value",
+      "Progress Iteratively with Feedback",
+      "Collaborate and Promote Visibility",
+      "Start Where You Are"
+    ],
+    correct: 1,
+    explain: "'Progress Iteratively with Feedback' explicitly warns against doing everything at once. Even large initiatives should be broken into manageable iterations with feedback loops to allow course correction.",
+    ref: "ITIL 4 Foundation, Section 4.3.3"
+  },
+  {
+    cat: "Guiding Principles",
+    q: "Which guiding principle states that value is always defined by the consumer, and that all actions should link back to value for stakeholders?",
+    opts: [
+      "Think and Work Holistically",
+      "Collaborate and Promote Visibility",
+      "Focus on Value",
+      "Keep It Simple and Practical"
+    ],
+    correct: 2,
+    explain: "'Focus on Value' means that everything the organisation does should create value for its stakeholders. Critically, value is co-created — it is defined by the consumer, not the provider.",
+    ref: "ITIL 4 Foundation, Section 4.3.1"
+  },
+  {
+    cat: "Four Dimensions",
+    q: "Which of the four dimensions focuses on organisational culture, roles and responsibilities, and the skills and competencies of staff?",
+    opts: [
+      "Information and Technology",
+      "Value Streams and Processes",
+      "Partners and Suppliers",
+      "Organisations and People"
+    ],
+    correct: 3,
+    explain: "The 'Organisations and People' dimension covers organisational structure, culture, roles, responsibilities, and workforce capabilities. A technically excellent process will fail if this dimension is neglected.",
+    ref: "ITIL 4 Foundation, Section 3.1"
+  },
+  {
+    cat: "Four Dimensions",
+    q: "What does the acronym PESTLE stand for, and how does it relate to the four dimensions?",
+    opts: [
+      "Process, Execution, Service, Testing, Lifecycle, Environment — the six stages of service delivery",
+      "Political, Economic, Social, Technological, Legal, Environmental — external factors that influence all four dimensions",
+      "Plan, Engage, Support, Transition, Launch, Evaluate — steps in the service value chain",
+      "Practice, Evaluation, Strategy, Training, Lifecycle, Enablement — guiding principles for practice adoption"
+    ],
+    correct: 1,
+    explain: "PESTLE represents external factors largely outside the control of the SVS: Political, Economic, Social, Technological, Legal, and Environmental. All four dimensions are influenced by these external factors, which must be considered when designing services.",
+    ref: "ITIL 4 Foundation, Section 3.5"
+  },
+  {
+    cat: "Practices",
+    q: "What is the difference between 'Release Management' and 'Deployment Management' in ITIL 4?",
+    opts: [
+      "They are the same practice with different names",
+      "Release Management physically moves components into live environments; Deployment Management decides when features are made available to users",
+      "Release Management decides when and what becomes available to users; Deployment Management physically moves components into live environments",
+      "Release Management manages emergency changes; Deployment Management manages standard changes"
+    ],
+    correct: 2,
+    explain: "These are distinct practices. Release Management controls what is made available to consumers and when. Deployment Management is the technical activity of physically moving components to live (or test) environments. A release may involve multiple deployments.",
+    ref: "ITIL 4 Foundation, Section 5.2.9 & 5.3.1"
+  },
+  {
+    cat: "Practices",
+    q: "An SLA appears to be met based on technical metrics, but customers consistently report dissatisfaction. This is an example of:",
+    opts: [
+      "A major incident",
+      "A watermelon SLA",
+      "A known error in Service Level Management",
+      "A breach of the Underpinning Contract"
+    ],
+    correct: 1,
+    explain: "A 'watermelon SLA' is green on the outside (metrics show compliance) but red on the inside (customers are unhappy). It occurs when metrics do not reflect actual customer experience. ITIL 4 recommends using qualitative feedback alongside quantitative metrics.",
+    ref: "ITIL 4 Foundation, Section 5.2.16"
+  },
+  {
+    cat: "SVS",
+    q: "Governance in the ITIL 4 SVS is described through which three activities?",
+    opts: [
+      "Plan, Do, Check",
+      "Identify, Assess, Approve",
+      "Evaluate, Direct, Monitor",
+      "Analyse, Design, Implement"
+    ],
+    correct: 2,
+    explain: "The governance component of the SVS uses the EDM model: Evaluate (assess the organisation and its environment), Direct (assign responsibility and direct implementation), and Monitor (oversee performance). This is distinct from management activities.",
+    ref: "ITIL 4 Foundation, Section 4.1"
+  },
+  {
+    cat: "Practices",
+    q: "Which of the following BEST describes the Continual Improvement Register (CIR)?",
+    opts: [
+      "A formal document used to authorise major improvement projects",
+      "A database or document used to track and manage improvement ideas from identification through to final action",
+      "A record of all incidents that led to service improvements",
+      "A list of known errors that have been resolved"
+    ],
+    correct: 1,
+    explain: "The CIR is used to log and manage all improvement ideas regardless of size or origin. It ensures no improvement idea is lost and provides a mechanism for prioritising and tracking improvement initiatives over time.",
+    ref: "ITIL 4 Foundation, Section 5.1.2"
   }
+];
 
-  // ── QUIZ DATA ──
-  const questions = [
-    {
-      q: "Which of the following BEST describes a 'service' in ITIL 4?",
-      opts: ["A means of enabling value co-creation by facilitating outcomes customers want without managing specific costs and risks","A software application that supports business operations","A set of defined activities that transform inputs into outputs","A contract between a service provider and a customer"],
-      correct: 0,
-      explain: "ITIL 4 defines a service as enabling value co-creation. The key shift is that value is co-created with customers, not delivered to them."
-    },
-    {
-      q: "What is the MAIN purpose of the Service Value Chain?",
-      opts: ["To document SLAs between provider and customer","To provide a flexible operating model for creating, delivering, and improving services","To define the governance structure for IT services","To store configuration data about IT components"],
-      correct: 1,
-      explain: "The SVC is the core operating model within the SVS. It has six activities that combine flexibly into value streams."
-    },
-    {
-      q: "Which guiding principle recommends assessing the current state before making changes?",
-      opts: ["Focus on Value","Keep it Simple and Practical","Start Where You Are","Think and Work Holistically"],
-      correct: 2,
-      explain: "'Start Where You Are' means leveraging existing capabilities instead of starting from scratch. Measure and observe before deciding what to change."
-    },
-    {
-      q: "An incident is BEST described as:",
-      opts: ["A planned interruption to a service","An unplanned interruption or reduction in the quality of an IT service","The root cause of one or more problems","A request from a user for a new feature"],
-      correct: 1,
-      explain: "Incidents are unplanned events. Problems are the root causes of incidents. Service requests are for pre-approved items."
-    },
-    {
-      q: "Which of the four dimensions focuses on how data flows and is managed across an organisation?",
-      opts: ["Organisations and People","Partners and Suppliers","Information and Technology","Value Streams and Processes"],
-      correct: 2,
-      explain: "The Information and Technology dimension covers data, information, knowledge, and the tools and technologies used to deliver services."
-    },
-    {
-      q: "A change that is pre-authorised, low risk, and follows a documented procedure is called a:",
-      opts: ["Normal change","Emergency change","Standard change","Routine change"],
-      correct: 2,
-      explain: "Standard changes are pre-approved because they are well understood, low risk, and have a proven procedure. No CAB review is needed."
-    },
-    {
-      q: "Which ITIL 4 practice is responsible for minimising the negative impact of incidents?",
-      opts: ["Problem Management","Service Desk","Incident Management","Change Enablement"],
-      correct: 2,
-      explain: "Incident Management focuses on restoring normal service as quickly as possible. Problem Management deals with the underlying causes."
-    },
-    {
-      q: "What does 'warranty' refer to in ITIL 4?",
-      opts: ["A legal guarantee that services will never fail","Assurance that a product or service will meet agreed requirements — fit for use","The functionality of a service — fit for purpose","A contract between provider and supplier"],
-      correct: 1,
-      explain: "Warranty = fit for use (availability, capacity, security, continuity). Utility = fit for purpose (the functionality)."
-    },
-    {
-      q: "The CMDB is associated with which ITIL 4 practice?",
-      opts: ["IT Asset Management","Service Catalogue Management","Service Configuration Management","Incident Management"],
-      correct: 2,
-      explain: "Service Configuration Management maintains the CMDB (Configuration Management Database), which stores details of CIs and their relationships."
-    },
-    {
-      q: "Which guiding principle says: 'If a step adds no value, remove it'?",
-      opts: ["Optimise and Automate","Progress Iteratively with Feedback","Keep it Simple and Practical","Focus on Value"],
-      correct: 2,
-      explain: "'Keep it Simple and Practical' recommends using the minimum number of steps needed and eliminating anything that doesn't add value."
-    },
-    {
-      q: "The Service Value System (SVS) has how many components?",
-      opts: ["4","5","6","7"],
-      correct: 1,
-      explain: "The SVS has 5 components: Guiding Principles, Governance, Service Value Chain, Practices, and Continual Improvement."
-    },
-    {
-      q: "What distinguishes a 'known error' from a 'problem'?",
-      opts: ["A known error is a type of incident","A known error is a problem that has been analysed but not yet resolved","A known error has been fully resolved","A known error only affects a single user"],
-      correct: 1,
-      explain: "A problem becomes a 'known error' once root cause analysis is complete and the underlying cause is understood, even if no fix exists yet."
-    },
-    {
-      q: "Which of the following is a component of the Service Value System but NOT an activity in the Service Value Chain?",
-      opts: ["Engage","Continual Improvement","Obtain/Build","Deliver and Support"],
-      correct: 1,
-      explain: "Continual Improvement is an SVS component. The six SVC activities are: Plan, Improve, Engage, Design & Transition, Obtain/Build, Deliver & Support."
-    },
-    {
-      q: "An OLA (Operational Level Agreement) is BEST described as:",
-      opts: ["A contract between the service provider and an external supplier","An agreement between internal teams within the same organisation","An agreement between the service provider and the customer","A legal framework for service delivery"],
-      correct: 1,
-      explain: "OLA = internal agreement (e.g. IT team with networking team). SLA = with customer. UC (Underpinning Contract) = with external supplier."
-    },
-    {
-      q: "Which guiding principle recommends automating AFTER optimising?",
-      opts: ["Think and Work Holistically","Collaborate and Promote Visibility","Progress Iteratively with Feedback","Optimise and Automate"],
-      correct: 3,
-      explain: "'Optimise and Automate' — you should first make the process as good as possible manually, then automate it. Automating a bad process just makes the problem faster."
-    }
-  ];
+let current = 0, score = 0, answered = false;
 
-  let current = 0, score = 0, answered = false;
+function initQuiz() {
+  current = 0; score = 0; answered = false;
+  renderQuestion();
+}
 
-  function initQuiz() {
-    current = 0; score = 0; answered = false;
-    renderQuestion();
-  }
-
-  function renderQuestion() {
-    const container = document.getElementById('quiz-container');
-    if (current >= questions.length) {
-      const pct = Math.round((score / questions.length) * 100);
-      let grade = pct >= 80 ? '🎉 Pass — ready for the exam!' : pct >= 60 ? '📚 Close — review weak areas.' : '🔁 Keep studying and retry.';
-      container.innerHTML = `
-        <div class="score-card">
-          <div class="q-number">QUIZ COMPLETE</div>
-          <div class="score-num">${score}/${questions.length}</div>
-          <div class="score-label">${pct}% — ${grade}</div>
-          <button class="retry-btn" onclick="initQuiz()">Retry Quiz</button>
-        </div>`;
-      return;
-    }
-
-    const q = questions[current];
-    const pct = (current / questions.length) * 100;
-    answered = false;
-
+function renderQuestion() {
+  const container = document.getElementById('quiz-container');
+  if (current >= questions.length) {
+    const pct = Math.round((score / questions.length) * 100);
+    let msg, colour;
+    if (pct >= 75) { msg = "Pass threshold met — well done!"; colour = "var(--green)"; }
+    else if (pct >= 60) { msg = "Nearly there — revisit weak areas."; colour = "var(--gold)"; }
+    else { msg = "Keep studying — retry when ready."; colour = "var(--accent)"; }
     container.innerHTML = `
+      <div class="score-card">
+        <div style="font-size:11px;font-family:var(--mono);letter-spacing:2px;text-transform:uppercase;color:var(--muted)">RESULT</div>
+        <div class="score-num" style="color:${colour}">${score}/${questions.length}</div>
+        <div class="score-msg">${msg}</div>
+        <div class="score-label">${pct}% &nbsp;·&nbsp; ITIL 4 Foundation pass mark is 65% (26/40 questions)</div>
+        <button class="retry-btn" onclick="initQuiz()">Retry Quiz</button>
+      </div>`;
+    return;
+  }
+
+  const q = questions[current];
+  const pct = (current / questions.length) * 100;
+  answered = false;
+
+  container.innerHTML = `
+    <div class="progress-row">
       <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
-      <div class="q-number">QUESTION ${current + 1} OF ${questions.length}</div>
-      <div class="q-text">${q.q}</div>
-      <div class="options">
-        ${q.opts.map((o, i) => `<button class="option" onclick="selectAnswer(${i})">${o}</button>`).join('')}
-      </div>
-      <div class="feedback" id="feedback"></div>
-      <button class="next-btn" id="next-btn" onclick="nextQuestion()">${current === questions.length - 1 ? 'See Results' : 'Next Question'}</button>
-    `;
-  }
+      <div class="progress-label">${current + 1} / ${questions.length}</div>
+    </div>
+    <div class="q-category">${q.cat}</div>
+    <div class="q-text">${q.q}</div>
+    <div class="options">
+      ${q.opts.map((o, i) => `<button class="option" onclick="selectAnswer(${i})">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}
+    </div>
+    <div class="feedback" id="feedback"></div>
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">${current === questions.length - 1 ? 'See Results →' : 'Next Question →'}</button>
+  `;
+}
 
-  function selectAnswer(idx) {
-    if (answered) return;
-    answered = true;
-    const q = questions[current];
-    const opts = document.querySelectorAll('.option');
-    opts.forEach(o => o.disabled = true);
-    opts[idx].classList.add(idx === q.correct ? 'correct' : 'wrong');
-    if (idx !== q.correct) opts[q.correct].classList.add('correct');
-    if (idx === q.correct) score++;
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const opts = document.querySelectorAll('.option');
+  opts.forEach(o => o.disabled = true);
+  opts[idx].classList.add(idx === q.correct ? 'correct' : 'wrong');
+  if (idx !== q.correct) opts[q.correct].classList.add('correct');
+  if (idx === q.correct) score++;
 
-    const fb = document.getElementById('feedback');
-    fb.className = 'feedback show ' + (idx === q.correct ? 'correct' : 'wrong');
-    fb.textContent = (idx === q.correct ? '✓ Correct! ' : '✗ Incorrect. ') + q.explain;
+  const fb = document.getElementById('feedback');
+  const icon = idx === q.correct ? '✓' : '✗';
+  const cls = idx === q.correct ? 'correct' : 'wrong';
+  fb.className = `feedback show ${cls}`;
+  fb.innerHTML = `<strong>${icon} ${idx === q.correct ? 'Correct' : 'Incorrect'}</strong> — ${q.explain}<div class="ref">${q.ref}</div>`;
 
-    document.getElementById('next-btn').classList.add('show');
-  }
+  document.getElementById('next-btn').classList.add('show');
+}
 
-  function nextQuestion() {
-    current++;
-    renderQuestion();
-  }
+function nextQuestion() {
+  current++;
+  renderQuestion();
+}
 </script>
 </body>
 </html>

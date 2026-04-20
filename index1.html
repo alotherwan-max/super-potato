@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baby Feeding Tracker</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --cream: #fdf8f0;
+    --warm: #f5ece0;
+    --blush: #f2c4a0;
+    --coral: #e8896a;
+    --rust: #c45c3a;
+    --sage: #8aab8e;
+    --slate: #4a5568;
+    --ink: #2d3748;
+    --soft: #718096;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 24px 16px 40px;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 32px;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    color: var(--rust);
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+
+  .header p {
+    font-size: 0.85rem;
+    color: var(--soft);
+    font-weight: 300;
+    letter-spacing: 0.04em;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+    animation: fadeUp 0.6s 0.15s ease both;
+  }
+
+  .stat-pill {
+    background: white;
+    border: 1.5px solid var(--blush);
+    border-radius: 50px;
+    padding: 8px 18px;
+    text-align: center;
+    min-width: 100px;
+  }
+
+  .stat-pill .val {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: var(--coral);
+    display: block;
+  }
+
+  .stat-pill .lbl {
+    font-size: 0.7rem;
+    color: var(--soft);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    animation: fadeUp 0.6s 0.25s ease both;
+  }
+
+  .btn {
+    background: white;
+    border: 1.5px solid #ddd;
+    border-radius: 8px;
+    padding: 7px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--slate);
+    transition: all 0.2s ease;
+  }
+
+  .btn:hover { border-color: var(--coral); color: var(--coral); }
+  .btn.active { background: var(--coral); border-color: var(--coral); color: white; }
+
+  .chart-card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px 16px 16px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+    position: relative;
+    animation: fadeUp 0.6s 0.35s ease both;
+  }
+
+  .chart-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1rem;
+    color: var(--slate);
+    margin-bottom: 16px;
+    padding-left: 4px;
+  }
+
+  .chart-wrap {
+    position: relative;
+    height: 240px;
+  }
+
+  .tooltip-custom {
+    background: var(--ink) !important;
+    border-radius: 10px !important;
+    padding: 10px 14px !important;
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 13px !important;
+  }
+
+  .detail-panel {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+    animation: fadeUp 0.6s 0.45s ease both;
+  }
+
+  .detail-panel h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1rem;
+    color: var(--slate);
+    margin-bottom: 14px;
+  }
+
+  .feed-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+  }
+
+  .feed-table th {
+    text-align: left;
+    padding: 6px 8px;
+    font-weight: 600;
+    color: var(--soft);
+    text-transform: uppercase;
+    font-size: 0.68rem;
+    letter-spacing: 0.05em;
+    border-bottom: 1.5px solid var(--warm);
+  }
+
+  .feed-table td {
+    padding: 7px 8px;
+    border-bottom: 1px solid #f5f5f5;
+    color: var(--slate);
+  }
+
+  .feed-table tr:last-child td { border-bottom: none; }
+
+  .feed-table .highlight td { background: #fff8f5; }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .badge-high { background: #e8f5e9; color: #388e3c; }
+  .badge-low { background: #fff3e0; color: #e65100; }
+  .badge-mid { background: #f3f4f6; color: #6b7280; }
+
+  .day-selector {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .day-btn {
+    background: var(--warm);
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--slate);
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .day-btn:hover { background: var(--blush); }
+  .day-btn.active { background: var(--coral); color: white; }
+
+  .insight-box {
+    background: linear-gradient(135deg, #fff5f0 0%, #fff8f5 100%);
+    border-left: 3px solid var(--coral);
+    border-radius: 0 10px 10px 0;
+    padding: 12px 14px;
+    margin-top: 16px;
+    font-size: 0.8rem;
+    color: var(--slate);
+    line-height: 1.5;
+  }
+
+  .insight-box strong { color: var(--rust); }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🍼 Baby Feeding Log</h1>
+  <p>13 Apr – 20 Apr 2026 · Formula feeds tracked</p>
+</div>
+
+<div class="stats-row">
+  <div class="stat-pill"><span class="val" id="totalFeeds">—</span><span class="lbl">Total Feeds</span></div>
+  <div class="stat-pill"><span class="val" id="avgVol">—</span><span class="lbl">Avg ml/Feed</span></div>
+  <div class="stat-pill"><span class="val" id="totalMl">—</span><span class="lbl">Total ml</span></div>
+  <div class="stat-pill"><span class="val" id="diapers">—</span><span class="lbl">Diaper Days</span></div>
+</div>
+
+<div class="controls">
+  <button class="btn active" onclick="setView('daily', this)">Daily Total</button>
+  <button class="btn" onclick="setView('avg', this)">Avg / Feed</button>
+  <button class="btn" onclick="setView('count', this)">Feed Count</button>
+  <button class="btn" onclick="setView('all', this)">All Feeds</button>
+</div>
+
+<div class="chart-card">
+  <div class="chart-title" id="chartTitle">Daily Total Volume (ml)</div>
+  <div class="chart-wrap">
+    <canvas id="mainChart"></canvas>
+  </div>
+</div>
+
+<div class="detail-panel">
+  <h3>📋 Daily Breakdown</h3>
+  <div class="day-selector" id="daySelector"></div>
+  <table class="feed-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Time</th>
+        <th>Volume</th>
+        <th>Diaper</th>
+        <th>Note</th>
+      </tr>
+    </thead>
+    <tbody id="feedRows"></tbody>
+  </table>
+  <div class="insight-box" id="insightBox"></div>
+</div>
+
+<script>
+const data = {
+  "13 Apr": {
+    feeds: [
+      { time: "7:35am", vol: 80, diaper: true },
+      { time: "10:09", vol: 60, diaper: true },
+      { time: "12:25", vol: 100, diaper: false },
+      { time: "3:35", vol: 100, diaper: true, note: "Bathe 4:30" },
+      { time: "6:10", vol: 100, diaper: false },
+      { time: "9:20", vol: 100, diaper: true },
+    ]
+  },
+  "14 Apr": {
+    feeds: [
+      { time: "12:20", vol: 75, diaper: true },
+      { time: "3:20", vol: 75, diaper: true },
+      { time: "7:45", vol: 100, diaper: true },
+      { time: "10:45", vol: 80, diaper: true, note: "Pop what/Bathe" },
+      { time: "1:05", vol: 100, diaper: true },
+      { time: "3:30pm", vol: 90, diaper: true },
+      { time: "6:00pm", vol: 100, diaper: true },
+      { time: "9:10pm", vol: 40, diaper: false },
+      { time: "11:50pm", vol: 75, diaper: true },
+    ]
+  },
+  "15 Apr": {
+    feeds: [
+      { time: "3:35", vol: 100, diaper: true },
+      { time: "6:35", vol: 100, diaper: true },
+      { time: "9:50", vol: 20, diaper: false },
+      { time: "10:30", vol: 80, diaper: true },
+      { time: "1pm", vol: 30, diaper: true, note: "Bathe" },
+      { time: "1:05pm", vol: 70, diaper: true },
+      { time: "3:45pm", vol: 65, diaper: true, note: "Poo, Bathe" },
+      { time: "6:20pm", vol: 100, diaper: true },
+      { time: "8:25pm", vol: 70, diaper: true },
+    ]
+  },
+  "16 Apr": {
+    feeds: [
+      { time: "1:05am", vol: 100, diaper: true },
+      { time: "4:45", vol: 60, diaper: true },
+      { time: "7:45", vol: 100, diaper: false },
+      { time: "10:10", vol: 80, diaper: true },
+      { time: "1:05", vol: 100, diaper: true, note: "Bathe 2:45" },
+      { time: "4:30pm", vol: 30, diaper: true },
+      { time: "4:35", vol: 100, diaper: false },
+      { time: "7:40", vol: 100, diaper: true },
+    ]
+  },
+  "17 Apr": {
+    feeds: [
+      { time: "1:15", vol: 100, diaper: true },
+      { time: "5:30", vol: 100, diaper: true },
+      { time: "9:00", vol: 100, diaper: true },
+      { time: "12:25pm", vol: 100, diaper: true, note: "Poo, Bathe 4:30" },
+      { time: "3:05", vol: 100, diaper: true },
+      { time: "6:50pm", vol: 100, diaper: true },
+      { time: "9:20pm", vol: 50, diaper: true },
+    ]
+  },
+  "18 Apr": {
+    feeds: [
+      { time: "1:35am", vol: 90, diaper: true },
+      { time: "5:35", vol: 100, diaper: true },
+      { time: "8:25", vol: 100, diaper: true },
+      { time: "11:25", vol: 100, diaper: true },
+      { time: "2:45", vol: 110, diaper: true },
+      { time: "6:15", vol: 50, diaper: false, note: "Bathe 5:30" },
+      { time: "9:10pm", vol: 90, diaper: true },
+    ]
+  },
+  "19 Apr": {
+    feeds: [
+      { time: "1:45am", vol: 100, diaper: true },
+      { time: "5:10", vol: 40, diaper: false },
+      { time: "8:15", vol: 15, diaper: false, note: "Bathe" },
+      { time: "8:15", vol: 100, diaper: true },
+      { time: "11:40", vol: 110, diaper: true },
+      { time: "3:25", vol: 105, diaper: true },
+      { time: "6:35/7:20", vol: 110, diaper: true },
+      { time: "11:45pm", vol: 100, diaper: true },
+    ]
+  },
+  "20 Apr": {
+    feeds: [
+      { time: "4:35am", vol: 90, diaper: true },
+      { time: "8:30", vol: 100, diaper: true },
+      { time: "12:15", vol: 110, diaper: true, note: "Bathe" },
+      { time: "3:25", vol: 100, diaper: false },
+      { time: "6pm", vol: 80, diaper: true },
+    ]
+  }
+};
+
+const days = Object.keys(data);
+const dailyTotals = days.map(d => data[d].feeds.reduce((s, f) => s + f.vol, 0));
+const avgPerFeed = days.map(d => {
+  const feeds = data[d].feeds;
+  return Math.round(feeds.reduce((s, f) => s + f.vol, 0) / feeds.length);
+});
+const feedCounts = days.map(d => data[d].feeds.length);
+
+// Stats
+const allFeeds = days.flatMap(d => data[d].feeds);
+document.getElementById('totalFeeds').textContent = allFeeds.length;
+document.getElementById('avgVol').textContent = Math.round(allFeeds.reduce((s,f) => s+f.vol,0)/allFeeds.length) + 'ml';
+document.getElementById('totalMl').textContent = (allFeeds.reduce((s,f) => s+f.vol,0)/1000).toFixed(1) + 'L';
+document.getElementById('diapers').textContent = days.length;
+
+const allFeedTimeline = days.flatMap((d, di) => data[d].feeds.map((f, fi) => ({ day: d, di, fi, ...f })));
+
+let currentView = 'daily';
+let mainChart;
+
+const palette = {
+  fill: 'rgba(232, 137, 106, 0.15)',
+  line: '#e8896a',
+  point: '#c45c3a',
+  grid: '#f0ece8',
+  sage: '#8aab8e',
+  sageFill: 'rgba(138, 171, 142, 0.15)',
+};
+
+function buildChartConfig(view) {
+  if (view === 'all') {
+    return {
+      type: 'scatter',
+      data: {
+        datasets: [{
+          label: 'Feed volume (ml)',
+          data: allFeedTimeline.map((f, i) => ({ x: i, y: f.vol })),
+          backgroundColor: allFeedTimeline.map(f => f.vol >= 100 ? palette.point : f.vol >= 70 ? palette.line : '#f5c19a'),
+          pointRadius: 5,
+          pointHoverRadius: 7,
+        }]
+      },
+      options: getOpts('Individual Feed Volumes (ml)', (ctx) => {
+        const f = allFeedTimeline[ctx.dataIndex];
+        return [`${f.day} · ${f.time}`, `Volume: ${f.vol}ml`, f.diaper ? '✓ Diaper' : '', f.note || ''].filter(Boolean);
+      }, true)
+    };
+  }
+
+  const isCount = view === 'count';
+  const isSage = isCount;
+  return {
+    type: 'line',
+    data: {
+      labels: days,
+      datasets: [{
+        label: isCount ? 'Feeds' : 'ml',
+        data: view === 'daily' ? dailyTotals : view === 'avg' ? avgPerFeed : feedCounts,
+        borderColor: isSage ? palette.sage : palette.line,
+        backgroundColor: isSage ? palette.sageFill : palette.fill,
+        borderWidth: 2.5,
+        pointBackgroundColor: isSage ? palette.sage : palette.point,
+        pointRadius: 5,
+        pointHoverRadius: 8,
+        tension: 0.4,
+        fill: true,
+      }]
+    },
+    options: getOpts(
+      view === 'daily' ? 'Daily Total Volume (ml)' :
+      view === 'avg' ? 'Average ml Per Feed' : 'Number of Feeds Per Day',
+      (ctx) => {
+        const d = days[ctx.dataIndex];
+        const feeds = data[d].feeds;
+        return [
+          d,
+          isCount ? `${ctx.raw} feeds` : `${ctx.raw}ml`,
+          `${feeds.length} feeds · ${feeds.reduce((s,f)=>s+f.vol,0)}ml total`
+        ];
+      }
+    )
+  };
+}
+
+function getOpts(titleStr, tooltipCallback, scatter = false) {
+  document.getElementById('chartTitle').textContent = titleStr;
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'nearest', intersect: false },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#2d3748',
+        titleFont: { family: 'DM Sans', size: 12, weight: '600' },
+        bodyFont: { family: 'DM Sans', size: 12 },
+        padding: 12,
+        cornerRadius: 10,
+        callbacks: { label: (ctx) => tooltipCallback(ctx) }
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: palette.grid },
+        ticks: { font: { family: 'DM Sans', size: 11 }, color: '#718096' }
+      },
+      y: {
+        grid: { color: palette.grid },
+        ticks: { font: { family: 'DM Sans', size: 11 }, color: '#718096' }
+      }
+    }
+  };
+}
+
+function setView(view, btn) {
+  currentView = view;
+  document.querySelectorAll('.controls .btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (mainChart) mainChart.destroy();
+  const cfg = buildChartConfig(view);
+  mainChart = new Chart(document.getElementById('mainChart'), cfg);
+}
+
+// Init chart
+mainChart = new Chart(document.getElementById('mainChart'), buildChartConfig('daily'));
+
+// Day selector
+const daySelector = document.getElementById('daySelector');
+days.forEach((d, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'day-btn' + (i === 0 ? ' active' : '');
+  btn.textContent = d;
+  btn.onclick = () => {
+    document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderTable(d);
+  };
+  daySelector.appendChild(btn);
+});
+
+function renderTable(day) {
+  const feeds = data[day].feeds;
+  const tbody = document.getElementById('feedRows');
+  tbody.innerHTML = '';
+  feeds.forEach((f, i) => {
+    const tr = document.createElement('tr');
+    if (f.vol >= 100) tr.className = 'highlight';
+    const volClass = f.vol >= 100 ? 'badge-high' : f.vol < 60 ? 'badge-low' : 'badge-mid';
+    tr.innerHTML = `
+      <td>${i+1}</td>
+      <td>${f.time}</td>
+      <td><span class="badge ${volClass}">${f.vol}ml</span></td>
+      <td>${f.diaper ? '✓' : '—'}</td>
+      <td style="color:#a0aec0;font-size:0.72rem">${f.note || ''}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const total = feeds.reduce((s,f) => s+f.vol, 0);
+  const avg = Math.round(total / feeds.length);
+  const low = feeds.filter(f => f.vol < 60).length;
+
+  const insights = {
+    "13 Apr": "Steady day, consistent ~90ml feeds. Good diaper output across all feeds.",
+    "14 Apr": "Longest day logged — 9 feeds. One dip at 9:10pm (40ml) likely a comfort feed.",
+    "15 Apr": "Two very small feeds (20ml & 30ml) — possible wind or fussiness. Otherwise consistent.",
+    "16 Apr": "One 30ml feed at 4:30pm sandwiched by normal feeds — likely a partial/split session.",
+    "17 Apr": "Strong day — six 100ml feeds. Excellent volume, consistent rhythm. 50ml at night.",
+    "18 Apr": "Solid feeds. Notable 110ml at 2:45 — growing appetite showing. Bathe at 5:30.",
+    "19 Apr": "Split feeds noted (6:35/7:20). One very small feed (15ml) — possible comfort. Otherwise excellent.",
+    "20 Apr": "Partial day (5 feeds logged to 6pm). Higher avg per feed — appetite trending up. 🌱",
+  };
+
+  document.getElementById('insightBox').innerHTML = `
+    <strong>${day}:</strong> ${feeds.length} feeds · ${total}ml total · avg ${avg}ml/feed${low > 0 ? ` · ⚠️ ${low} feed${low>1?'s':''} under 60ml` : ''}<br>
+    ${insights[day] || ''}
+  `;
+}
+
+renderTable(days[0]);
+</script>
+</body>
+</html>

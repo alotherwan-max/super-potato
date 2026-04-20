@@ -298,21 +298,24 @@ function uid() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 }
 
+const TZ = 'Asia/Singapore';
+
 function todayStr() {
-  return new Date().toISOString().slice(0, 10);
+  return new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year:'numeric', month:'2-digit', day:'2-digit' }).format(new Date());
 }
 
 function nowTimeStr() {
-  return new Date().toTimeString().slice(0, 5);
+  return new Intl.DateTimeFormat('en-GB', { timeZone: TZ, hour:'2-digit', minute:'2-digit', hour12: false }).format(new Date());
 }
 
 function dayLabel(dateStr) {
   const today = todayStr();
-  const yesterday = (() => { const d = new Date(); d.setDate(d.getDate()-1); return d.toISOString().slice(0,10); })();
+  const yd = new Date(); yd.setDate(yd.getDate() - 1);
+  const yesterday = new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year:'numeric', month:'2-digit', day:'2-digit' }).format(yd);
   if (dateStr === today) return 'Today';
   if (dateStr === yesterday) return 'Yesterday';
   const [y,m,d] = dateStr.split('-');
-  return new Date(+y,+m-1,+d).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+  return new Date(+y,+m-1,+d).toLocaleDateString('en-SG',{weekday:'short',month:'short',day:'numeric'});
 }
 
 // ── RENDER ───────────────────────────────────────────
@@ -464,7 +467,7 @@ function renderChart(days) {
   const buckets = {};
   for (let i = 0; i < days; i++) {
     const d = new Date(); d.setDate(d.getDate() - i);
-    buckets[d.toISOString().slice(0,10)] = 0;
+    buckets[new Intl.DateTimeFormat('en-CA', { timeZone: TZ, year:'numeric', month:'2-digit', day:'2-digit' }).format(d)] = 0;
   }
   const cutoff = Object.keys(buckets).sort()[0];
   entries.filter(e => e.date >= cutoff && e.ml)

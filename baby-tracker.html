@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Baby Tracker</title>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #fdf8f0;
+      --warm: #f5ece0;
+      --blush: #f2c4a0;
+      --coral: #e8896a;
+      --rust: #c45c3a;
+      --sage: #8aab8e;
+      --slate: #4a5568;
+      --ink: #2d3748;
+      --soft: #718096;
+      --radius: 12px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+    h1, h2, h3 { font-family: 'DM Serif Display', serif; }
+
+    /* ── Setup overlay ── */
+    #setup-overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .setup-card {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      max-width: 420px; width: 100%;
+      box-shadow: 0 4px 24px rgba(0,0,0,.08);
+      animation: fadeDown .4s ease;
+    }
+    .setup-card h2 { font-size: 1.6rem; margin-bottom: 6px; color: var(--rust); }
+    .setup-card p { color: var(--soft); font-size: .9rem; margin-bottom: 20px; }
+    .setup-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+    .setup-tab {
+      flex: 1; padding: 8px; border: 2px solid var(--blush); border-radius: 8px;
+      background: none; cursor: pointer; font-family: 'DM Sans', sans-serif;
+      font-size: .85rem; color: var(--slate); transition: all .2s;
+    }
+    .setup-tab.active { background: var(--coral); border-color: var(--coral); color: #fff; }
+
+    /* ── App shell ── */
+    #app { display: none; flex-direction: column; min-height: 100vh; }
+    header {
+      background: var(--warm);
+      border-bottom: 1px solid var(--blush);
+      padding: 14px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .header-left h1 { font-size: 1.3rem; color: var(--rust); line-height: 1; }
+    .header-left small { font-size: .75rem; color: var(--soft); }
+    .header-actions { display: flex; gap: 8px; }
+    .icon-btn {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: none; background: var(--blush);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; transition: background .2s;
+    }
+    .icon-btn:hover { background: var(--coral); }
+
+    /* ── Stats bar ── */
+    .stats-bar {
+      display: flex; gap: 8px; padding: 12px 16px; overflow-x: auto;
+      scrollbar-width: none; background: var(--warm);
+    }
+    .stats-bar::-webkit-scrollbar { display: none; }
+    .stat-pill {
+      background: #fff; border-radius: 20px; padding: 6px 14px;
+      white-space: nowrap; font-size: .78rem; color: var(--slate);
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .stat-pill strong { color: var(--rust); }
+
+    /* ── Action bar ── */
+    .action-bar {
+      display: flex; gap: 8px; padding: 12px 16px;
+      border-bottom: 1px solid var(--blush);
+    }
+    .btn {
+      padding: 8px 16px; border-radius: 8px; border: none;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      font-size: .85rem; font-weight: 500; transition: all .2s;
+    }
+    .btn-primary { background: var(--coral); color: #fff; }
+    .btn-primary:hover { background: var(--rust); }
+    .btn-secondary { background: var(--warm); color: var(--slate); border: 1px solid var(--blush); }
+    .btn-secondary:hover { background: var(--blush); }
+    .btn-sm { padding: 5px 10px; font-size: .78rem; }
+    .btn-danger { background: #fee2e2; color: #b91c1c; }
+    .btn-danger:hover { background: #fecaca; }
+
+    /* ── Journal table ── */
+    main { flex: 1; padding: 16px; }
+    .day-group { margin-bottom: 20px; animation: fadeUp .3s ease; }
+    .day-header {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1rem; color: var(--rust);
+      padding: 6px 0 4px; border-bottom: 1px solid var(--blush);
+      margin-bottom: 8px; display: flex; justify-content: space-between;
+    }
+    .day-header small { font-family: 'DM Sans', sans-serif; font-size: .75rem; color: var(--soft); }
+    .feed-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+    .feed-table th {
+      text-align: left; padding: 4px 8px; color: var(--soft);
+      font-weight: 500; font-size: .75rem; text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .feed-table td { padding: 7px 8px; border-bottom: 1px solid #f0ebe4; }
+    .feed-table tr:last-child td { border-bottom: none; }
+    .feed-table tr:hover td { background: var(--warm); }
+    .badge {
+      display: inline-block; padding: 2px 8px; border-radius: 12px;
+      font-size: .72rem; font-weight: 500;
+    }
+    .badge-high { background: #e8f5e9; color: #388e3c; }
+    .badge-mid  { background: #f3f4f6; color: #6b7280; }
+    .badge-low  { background: #fff3e0; color: #e65100; }
+    .badge-br   { background: #fce7f3; color: #9d174d; }
+    .badge-ex   { background: #ede9fe; color: #5b21b6; }
+    .entry-actions { display: flex; gap: 4px; }
+    .row-btn {
+      padding: 2px 6px; border-radius: 4px; border: none;
+      cursor: pointer; font-size: .72rem; background: var(--warm); color: var(--slate);
+    }
+    .row-btn:hover { background: var(--blush); }
+    .empty-state {
+      text-align: center; padding: 60px 20px; color: var(--soft);
+    }
+    .empty-state p { font-size: .9rem; margin-top: 8px; }
+
+    /* ── Modals ── */
+    .modal-backdrop {
+      position: fixed; inset: 0; z-index: 50;
+      background: rgba(0,0,0,.35); display: none;
+      align-items: flex-end; justify-content: center;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal {
+      background: #fff; border-radius: var(--radius) var(--radius) 0 0;
+      padding: 24px 20px 32px; width: 100%; max-width: 520px;
+      max-height: 90vh; overflow-y: auto;
+      animation: fadeUp .25s ease;
+    }
+    .modal-handle {
+      width: 40px; height: 4px; background: var(--blush);
+      border-radius: 2px; margin: 0 auto 16px;
+    }
+    .modal h3 { font-size: 1.2rem; margin-bottom: 16px; color: var(--rust); }
+
+    /* ── Forms ── */
+    .form-row { margin-bottom: 14px; }
+    .form-row label { display: block; font-size: .82rem; color: var(--slate); margin-bottom: 4px; }
+    .form-row input, .form-row select, .form-row textarea {
+      width: 100%; padding: 9px 12px; border-radius: 8px;
+      border: 1.5px solid var(--blush); background: var(--cream);
+      font-family: 'DM Sans', sans-serif; font-size: .9rem; color: var(--ink);
+      outline: none; transition: border-color .2s;
+    }
+    .form-row input:focus, .form-row select:focus, .form-row textarea:focus {
+      border-color: var(--coral);
+    }
+    .form-row textarea { resize: vertical; min-height: 60px; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-footer { display: flex; gap: 10px; margin-top: 18px; }
+    .form-footer .btn { flex: 1; }
+
+    /* ── Share modal ── */
+    .household-code {
+      font-size: 2rem; font-family: 'DM Serif Display', serif;
+      color: var(--rust); text-align: center; letter-spacing: .1em;
+      padding: 16px; background: var(--warm); border-radius: 8px; margin: 12px 0;
+    }
+    #qr-container { display: flex; justify-content: center; margin: 12px 0; }
+
+    /* ── Chart modal ── */
+    .chart-wrap { position: relative; height: 220px; }
+
+    /* ── Photo scan ── */
+    .scan-drop {
+      border: 2px dashed var(--blush); border-radius: 8px;
+      padding: 32px; text-align: center; cursor: pointer;
+      color: var(--soft); transition: all .2s;
+    }
+    .scan-drop:hover, .scan-drop.dragover { border-color: var(--coral); background: var(--warm); }
+    .scan-drop input[type=file] { display: none; }
+    .scan-preview { max-width: 100%; border-radius: 8px; margin: 10px 0; }
+    .scan-entries { margin-top: 12px; }
+    .scan-entry-row {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 0; border-bottom: 1px solid var(--blush); font-size: .82rem;
+    }
+    .scan-entry-row input[type=checkbox] { accent-color: var(--coral); width: 16px; height: 16px; }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--ink); color: #fff;
+      padding: 10px 20px; border-radius: 24px; font-size: .85rem;
+      pointer-events: none; opacity: 0; transition: opacity .25s; z-index: 200;
+      white-space: nowrap;
+    }
+    #toast.show { opacity: 1; }
+
+    /* ── Config warning ── */
+    .config-warning {
+      background: #fff3cd; border: 1px solid #ffd966; border-radius: 8px;
+      padding: 10px 14px; font-size: .82rem; color: #7d5a00; margin-bottom: 12px;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Mobile tweaks ── */
+    @media (max-width: 400px) {
+      .feed-table th:nth-child(6),
+      .feed-table td:nth-child(6) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Setup overlay ── -->
+<div id="setup-overlay">
+  <div class="setup-card">
+    <h2>Baby Tracker</h2>
+    <p>Track feeds, diapers, and notes — shared instantly with your household.</p>
+    <div class="setup-tabs">
+      <button class="setup-tab active" onclick="showSetupTab('new')">New Household</button>
+      <button class="setup-tab" onclick="showSetupTab('join')">Join Existing</button>
+    </div>
+
+    <div id="tab-new">
+      <div class="form-row">
+        <label>Baby's name</label>
+        <input id="setup-baby-name" type="text" placeholder="e.g. Lily" autocomplete="off">
+      </div>
+      <div class="form-row">
+        <label>Your household code will be generated automatically</label>
+        <input id="setup-new-code" type="text" readonly placeholder="Will appear here…" style="background:#f9f9f9">
+      </div>
+      <div class="form-row">
+        <label>Firebase config (JSON) <a href="#" onclick="showFirebaseHelp();return false;" style="color:var(--coral);font-size:.8rem">How to get this?</a></label>
+        <textarea id="setup-firebase-config" rows="3" placeholder='{"apiKey":"…","authDomain":"…","projectId":"…"}'></textarea>
+      </div>
+      <button class="btn btn-primary" style="width:100%" onclick="createHousehold()">Create Household</button>
+    </div>
+
+    <div id="tab-join" style="display:none">
+      <div class="form-row">
+        <label>Household code</label>
+        <input id="setup-join-code" type="text" placeholder="LEAF-8823" autocomplete="off" style="text-transform:uppercase;letter-spacing:.08em">
+      </div>
+      <div class="form-row">
+        <label>Firebase config (JSON)</label>
+        <textarea id="setup-join-firebase" rows="3" placeholder='{"apiKey":"…","authDomain":"…","projectId":"…"}'></textarea>
+      </div>
+      <button class="btn btn-primary" style="width:100%" onclick="joinHousehold()">Join Household</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Main app ── -->
+<div id="app">
+  <header>
+    <div class="header-left">
+      <h1 id="header-baby-name">Baby Tracker</h1>
+      <small id="header-code"></small>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" title="Charts" onclick="openModal('modal-chart')">📊</button>
+      <button class="icon-btn" title="Share" onclick="openModal('modal-share')">🔗</button>
+      <button class="icon-btn" title="More" onclick="openModal('modal-settings')">⚙️</button>
+    </div>
+  </header>
+
+  <div class="stats-bar" id="stats-bar">
+    <div class="stat-pill">Loading…</div>
+  </div>
+
+  <div class="action-bar">
+    <button class="btn btn-primary" onclick="openModal('modal-add')">+ Add Entry</button>
+    <button class="btn btn-secondary" onclick="openModal('modal-scan')">📷 Scan Photo</button>
+  </div>
+
+  <main id="journal"></main>
+</div>
+
+<!-- ── Add / Edit modal ── -->
+<div class="modal-backdrop" id="modal-add" onclick="backdropClose(event,this)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3 id="form-title">Add Entry</h3>
+    <input type="hidden" id="edit-entry-id">
+    <div class="form-grid">
+      <div class="form-row">
+        <label>Date</label>
+        <input id="f-date" type="date">
+      </div>
+      <div class="form-row">
+        <label>Time</label>
+        <input id="f-time" type="time">
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="form-row">
+        <label>Type</label>
+        <select id="f-type" onchange="toggleMl()">
+          <option value="For">Formula (For)</option>
+          <option value="Br">Breastfeed (Br)</option>
+          <option value="Ex">Express (Ex)</option>
+        </select>
+      </div>
+      <div class="form-row" id="ml-row">
+        <label>Amount (ml)</label>
+        <input id="f-ml" type="number" min="0" max="500" placeholder="120">
+      </div>
+    </div>
+    <div class="form-row">
+      <label>Diaper</label>
+      <select id="f-diaper">
+        <option value="">—</option>
+        <option value="wet">Wet 💧</option>
+        <option value="dirty">Dirty 💩</option>
+        <option value="both">Both</option>
+        <option value="dry">Dry</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Notes</label>
+      <textarea id="f-notes" placeholder="Any observations…"></textarea>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEntry()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Share modal ── -->
+<div class="modal-backdrop" id="modal-share" onclick="backdropClose(event,this)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3>Share Household</h3>
+    <p style="font-size:.85rem;color:var(--soft);margin-bottom:8px">Anyone with this code and your Firebase config can view and add entries.</p>
+    <div class="household-code" id="share-code-display"></div>
+    <div id="qr-container"></div>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <button class="btn btn-secondary" style="flex:1" onclick="copyCode()">📋 Copy Code</button>
+      <button class="btn btn-secondary" style="flex:1" onclick="copyShareLink()">🔗 Copy Link</button>
+    </div>
+    <hr style="margin:16px 0;border:none;border-top:1px solid var(--blush)">
+    <h3>Export / Import</h3>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-secondary" style="flex:1" onclick="exportJSON()">⬇️ Export JSON</button>
+      <button class="btn btn-secondary" style="flex:1" onclick="document.getElementById('import-file').click()">⬆️ Import JSON</button>
+    </div>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(event)">
+  </div>
+</div>
+
+<!-- ── Chart modal ── -->
+<div class="modal-backdrop" id="modal-chart" onclick="backdropClose(event,this)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3>Feeding Trends</h3>
+    <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">
+      <button class="btn btn-sm btn-secondary" onclick="renderChart(7)">7 days</button>
+      <button class="btn btn-sm btn-secondary" onclick="renderChart(14)">14 days</button>
+      <button class="btn btn-sm btn-secondary" onclick="renderChart(30)">30 days</button>
+    </div>
+    <div class="chart-wrap"><canvas id="feed-chart"></canvas></div>
+    <p id="chart-note" style="font-size:.75rem;color:var(--soft);margin-top:8px;text-align:center"></p>
+  </div>
+</div>
+
+<!-- ── Settings modal ── -->
+<div class="modal-backdrop" id="modal-settings" onclick="backdropClose(event,this)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3>Settings</h3>
+    <div class="form-row">
+      <label>Baby's name</label>
+      <input id="settings-baby-name" type="text" placeholder="Baby's name">
+    </div>
+    <div class="form-row">
+      <label>Anthropic API key (for photo scan)</label>
+      <input id="settings-api-key" type="password" placeholder="sk-ant-…">
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-settings')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveSettings()">Save</button>
+    </div>
+    <hr style="margin:16px 0;border:none;border-top:1px solid var(--blush)">
+    <button class="btn btn-danger btn-sm" onclick="resetApp()">🚪 Leave Household</button>
+  </div>
+</div>
+
+<!-- ── Photo scan modal ── -->
+<div class="modal-backdrop" id="modal-scan" onclick="backdropClose(event,this)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3>Scan Journal Photo</h3>
+    <div id="scan-api-warning" class="config-warning" style="display:none">
+      ⚠️ Set your Anthropic API key in Settings first.
+    </div>
+    <div class="scan-drop" id="scan-drop" onclick="document.getElementById('scan-file').click()" ondragover="scanDragOver(event)" ondragleave="scanDragLeave(event)" ondrop="scanDrop(event)">
+      <input type="file" id="scan-file" accept="image/*" onchange="scanFileChosen(event)">
+      <div style="font-size:2rem">📷</div>
+      <p>Tap to choose a photo, or drag & drop</p>
+      <p style="font-size:.75rem;margin-top:4px">Your handwritten journal will be read by AI</p>
+    </div>
+    <img id="scan-preview" class="scan-preview" style="display:none">
+    <div id="scan-status" style="font-size:.85rem;color:var(--soft);margin-top:8px;text-align:center"></div>
+    <div class="scan-entries" id="scan-results"></div>
+    <div id="scan-confirm-bar" style="display:none;margin-top:12px">
+      <button class="btn btn-primary" style="width:100%" onclick="confirmScanEntries()">✅ Import Selected Entries</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Firebase help modal ── -->
+<div class="modal-backdrop" id="modal-fb-help" onclick="backdropClose(event,this)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <h3>Firebase Setup</h3>
+    <ol style="font-size:.85rem;color:var(--slate);line-height:1.8;padding-left:18px">
+      <li>Go to <strong>console.firebase.google.com</strong></li>
+      <li>Create a new project (free Spark plan)</li>
+      <li>Add a Web App and copy the <code>firebaseConfig</code> object</li>
+      <li>In Firestore → Rules, set: <code>allow read, write: if true;</code></li>
+      <li>Paste the JSON config here</li>
+    </ol>
+    <button class="btn btn-primary" style="margin-top:16px;width:100%" onclick="closeModal('modal-fb-help')">Got it</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ── CONFIG & STATE ──────────────────────────────────
+const WORDS = ['LEAF','MOON','ROSE','DAWN','FERN','TIDE','VALE','MIST','PEAK','NEST',
+               'GLOW','DUSK','LARK','BROOK','PINE','SNOW','SAGE','REEF','BIRCH','WREN'];
+
+let db = null;
+let unsubscribe = null;
+let allEntries = [];       // [{id, date, time, type, ml, diaper, notes, createdAt}]
+let householdCode = localStorage.getItem('bt_code') || '';
+let babyName = localStorage.getItem('bt_baby') || 'Baby';
+let fbConfigRaw = localStorage.getItem('bt_fbconfig') || '';
+let anthropicKey = localStorage.getItem('bt_apikey') || '';
+let chartInstance = null;
+let pendingScanEntries = [];
+
+// ── UTILS ────────────────────────────────────────────
+function genCode() {
+  const w = WORDS[Math.floor(Math.random() * WORDS.length)];
+  const n = String(Math.floor(1000 + Math.random() * 9000));
+  return `${w}-${n}`;
+}
+
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+
+function nowTimeStr() {
+  const d = new Date();
+  return d.toTimeString().slice(0, 5);
+}
+
+function fmtDate(dateStr) {
+  const [y, m, d] = dateStr.split('-');
+  const dt = new Date(+y, +m - 1, +d);
+  return dt.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
+function isToday(dateStr) { return dateStr === todayStr(); }
+
+function isYesterday(dateStr) {
+  const y = new Date(); y.setDate(y.getDate() - 1);
+  return dateStr === y.toISOString().slice(0, 10);
+}
+
+function dayLabel(dateStr) {
+  if (isToday(dateStr)) return 'Today';
+  if (isYesterday(dateStr)) return 'Yesterday';
+  return fmtDate(dateStr);
+}
+
+// ── FIREBASE INIT ────────────────────────────────────
+function initFirebase(configJSON) {
+  let cfg;
+  try { cfg = typeof configJSON === 'string' ? JSON.parse(configJSON) : configJSON; }
+  catch(e) { toast('Invalid Firebase config JSON'); return false; }
+
+  if (firebase.apps.length) firebase.apps.forEach(a => a.delete());
+  const app = firebase.initializeApp(cfg);
+  db = firebase.firestore(app);
+  db.enablePersistence().catch(() => {});
+  return true;
+}
+
+// ── HOUSEHOLD ────────────────────────────────────────
+function showSetupTab(tab) {
+  document.getElementById('tab-new').style.display = tab === 'new' ? '' : 'none';
+  document.getElementById('tab-join').style.display = tab === 'join' ? '' : 'none';
+  document.querySelectorAll('.setup-tab').forEach((el, i) => {
+    el.classList.toggle('active', (i === 0 && tab === 'new') || (i === 1 && tab === 'join'));
+  });
+  if (tab === 'new') prefillNewCode();
+}
+
+function prefillNewCode() {
+  const el = document.getElementById('setup-new-code');
+  if (!el.value) el.value = genCode();
+}
+
+function showFirebaseHelp() { openModal('modal-fb-help'); }
+
+async function createHousehold() {
+  const name = document.getElementById('setup-baby-name').value.trim();
+  const code = document.getElementById('setup-new-code').value.trim().toUpperCase();
+  const cfgRaw = document.getElementById('setup-firebase-config').value.trim();
+  if (!name) { toast('Enter a baby name'); return; }
+  if (!code) { toast('Code is missing'); return; }
+  if (!cfgRaw) { toast('Paste your Firebase config'); return; }
+  if (!initFirebase(cfgRaw)) return;
+
+  try {
+    await db.collection('households').doc(code).set({ babyName: name, createdAt: Date.now() });
+    localStorage.setItem('bt_code', code);
+    localStorage.setItem('bt_baby', name);
+    localStorage.setItem('bt_fbconfig', cfgRaw);
+    householdCode = code; babyName = name; fbConfigRaw = cfgRaw;
+    launchApp();
+  } catch(e) { toast('Firebase error: ' + e.message); }
+}
+
+async function joinHousehold() {
+  const code = document.getElementById('setup-join-code').value.trim().toUpperCase();
+  const cfgRaw = document.getElementById('setup-join-firebase').value.trim();
+  if (!code) { toast('Enter household code'); return; }
+  if (!cfgRaw) { toast('Paste your Firebase config'); return; }
+  if (!initFirebase(cfgRaw)) return;
+
+  try {
+    const snap = await db.collection('households').doc(code).get();
+    if (!snap.exists) { toast('Household not found'); return; }
+    const data = snap.data();
+    babyName = data.babyName || 'Baby';
+    localStorage.setItem('bt_code', code);
+    localStorage.setItem('bt_baby', babyName);
+    localStorage.setItem('bt_fbconfig', cfgRaw);
+    householdCode = code; fbConfigRaw = cfgRaw;
+    launchApp();
+  } catch(e) { toast('Firebase error: ' + e.message); }
+}
+
+function launchApp() {
+  document.getElementById('setup-overlay').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  document.getElementById('header-baby-name').textContent = babyName + "'s Tracker";
+  document.getElementById('header-code').textContent = householdCode;
+  document.getElementById('share-code-display').textContent = householdCode;
+  generateQR();
+  subscribeEntries();
+}
+
+// ── FIRESTORE STORE ──────────────────────────────────
+function subscribeEntries() {
+  if (unsubscribe) unsubscribe();
+  unsubscribe = db.collection('households').doc(householdCode)
+    .collection('entries')
+    .orderBy('date', 'desc')
+    .onSnapshot(snap => {
+      allEntries = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      allEntries.sort((a, b) => {
+        if (b.date !== a.date) return b.date.localeCompare(a.date);
+        return b.time.localeCompare(a.time);
+      });
+      renderJournal();
+      renderStats();
+    }, err => toast('Sync error: ' + err.message));
+}
+
+async function addEntry(entry) {
+  return db.collection('households').doc(householdCode)
+    .collection('entries').add({ ...entry, createdAt: Date.now(), updatedAt: Date.now() });
+}
+
+async function updateEntry(id, entry) {
+  return db.collection('households').doc(householdCode)
+    .collection('entries').doc(id).update({ ...entry, updatedAt: Date.now() });
+}
+
+async function deleteEntry(id) {
+  return db.collection('households').doc(householdCode)
+    .collection('entries').doc(id).delete();
+}
+
+// ── RENDER JOURNAL ───────────────────────────────────
+function renderJournal() {
+  const container = document.getElementById('journal');
+  if (!allEntries.length) {
+    container.innerHTML = '<div class="empty-state"><div style="font-size:3rem">🍼</div><p>No entries yet. Tap <strong>Add Entry</strong> to start.</p></div>';
+    return;
+  }
+
+  const grouped = {};
+  allEntries.forEach(e => {
+    if (!grouped[e.date]) grouped[e.date] = [];
+    grouped[e.date].push(e);
+  });
+
+  container.innerHTML = Object.keys(grouped).sort((a,b) => b.localeCompare(a)).map(date => {
+    const entries = grouped[date];
+    const totalMl = entries.filter(e => e.ml).reduce((s,e) => s + (+e.ml||0), 0);
+    return `
+      <div class="day-group">
+        <div class="day-header">
+          <span>${dayLabel(date)}</span>
+          <small>${totalMl ? totalMl + ' ml total' : ''}</small>
+        </div>
+        <table class="feed-table">
+          <thead><tr>
+            <th>#</th><th>Time</th><th>Type</th><th>ml</th><th>Diaper</th><th>Notes</th><th></th>
+          </tr></thead>
+          <tbody>
+            ${entries.map((e, i) => `
+              <tr>
+                <td style="color:var(--soft)">${i+1}</td>
+                <td>${e.time}</td>
+                <td>${typeBadge(e.type)}</td>
+                <td>${e.ml ? e.ml : '<span style="color:var(--soft)">—</span>'}</td>
+                <td>${diaperBadge(e.diaper)}</td>
+                <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.notes||''}</td>
+                <td>
+                  <div class="entry-actions">
+                    <button class="row-btn" onclick="editEntry('${e.id}')">✏️</button>
+                    <button class="row-btn" onclick="confirmDelete('${e.id}')">🗑️</button>
+                  </div>
+                </td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }).join('');
+}
+
+function typeBadge(type) {
+  if (type === 'For') return '<span class="badge badge-high">For</span>';
+  if (type === 'Br')  return '<span class="badge badge-br">Br</span>';
+  if (type === 'Ex')  return '<span class="badge badge-ex">Ex</span>';
+  return `<span class="badge badge-mid">${type||'—'}</span>`;
+}
+
+function diaperBadge(d) {
+  if (!d || d === '') return '<span style="color:var(--soft)">—</span>';
+  const map = { wet:'💧', dirty:'💩', both:'💧💩', dry:'✅' };
+  return map[d] || d;
+}
+
+// ── RENDER STATS ─────────────────────────────────────
+function renderStats() {
+  const today = allEntries.filter(e => e.date === todayStr());
+  const totalMl = today.filter(e => e.ml).reduce((s,e) => s+(+e.ml||0), 0);
+  const feeds = today.length;
+  const lastEntry = allEntries[0];
+  const lastTime = lastEntry ? lastEntry.time : '—';
+  const diapers = today.filter(e => e.diaper && e.diaper !== 'dry').length;
+
+  document.getElementById('stats-bar').innerHTML = `
+    <div class="stat-pill">Today: <strong>${feeds}</strong> feeds</div>
+    <div class="stat-pill">Total: <strong>${totalMl} ml</strong></div>
+    <div class="stat-pill">Diapers: <strong>${diapers}</strong></div>
+    <div class="stat-pill">Last feed: <strong>${lastTime}</strong></div>
+  `;
+}
+
+// ── FORM ─────────────────────────────────────────────
+function openAddForm() {
+  document.getElementById('form-title').textContent = 'Add Entry';
+  document.getElementById('edit-entry-id').value = '';
+  document.getElementById('f-date').value = todayStr();
+  document.getElementById('f-time').value = nowTimeStr();
+  document.getElementById('f-type').value = 'For';
+  document.getElementById('f-ml').value = '';
+  document.getElementById('f-diaper').value = '';
+  document.getElementById('f-notes').value = '';
+  toggleMl();
+  openModal('modal-add');
+}
+
+function toggleMl() {
+  const type = document.getElementById('f-type').value;
+  document.getElementById('ml-row').style.opacity = type === 'Br' ? '.4' : '1';
+  document.getElementById('f-ml').disabled = type === 'Br';
+}
+
+function editEntry(id) {
+  const e = allEntries.find(x => x.id === id);
+  if (!e) return;
+  document.getElementById('form-title').textContent = 'Edit Entry';
+  document.getElementById('edit-entry-id').value = id;
+  document.getElementById('f-date').value = e.date;
+  document.getElementById('f-time').value = e.time;
+  document.getElementById('f-type').value = e.type;
+  document.getElementById('f-ml').value = e.ml || '';
+  document.getElementById('f-diaper').value = e.diaper || '';
+  document.getElementById('f-notes').value = e.notes || '';
+  toggleMl();
+  openModal('modal-add');
+}
+
+async function saveEntry() {
+  const id = document.getElementById('edit-entry-id').value;
+  const type = document.getElementById('f-type').value;
+  const entry = {
+    date:   document.getElementById('f-date').value,
+    time:   document.getElementById('f-time').value,
+    type,
+    ml:     type === 'Br' ? null : (parseInt(document.getElementById('f-ml').value) || null),
+    diaper: document.getElementById('f-diaper').value,
+    notes:  document.getElementById('f-notes').value.trim(),
+  };
+  if (!entry.date || !entry.time) { toast('Date and time are required'); return; }
+  try {
+    if (id) { await updateEntry(id, entry); toast('Entry updated'); }
+    else    { await addEntry(entry); toast('Entry saved'); }
+    closeModal('modal-add');
+  } catch(e) { toast('Save failed: ' + e.message); }
+}
+
+function confirmDelete(id) {
+  if (confirm('Delete this entry?')) {
+    deleteEntry(id).then(() => toast('Deleted')).catch(e => toast('Error: ' + e.message));
+  }
+}
+
+// ── CHART ────────────────────────────────────────────
+function renderChart(days) {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - days + 1);
+  const cutoffStr = cutoff.toISOString().slice(0,10);
+
+  const buckets = {};
+  for (let i = 0; i < days; i++) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    buckets[d.toISOString().slice(0,10)] = 0;
+  }
+  allEntries
+    .filter(e => e.date >= cutoffStr && e.ml)
+    .forEach(e => { if (buckets[e.date] !== undefined) buckets[e.date] += (+e.ml||0); });
+
+  const labels = Object.keys(buckets).sort();
+  const data = labels.map(k => buckets[k]);
+
+  if (chartInstance) chartInstance.destroy();
+  const ctx = document.getElementById('feed-chart').getContext('2d');
+  chartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels.map(l => {
+        const [,m,d] = l.split('-');
+        return `${m}/${d}`;
+      }),
+      datasets: [{
+        label: 'ml',
+        data,
+        backgroundColor: 'rgba(232,137,106,0.6)',
+        borderColor: '#c45c3a',
+        borderWidth: 1,
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { beginAtZero: true, grid: { color: '#f0ebe4' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+
+  const avg = data.filter(v=>v>0).reduce((s,v,_,a) => s + v/a.length, 0);
+  document.getElementById('chart-note').textContent =
+    avg ? `Avg ${Math.round(avg)} ml/day over ${days} days` : 'No ml data in this range';
+}
+
+// ── MODALS ───────────────────────────────────────────
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  if (id === 'modal-add') openAddForm();
+  if (id === 'modal-chart') setTimeout(() => renderChart(7), 50);
+  if (id === 'modal-settings') {
+    document.getElementById('settings-baby-name').value = babyName;
+    document.getElementById('settings-api-key').value = anthropicKey;
+  }
+  if (id === 'modal-scan') {
+    document.getElementById('scan-api-warning').style.display = anthropicKey ? 'none' : '';
+  }
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function backdropClose(e, el) {
+  if (e.target === el) el.classList.remove('open');
+}
+
+// ── SHARE / QR ───────────────────────────────────────
+function generateQR() {
+  const container = document.getElementById('qr-container');
+  container.innerHTML = '';
+  const url = shareURL();
+  try {
+    new QRCode(container, { text: url, width: 150, height: 150, colorDark: '#2d3748', colorLight: '#fdf8f0' });
+  } catch(e) {}
+}
+
+function shareURL() {
+  return `${location.origin}${location.pathname}?code=${householdCode}`;
+}
+
+function copyCode() {
+  navigator.clipboard.writeText(householdCode).then(() => toast('Code copied!'));
+}
+
+function copyShareLink() {
+  navigator.clipboard.writeText(shareURL()).then(() => toast('Link copied!'));
+}
+
+// ── SETTINGS ─────────────────────────────────────────
+function saveSettings() {
+  const newName = document.getElementById('settings-baby-name').value.trim();
+  const newKey = document.getElementById('settings-api-key').value.trim();
+  if (newName) {
+    babyName = newName;
+    localStorage.setItem('bt_baby', babyName);
+    document.getElementById('header-baby-name').textContent = babyName + "'s Tracker";
+    db.collection('households').doc(householdCode).update({ babyName }).catch(()=>{});
+  }
+  if (newKey) {
+    anthropicKey = newKey;
+    localStorage.setItem('bt_apikey', newKey);
+  }
+  closeModal('modal-settings');
+  toast('Settings saved');
+}
+
+function resetApp() {
+  if (!confirm('Leave this household? Your local data will be cleared.')) return;
+  localStorage.removeItem('bt_code');
+  localStorage.removeItem('bt_baby');
+  localStorage.removeItem('bt_fbconfig');
+  if (unsubscribe) unsubscribe();
+  location.reload();
+}
+
+// ── EXPORT / IMPORT ──────────────────────────────────
+function exportJSON() {
+  const blob = new Blob([JSON.stringify({ householdCode, babyName, entries: allEntries }, null, 2)],
+    { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `baby-tracker-${householdCode}-${todayStr()}.json`;
+  a.click();
+  toast('Export downloaded');
+}
+
+async function importJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const data = JSON.parse(text);
+    const entries = data.entries || [];
+    if (!entries.length) { toast('No entries found in file'); return; }
+    let count = 0;
+    for (const e of entries) {
+      const { id, createdAt, updatedAt, ...fields } = e;
+      await addEntry(fields);
+      count++;
+    }
+    toast(`Imported ${count} entries`);
+    event.target.value = '';
+  } catch(err) { toast('Import failed: ' + err.message); }
+}
+
+// ── PHOTO SCAN ───────────────────────────────────────
+function scanDragOver(e) { e.preventDefault(); document.getElementById('scan-drop').classList.add('dragover'); }
+function scanDragLeave(e) { document.getElementById('scan-drop').classList.remove('dragover'); }
+function scanDrop(e) {
+  e.preventDefault();
+  document.getElementById('scan-drop').classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) processScanFile(file);
+}
+function scanFileChosen(e) {
+  const file = e.target.files[0];
+  if (file) processScanFile(file);
+}
+
+async function processScanFile(file) {
+  if (!anthropicKey) { toast('Set your Anthropic API key in Settings'); return; }
+  const preview = document.getElementById('scan-preview');
+  const status = document.getElementById('scan-status');
+  const results = document.getElementById('scan-results');
+  const confirmBar = document.getElementById('scan-confirm-bar');
+
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = 'block';
+  results.innerHTML = '';
+  confirmBar.style.display = 'none';
+  status.textContent = 'Reading image with AI…';
+
+  const b64 = await fileToBase64(file);
+  const mediaType = file.type || 'image/jpeg';
+
+  const prompt = `This is a photo of a handwritten baby feeding journal.
+Extract each entry as JSON. Return ONLY a JSON array, no other text.
+Each object: { "date": "YYYY-MM-DD", "time": "HH:MM", "type": "For|Br|Ex", "ml": number_or_null, "diaper": "wet|dirty|both|dry|", "notes": "" }
+Today is ${todayStr()}. If you see "today" interpret it as that date.
+If date is unclear use today. For Br (breastfeed) entries ml should be null.`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': anthropicKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 2048,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: mediaType, data: b64 } },
+            { type: 'text', text: prompt }
+          ]
+        }]
+      })
+    });
+
+    if (!resp.ok) {
+      const err = await resp.json().catch(()=>({}));
+      throw new Error(err.error?.message || resp.statusText);
+    }
+
+    const json = await resp.json();
+    const text = json.content?.[0]?.text || '';
+    const match = text.match(/\[[\s\S]*\]/);
+    if (!match) throw new Error('No JSON array found in response');
+    pendingScanEntries = JSON.parse(match[0]);
+    renderScanResults(pendingScanEntries);
+    status.textContent = `Found ${pendingScanEntries.length} entries. Review and select which to import.`;
+    confirmBar.style.display = '';
+  } catch(err) {
+    status.textContent = 'Error: ' + err.message;
+  }
+}
+
+function renderScanResults(entries) {
+  const container = document.getElementById('scan-results');
+  container.innerHTML = entries.map((e, i) => `
+    <div class="scan-entry-row">
+      <input type="checkbox" id="scan-chk-${i}" checked>
+      <label for="scan-chk-${i}" style="flex:1;cursor:pointer">
+        <strong>${e.date} ${e.time}</strong>
+        ${typeBadge(e.type)}
+        ${e.ml ? e.ml+'ml ' : ''}
+        ${e.diaper ? diaperBadge(e.diaper)+' ' : ''}
+        <span style="color:var(--soft)">${e.notes||''}</span>
+      </label>
+    </div>`).join('');
+}
+
+async function confirmScanEntries() {
+  const checked = pendingScanEntries.filter((_, i) =>
+    document.getElementById('scan-chk-'+i)?.checked);
+  if (!checked.length) { toast('Select at least one entry'); return; }
+  let count = 0;
+  for (const e of checked) {
+    await addEntry({
+      date: e.date || todayStr(),
+      time: e.time || '00:00',
+      type: e.type || 'For',
+      ml: e.ml || null,
+      diaper: e.diaper || '',
+      notes: e.notes || '',
+    });
+    count++;
+  }
+  toast(`Imported ${count} entries`);
+  closeModal('modal-scan');
+  document.getElementById('scan-results').innerHTML = '';
+  document.getElementById('scan-preview').style.display = 'none';
+  document.getElementById('scan-confirm-bar').style.display = 'none';
+  document.getElementById('scan-status').textContent = '';
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result.split(',')[1]);
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
+
+// ── TOAST ────────────────────────────────────────────
+let toastTimer = null;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+// ── AUTO-JOIN FROM URL ───────────────────────────────
+function checkURLCode() {
+  const params = new URLSearchParams(location.search);
+  const code = params.get('code');
+  if (code && !householdCode) {
+    document.getElementById('setup-join-code').value = code;
+    showSetupTab('join');
+  }
+}
+
+// ── INIT ─────────────────────────────────────────────
+function init() {
+  checkURLCode();
+  prefillNewCode();
+
+  if (householdCode && fbConfigRaw) {
+    if (initFirebase(fbConfigRaw)) {
+      launchApp();
+      return;
+    }
+  }
+  document.getElementById('setup-overlay').style.display = 'flex';
+}
+
+init();
+</script>
+</body>
+</html>

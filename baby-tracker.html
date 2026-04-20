@@ -411,6 +411,11 @@
     <div class="form-row">
       <label>Anthropic API key (for photo scan)</label>
       <input id="settings-api-key" type="password" placeholder="sk-ant-…">
+      <p style="font-size:.75rem;color:var(--soft);margin-top:4px">
+        Stored in <strong>session only</strong> — cleared when you close the tab.
+        Never saved to the server or repo. Visible in browser DevTools network tab during scans.
+        Use a <a href="https://console.anthropic.com/settings/api-keys" target="_blank" rel="noopener" style="color:var(--coral)">restricted key</a> with low spend limits.
+      </p>
     </div>
     <div class="form-footer">
       <button class="btn btn-secondary" onclick="closeModal('modal-settings')">Cancel</button>
@@ -473,7 +478,7 @@ let allEntries = [];       // [{id, date, time, type, ml, diaper, notes, created
 let householdCode = localStorage.getItem('bt_code') || '';
 let babyName = localStorage.getItem('bt_baby') || 'Baby';
 let fbConfigRaw = localStorage.getItem('bt_fbconfig') || '';
-let anthropicKey = localStorage.getItem('bt_apikey') || '';
+let anthropicKey = sessionStorage.getItem('bt_apikey') || '';
 let chartInstance = null;
 let pendingScanEntries = [];
 
@@ -820,7 +825,9 @@ function openModal(id) {
   if (id === 'modal-chart') setTimeout(() => renderChart(7), 50);
   if (id === 'modal-settings') {
     document.getElementById('settings-baby-name').value = babyName;
-    document.getElementById('settings-api-key').value = anthropicKey;
+    document.getElementById('settings-api-key').value = '';
+    document.getElementById('settings-api-key').placeholder =
+      anthropicKey ? '(key is set — enter new key to replace)' : 'sk-ant-…';
   }
   if (id === 'modal-scan') {
     document.getElementById('scan-api-warning').style.display = anthropicKey ? 'none' : '';
@@ -869,7 +876,8 @@ function saveSettings() {
   }
   if (newKey) {
     anthropicKey = newKey;
-    localStorage.setItem('bt_apikey', newKey);
+    sessionStorage.setItem('bt_apikey', newKey);
+    localStorage.removeItem('bt_apikey'); // remove any previously persisted key
   }
   closeModal('modal-settings');
   toast('Settings saved');
@@ -1060,6 +1068,7 @@ function checkURLCode() {
 
 // ── INIT ─────────────────────────────────────────────
 function init() {
+  localStorage.removeItem('bt_apikey'); // migrate: never persist the API key
   checkURLCode();
   prefillNewCode();
 

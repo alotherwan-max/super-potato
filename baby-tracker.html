@@ -234,13 +234,13 @@
     <div class="modal-handle"></div>
     <h3>Export &amp; Import</h3>
     <p style="font-size:.85rem;color:var(--soft);margin-bottom:16px">
-      Export a JSON backup to share with your partner or keep as a backup. Import to restore or merge entries.
+      Export a CSV file to share with your partner, open in Excel/Sheets, or keep as a backup. Import to restore or merge entries.
     </p>
     <div style="display:flex;gap:10px">
-      <button class="btn btn-primary" style="flex:1" onclick="exportJSON()">⬇️ Export JSON</button>
-      <button class="btn btn-secondary" style="flex:1" onclick="document.getElementById('import-file').click()">⬆️ Import JSON</button>
+      <button class="btn btn-primary" style="flex:1" onclick="exportCSV()">⬇️ Export CSV</button>
+      <button class="btn btn-secondary" style="flex:1" onclick="document.getElementById('import-file').click()">⬆️ Import CSV</button>
     </div>
-    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(event)">
+    <input type="file" id="import-file" accept=".csv" style="display:none" onchange="importCSV(event)">
     <p style="font-size:.75rem;color:var(--soft);margin-top:12px">
       Import merges entries — duplicates (same date + time) are skipped.
     </p>
@@ -527,33 +527,52 @@ function clearAllData() {
 }
 
 // ── EXPORT / IMPORT ──────────────────────────────────
-function exportJSON() {
-  const data = { babyName, exportedAt: new Date().toISOString(), entries };
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+function exportCSV() {
+  const header = 'date,time,type,ml,diaper,notes';
+  const rows = entries.map(e => [
+    e.date, e.time, e.type,
+    e.ml ?? '',
+    e.diaper,
+    '"' + (e.notes || '').replace(/"/g, '""') + '"'
+  ].join(','));
+  const blob = new Blob([header + '\n' + rows.join('\n')], { type: 'text/csv' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `baby-tracker-${todayStr()}.json`;
+  a.download = `baby-tracker-${todayStr()}.csv`;
   a.click();
   toast('Exported');
 }
 
-async function importJSON(event) {
+async function importCSV(event) {
   const file = event.target.files[0];
   if (!file) return;
   try {
     const text = await (file.text ? file.text() : new Promise((res, rej) => {
       const r = new FileReader(); r.onload = e => res(e.target.result); r.onerror = rej; r.readAsText(file);
     }));
-    const data = JSON.parse(text);
-    const incoming = Array.isArray(data.entries) ? data.entries : (Array.isArray(data) ? data : null);
-    if (!incoming || !incoming.length) { toast('No entries found in file'); return; }
+    const lines = text.trim().split(/\r?\n/);
+    if (lines.length < 2) { toast('No entries found in file'); return; }
+    const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+    const idx = f => headers.indexOf(f);
 
     const existingKeys = new Set(entries.map(e => e.date + '|' + e.time));
     let added = 0;
-    for (const e of incoming) {
-      if (!e.date || !e.time) continue;
-      if (existingKeys.has(e.date + '|' + e.time)) continue;
-      entries.push({ id: uid(), createdAt: Date.now(), ...e });
+    for (let i = 1; i < lines.length; i++) {
+      const cols = parseCSVLine(lines[i]);
+      const date = cols[idx('date')]?.trim();
+      const time = cols[idx('time')]?.trim();
+      if (!date || !time) continue;
+      if (existingKeys.has(date + '|' + time)) continue;
+      const ml = cols[idx('ml')]?.trim();
+      entries.push({
+        id: uid(), createdAt: Date.now(),
+        date, time,
+        type:   cols[idx('type')]?.trim() || 'For',
+        ml:     ml ? parseInt(ml) || null : null,
+        diaper: cols[idx('diaper')]?.trim() || 'No',
+        notes:  cols[idx('notes')]?.trim() || '',
+      });
+      existingKeys.add(date + '|' + time);
       added++;
     }
     save();
@@ -561,6 +580,22 @@ async function importJSON(event) {
     event.target.value = '';
     toast(`Imported ${added} new entr${added === 1 ? 'y' : 'ies'}`);
   } catch(err) { toast('Import failed: ' + err.message); }
+}
+
+function parseCSVLine(line) {
+  const cols = [];
+  let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') {
+      if (inQ && line[i+1] === '"') { cur += '"'; i++; }
+      else inQ = !inQ;
+    } else if (ch === ',' && !inQ) {
+      cols.push(cur); cur = '';
+    } else cur += ch;
+  }
+  cols.push(cur);
+  return cols;
 }
 
 // ── TOAST ────────────────────────────────────────────

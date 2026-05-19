@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SG Anniversary Combos</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --card: #1a1a26;
+  --border: rgba(255,255,255,0.07);
+  --text: #e8e4f0;
+  --muted: #7a7590;
+  --accent1: #ff6b6b;
+  --accent2: #ffd93d;
+  --accent3: #6bcb77;
+  --accent4: #4d96ff;
+  --accent5: #c77dff;
+  --accent6: #ff9f43;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* animated bg grid */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,107,107,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,107,107,0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 60px 20px 100px;
+}
+
+/* HEADER */
+.hero {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.hero-tag {
+  display: inline-block;
+  padding: 6px 16px;
+  border: 1px solid var(--accent1);
+  border-radius: 100px;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent1);
+  margin-bottom: 24px;
+  animation: fadeIn 0.6s ease forwards;
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(40px, 7vw, 80px);
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 16px;
+  animation: fadeIn 0.8s ease forwards;
+}
+
+.hero h1 span {
+  font-style: italic;
+  background: linear-gradient(135deg, var(--accent1), var(--accent5));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 16px;
+  color: var(--muted);
+  font-weight: 300;
+  animation: fadeIn 1s ease forwards;
+}
+
+.hero-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--muted);
+  animation: fadeIn 1.2s ease forwards;
+}
+
+.count-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--accent2);
+  line-height: 1;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* FILTER PILLS */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 48px;
+}
+
+.pill {
+  padding: 8px 18px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  transition: all 0.2s ease;
+}
+
+.pill:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+.pill.active { background: var(--accent1); border-color: var(--accent1); color: white; }
+.pill[data-cat="🔥 Wild"] { --pill-col: var(--accent1); }
+.pill[data-cat="🍽️ Food"] { --pill-col: var(--accent2); }
+.pill[data-cat="🧘 Chill"] { --pill-col: var(--accent3); }
+.pill[data-cat="💣 Smash"] { --pill-col: var(--accent6); }
+.pill[data-cat="🎨 Create"] { --pill-col: var(--accent5); }
+.pill[data-cat="🌊 Outdoor"] { --pill-col: var(--accent4); }
+.pill[data-cat="🍹 Drinks"] { --pill-col: #ff6eb4; }
+.pill.active { background: var(--pill-col, var(--accent1)); border-color: var(--pill-col, var(--accent1)); }
+
+/* STATS BAR */
+.stats-bar {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  margin-bottom: 40px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.stats-bar strong { color: var(--text); }
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+/* CARD */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+  cursor: default;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  animation: cardIn 0.4s ease forwards;
+  opacity: 0;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--card-accent, linear-gradient(90deg, var(--accent1), var(--accent5)));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255,255,255,0.14);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+.card:hover::before { opacity: 1; }
+
+.card.hidden { display: none; }
+
+/* card number */
+.card-num {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 900;
+  color: rgba(255,255,255,0.04);
+  line-height: 1;
+  user-select: none;
+}
+
+.card-cat {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--cat-color);
+  margin-bottom: 12px;
+}
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 10px;
+  color: #f0eeff;
+}
+
+.card-desc {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--muted);
+  font-weight: 300;
+  margin-bottom: 16px;
+}
+
+/* stops */
+.stops {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stop {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.stop-icon {
+  font-size: 14px;
+  min-width: 20px;
+  margin-top: 1px;
+}
+
+.stop-body {}
+.stop-time {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.stop-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 1px;
+}
+
+.stop-detail {
+  font-size: 11.5px;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+/* tags */
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.tag {
+  font-size: 10.5px;
+  padding: 3px 9px;
+  border-radius: 100px;
+  background: rgba(255,255,255,0.05);
+  color: var(--muted);
+  font-weight: 400;
+}
+
+/* vibe dot */
+.vibes {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.vibe-label {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.vibe-dots {
+  display: flex;
+  gap: 3px;
+}
+
+.vibe-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+.vibe-dot.on { background: var(--cat-color); }
+
+/* budget */
+.budget-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 6px;
+  margin-left: auto;
+}
+
+.budget-$ { background: rgba(107,203,119,0.15); color: #6bcb77; }
+.budget-$$ { background: rgba(255,217,61,0.15); color: #ffd93d; }
+.budget-$$$ { background: rgba(255,107,107,0.15); color: #ff6b6b; }
+
+.card-header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+/* EMPTY STATE */
+.empty {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 60px;
+  color: var(--muted);
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 24px;
+}
+
+/* SCROLL TO TOP */
+.back-top {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 44px;
+  height: 44px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.2s;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.back-top.visible { opacity: 1; pointer-events: all; }
+.back-top:hover { background: var(--accent1); border-color: var(--accent1); }
+
+/* CONNECTOR LINE between stops */
+.stops .stop:not(:last-child) {
+  padding-bottom: 8px;
+  border-bottom: 1px dashed rgba(255,255,255,0.06);
+}
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <div class="hero">
+    <div class="hero-tag">Anniversary Edition · Singapore</div>
+    <h1>Go <span>Crazy</span><br>Out There</h1>
+    <p class="hero-sub">Every combo you could possibly want, in one place.</p>
+    <div class="hero-count">
+      <span class="count-num" id="visibleCount">35</span>
+      <span>curated combos for two</span>
+    </div>
+  </div>
+
+  <div class="filters">
+    <div class="pill active" data-cat="All" onclick="filterCards('All', this)">All</div>
+    <div class="pill" data-cat="🔥 Wild" onclick="filterCards('🔥 Wild', this)">🔥 Wild</div>
+    <div class="pill" data-cat="🍽️ Food" onclick="filterCards('🍽️ Food', this)">🍽️ Food</div>
+    <div class="pill" data-cat="🧘 Chill" onclick="filterCards('🧘 Chill', this)">🧘 Chill</div>
+    <div class="pill" data-cat="💣 Smash" onclick="filterCards('💣 Smash', this)">💣 Smash</div>
+    <div class="pill" data-cat="🎨 Create" onclick="filterCards('🎨 Create', this)">🎨 Create</div>
+    <div class="pill" data-cat="🌊 Outdoor" onclick="filterCards('🌊 Outdoor', this)">🌊 Outdoor</div>
+    <div class="pill" data-cat="🍹 Drinks" onclick="filterCards('🍹 Drinks', this)">🍹 Drinks</div>
+  </div>
+
+  <div class="grid" id="cardGrid">
+
+    <!-- ===== CARDS ===== -->
+
+    <div class="card" data-cat="💣 Smash" style="--card-accent: linear-gradient(90deg,#ff6b6b,#ff9f43); --cat-color: #ff6b6b;" data-anim="1">
+      <div class="card-num">01</div>
+      <div class="card-header-row">
+        <div class="card-cat">💣 Smash</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Rage & Zen</div>
+      <div class="card-desc">Destroy things together, then float away in total peace. The contrast is everything.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">💥</div><div class="stop-body"><div class="stop-time">12:00pm</div><div class="stop-name">The Fragment Room</div><div class="stop-detail">MacPherson · Duo smash package, add a monitor</div></div></div>
+        <div class="stop"><div class="stop-icon">🌺</div><div class="stop-body"><div class="stop-time">2:00pm</div><div class="stop-name">Sabaai Sabaai Thai Spa</div><div class="stop-detail">Wisma Atria · Hinoki onsen + 90min couples massage</div></div></div>
+        <div class="stop"><div class="stop-icon">🍰</div><div class="stop-body"><div class="stop-time">4:30pm</div><div class="stop-name">Ginger.Lily High Tea</div><div class="stop-detail">Hilton Orchard · One of SG's best high teas ★4.8</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Fully Indoor</span><span class="tag">Rain-safe</span><span class="tag">Orchard-based</span></div>
+    </div>
+
+    <div class="card" data-cat="🌊 Outdoor" style="--card-accent: linear-gradient(90deg,#4d96ff,#6bcb77); --cat-color: #4d96ff;" data-anim="2">
+      <div class="card-num">02</div>
+      <div class="card-header-row">
+        <div class="card-cat">🌊 Outdoor</div>
+        <div class="budget-badge budget-$$$">$$$</div>
+      </div>
+      <div class="card-title">The Sea Escape</div>
+      <div class="card-desc">Leave the island. See Singapore the way nobody does — from the water.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">⛵</div><div class="stop-body"><div class="stop-time">9:00am</div><div class="stop-name">Wanderlust Adventures Yacht</div><div class="stop-detail">Sentosa Cove · Half-day private charter, Southern Islands</div></div></div>
+        <div class="stop"><div class="stop-icon">🐟</div><div class="stop-body"><div class="stop-time">12:30pm</div><div class="stop-name">OCEAN Restaurant</div><div class="stop-detail">RWS Sentosa · Dine inside the S.E.A. Aquarium</div></div></div>
+        <div class="stop"><div class="stop-icon">💆</div><div class="stop-body"><div class="stop-time">2:30pm</div><div class="stop-name">Adeva Spa, Paragon</div><div class="stop-detail">Orchard · 90min couples foot + body treatment</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Sentosa-based</span><span class="tag">Splurge day</span><span class="tag">Unforgettable</span></div>
+    </div>
+
+    <div class="card" data-cat="🍽️ Food" style="--card-accent: linear-gradient(90deg,#ffd93d,#ff9f43); --cat-color: #ffd93d;" data-anim="3">
+      <div class="card-num">03</div>
+      <div class="card-header-row">
+        <div class="card-cat">🍽️ Food</div>
+        <div class="budget-badge budget-$$$">$$$</div>
+      </div>
+      <div class="card-title">The View Chaser</div>
+      <div class="card-desc">Eat at three places with genuinely stunning views. No beach clubs, no compromise.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">☕</div><div class="stop-body"><div class="stop-time">9:00am</div><div class="stop-name">Lola's, Holland Village</div><div class="stop-detail">Brunch · Leafy courtyard, amazing salmon grain bowl</div></div></div>
+        <div class="stop"><div class="stop-icon">🌿</div><div class="stop-body"><div class="stop-time">12:30pm</div><div class="stop-name">Marguerite, Flower Dome</div><div class="stop-detail">Gardens by the Bay · Michelin-starred lunch in a botanical garden</div></div></div>
+        <div class="stop"><div class="stop-icon">🌆</div><div class="stop-body"><div class="stop-time">4:00pm</div><div class="stop-name">VUE, Level 19 OUE Bayfront</div><div class="stop-detail">CBD · Panoramic Marina Bay skyline views, sunset drinks</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">No spa</span><span class="tag">Food-forward</span><span class="tag">Scenic</span></div>
+    </div>
+
+    <div class="card" data-cat="🎨 Create" style="--card-accent: linear-gradient(90deg,#c77dff,#4d96ff); --cat-color: #c77dff;" data-anim="4">
+      <div class="card-num">04</div>
+      <div class="card-header-row">
+        <div class="card-cat">🎨 Create</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Make Things Together</div>
+      <div class="card-desc">Create something that lasts longer than the day itself. Hands dirty, hearts full.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🍳</div><div class="stop-body"><div class="stop-time">9:30am</div><div class="stop-name">Food Playground, Chinatown</div><div class="stop-detail">Learn to make Char Kway Teow + Popiah from scratch ★4.9</div></div></div>
+        <div class="stop"><div class="stop-icon">🏺</div><div class="stop-body"><div class="stop-time">12:30pm</div><div class="stop-name">Am I Addicted Pottery</div><div class="stop-detail">Orchard Central · 2hr wheel throwing, pieces delivered home</div></div></div>
+        <div class="stop"><div class="stop-icon">💆</div><div class="stop-body"><div class="stop-time">3:30pm</div><div class="stop-name">i Spa, Concorde Hotel</div><div class="stop-detail">Orchard · 24hr open, couples massage wind-down</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Take-home souvenirs</span><span class="tag">Hands-on</span><span class="tag">Rain-safe</span></div>
+    </div>
+
+    <div class="card" data-cat="🔥 Wild" style="--card-accent: linear-gradient(90deg,#ff6b6b,#c77dff); --cat-color: #ff6b6b;" data-anim="5">
+      <div class="card-num">05</div>
+      <div class="card-header-row">
+        <div class="card-cat">🔥 Wild</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Alice Goes Feral</div>
+      <div class="card-desc">A fully unhinged day. Immersive theatre, smashing things, secret bar.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🎭</div><div class="stop-body"><div class="stop-time">12:00pm</div><div class="stop-name">Wonderland Upside Down</div><div class="stop-detail">Serangoon Rd · 5-course immersive Alice in Wonderland dining theatre</div></div></div>
+        <div class="stop"><div class="stop-icon">💥</div><div class="stop-body"><div class="stop-time">3:00pm</div><div class="stop-name">The Fragment Room</div><div class="stop-detail">MacPherson · Post-lunch destruction therapy</div></div></div>
+        <div class="stop"><div class="stop-icon">🍸</div><div class="stop-body"><div class="stop-time">5:00pm</div><div class="stop-name">Oriental Elixir Speakeasy</div><div class="stop-detail">River Valley · Hidden bar, bespoke gin cocktails with insane ingredients</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">No spa</span><span class="tag">Most unusual</span><span class="tag">Story to tell</span></div>
+    </div>
+
+    <div class="card" data-cat="🧘 Chill" style="--card-accent: linear-gradient(90deg,#6bcb77,#4d96ff); --cat-color: #6bcb77;" data-anim="6">
+      <div class="card-num">06</div>
+      <div class="card-header-row">
+        <div class="card-cat">🧘 Chill</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">The Pure Reset</div>
+      <div class="card-desc">No agenda. No rush. The entire day is about decompression. You've earned it.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">☕</div><div class="stop-body"><div class="stop-time">9:00am</div><div class="stop-name">Chopsuey Café, Dempsey</div><div class="stop-detail">Long slow brunch, colonial setting, no rush</div></div></div>
+        <div class="stop"><div class="stop-icon">🌸</div><div class="stop-body"><div class="stop-time">11:00am</div><div class="stop-name">Botanic Gardens</div><div class="stop-detail">Lake loop walk, completely free, no stroller required</div></div></div>
+        <div class="stop"><div class="stop-icon">💆</div><div class="stop-body"><div class="stop-time">1:30pm</div><div class="stop-name">Sabaai Sabaai, Wisma Atria</div><div class="stop-detail">90min Traditional Thai massage ★4.9</div></div></div>
+        <div class="stop"><div class="stop-icon">🍰</div><div class="stop-body"><div class="stop-time">3:30pm</div><div class="stop-name">2am:dessertbar</div><div class="stop-detail">Holland V · Artisanal desserts + cocktails, opens 6pm, go for cakes</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Low energy</span><span class="tag">Romantic</span><span class="tag">Holland V area</span></div>
+    </div>
+
+    <div class="card" data-cat="🔥 Wild" style="--card-accent: linear-gradient(90deg,#ff9f43,#ff6b6b); --cat-color: #ff9f43;" data-anim="7">
+      <div class="card-num">07</div>
+      <div class="card-header-row">
+        <div class="card-cat">🔥 Wild</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Axe + Aquarium</div>
+      <div class="card-desc">Throw axes until someone cries (from laughing), then eat surrounded by sharks.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🪓</div><div class="stop-body"><div class="stop-time">9:30am</div><div class="stop-name">STUMPS Axe Throwing</div><div class="stop-detail">Tanjong Pagar · 45min session, drinks available</div></div></div>
+        <div class="stop"><div class="stop-icon">🐠</div><div class="stop-body"><div class="stop-time">11:30am</div><div class="stop-name">OCEAN Restaurant</div><div class="stop-detail">RWS · Lunch inside the aquarium, manta rays gliding past</div></div></div>
+        <div class="stop"><div class="stop-icon">💆</div><div class="stop-body"><div class="stop-time">2:00pm</div><div class="stop-name">Adeva Spa, Paragon</div><div class="stop-detail">Orchard · Couples foot reflexology ★4.7</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Sentosa + Orchard</span><span class="tag">High contrast vibes</span></div>
+    </div>
+
+    <div class="card" data-cat="🍹 Drinks" style="--card-accent: linear-gradient(90deg,#ff6eb4,#c77dff); --cat-color: #ff6eb4;" data-anim="8">
+      <div class="card-num">08</div>
+      <div class="card-header-row">
+        <div class="card-cat">🍹 Drinks</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Speakeasy Crawl</div>
+      <div class="card-desc">Three secret bars. Find the hidden doors, drink something weird, feel impossibly cool.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🧪</div><div class="stop-body"><div class="stop-time">12:00pm</div><div class="stop-name">The Other Room</div><div class="stop-detail">Marriott Orchard · Behind an unmarked door, Prohibition vibes</div></div></div>
+        <div class="stop"><div class="stop-icon">🧫</div><div class="stop-body"><div class="stop-time">2:30pm</div><div class="stop-name">Oriental Elixir</div><div class="stop-detail">River Valley · Ancient apothecary bar, insane gin infusions</div></div></div>
+        <div class="stop"><div class="stop-icon">🎭</div><div class="stop-body"><div class="stop-time">5:00pm</div><div class="stop-name">The Backdrop</div><div class="stop-detail">Voco Orchard · Scan QR to unlock the door, 90s retro theatre</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Drinks-focused</span><span class="tag">No spa</span><span class="tag">Urban adventure</span></div>
+    </div>
+
+    <div class="card" data-cat="🌊 Outdoor" style="--card-accent: linear-gradient(90deg,#4d96ff,#6bcb77); --cat-color: #4d96ff;" data-anim="9">
+      <div class="card-num">09</div>
+      <div class="card-header-row">
+        <div class="card-cat">🌊 Outdoor</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Zipline + Luxury Lunch</div>
+      <div class="card-desc">Get your adrenaline going over the sea, then reward yourselves absurdly well.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🪂</div><div class="stop-body"><div class="stop-time">9:30am</div><div class="stop-name">Mega Adventure Park</div><div class="stop-detail">Sentosa · Zipline, tree climb, MegaJump — sea views</div></div></div>
+        <div class="stop"><div class="stop-icon">🍽️</div><div class="stop-body"><div class="stop-time">12:00pm</div><div class="stop-name">Kaarla, Level 51 CapitaSpring</div><div class="stop-detail">CBD · Wood-fire grill, city skyline, sky garden after</div></div></div>
+        <div class="stop"><div class="stop-icon">💆</div><div class="stop-body"><div class="stop-time">2:30pm</div><div class="stop-name">Head Spa, Orchard Central</div><div class="stop-detail">Korean scalp treatment, rated ★4.9 by 699 reviews</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Sentosa morning</span><span class="tag">CBD afternoon</span></div>
+    </div>
+
+    <div class="card" data-cat="🎨 Create" style="--card-accent: linear-gradient(90deg,#c77dff,#ff6eb4); --cat-color: #c77dff;" data-anim="10">
+      <div class="card-num">10</div>
+      <div class="card-header-row">
+        <div class="card-cat">🎨 Create</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Paint + Pizza</div>
+      <div class="card-desc">Make art then make food. Both go home with you.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🖼️</div><div class="stop-body"><div class="stop-time">9:30am</div><div class="stop-name">Clayful Café, Orchard Central</div><div class="stop-detail">Pottery painting + brunch café in one space ★4.8</div></div></div>
+        <div class="stop"><div class="stop-icon">🍕</div><div class="stop-body"><div class="stop-time">12:30pm</div><div class="stop-name">The Sundowner</div><div class="stop-detail">Bukit Timah · Outdoor pizza-making class + fire oven, bee farm tour</div></div></div>
+        <div class="stop"><div class="stop-icon">💆</div><div class="stop-body"><div class="stop-time">3:30pm</div><div class="stop-name">Sabaai Sabaai</div><div class="stop-detail">Wisma Atria · Couples massage to close the day</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Cottage-core energy</span><span class="tag">Unique</span></div>
+    </div>
+
+    <div class="card" data-cat="💣 Smash" style="--card-accent: linear-gradient(90deg,#ff6b6b,#ff9f43); --cat-color: #ff6b6b;" data-anim="11">
+      <div class="card-num">11</div>
+      <div class="card-header-row">
+        <div class="card-cat">💣 Smash</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Floor is Lava + Fine Dining</div>
+      <div class="card-desc">Act like kids, eat like royalty. The contrast makes both better.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🔥</div><div class="stop-body"><div class="stop-time">11:00am</div><div class="stop-name">INMERS Floor is Lava</div><div class="stop-detail">City Square Mall · 30min cardio chaos ★5.0</div></div></div>
+        <div class="stop"><div class="stop-icon">🌿</div><div class="stop-body"><div class="stop-time">12:30pm</div><div class="stop-name">Marguerite, Flower Dome</div><div class="stop-detail">Michelin-star lunch inside Gardens by the Bay</div></div></div>
+        <div class="stop"><div class="stop-icon">💆</div><div class="stop-body"><div class="stop-time">3:00pm</div><div class="stop-name">Adeva Spa</div><div class="stop-detail">Paragon, Orchard · 90min couples treatment</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Sweaty + bougie</span><span class="tag">Rain-safe</span></div>
+    </div>
+
+    <div class="card" data-cat="🍽️ Food" style="--card-accent: linear-gradient(90deg,#ffd93d,#6bcb77); --cat-color: #ffd93d;" data-anim="12">
+      <div class="card-num">12</div>
+      <div class="card-header-row">
+        <div class="card-cat">🍽️ Food</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Cook It, Eat It</div>
+      <div class="card-desc">Build your meal from scratch. There's something deeply romantic about feeding each other food you made together.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">👨‍🍳</div><div class="stop-body"><div class="stop-time">9:30am</div><div class="stop-name">Commune Kitchen, Cecil St</div><div class="stop-detail">Pasta + tiramisu class, ★5.0, drinks included ★5.0</div></div></div>
+        <div class="stop"><div class="stop-icon">💆</div><div class="stop-body"><div class="stop-time">1:00pm</div><div class="stop-name">Head Spa, Orchard Central</div><div class="stop-detail">Korean scalp treatment ★4.9 — deeply relaxing</div></div></div>
+        <div class="stop"><div class="stop-icon">🍫</div><div class="stop-body"><div class="stop-time">3:30pm</div><div class="stop-name">CHOCOELF, South Bridge Rd</div><div class="stop-detail">Specialty chocolate café — pistachio kunafa bar is legendary</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Very romantic</span><span class="tag">CBD + Orchard</span></div>
+    </div>
+
+    <div class="card" data-cat="🔥 Wild" style="--card-accent: linear-gradient(90deg,#ff6b6b,#ffd93d); --cat-color: #ff6b6b;" data-anim="13">
+      <div class="card-num">13</div>
+      <div class="card-header-row">
+        <div class="card-cat">🔥 Wild</div>
+        <div class="budget-badge budget-$$$">$$$</div>
+      </div>
+      <div class="card-title">The Chaos Yacht</div>
+      <div class="card-desc">Charter a private yacht, find an island, swim off the back. Peak Singapore unlocked.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">⛵</div><div class="stop-body"><div class="stop-time">9:00am</div><div class="stop-name">YachtCruiseSG</div><div class="stop-detail">Sentosa Cove · Southern Islands guided speedboat tour ★4.9</div></div></div>
+        <div class="stop"><div class="stop-icon">🏖️</div><div class="stop-body"><div class="stop-time">11:00am</div><div class="stop-name">Lazarus Island</div><div class="stop-detail">White sand beach, almost nobody there on weekdays</div></div></div>
+        <div class="stop"><div class="stop-icon">🍽️</div><div class="stop-body"><div class="stop-time">1:30pm</div><div class="stop-name">The Cliff, Sofitel Sentosa</div><div class="stop-detail">Italian lunch with ocean views, octopus is outstanding</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Weather dependent</span><span class="tag">Full Sentosa day</span></div>
+    </div>
+
+    <div class="card" data-cat="🧘 Chill" style="--card-accent: linear-gradient(90deg,#6bcb77,#ffd93d); --cat-color: #6bcb77;" data-anim="14">
+      <div class="card-num">14</div>
+      <div class="card-header-row">
+        <div class="card-cat">🧘 Chill</div>
+        <div class="budget-badge budget-$$$">$$$</div>
+      </div>
+      <div class="card-title">The Michelin Melt</div>
+      <div class="card-desc">Eat extraordinarily well. Twice. With a spa in between. Zero guilt.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🌿</div><div class="stop-body"><div class="stop-time">9:30am</div><div class="stop-name">Dempsey Cookhouse & Bar</div><div class="stop-detail">Brunch · Salmon, crispy chicken, apple pie</div></div></div>
+        <div class="stop"><div class="stop-icon">💆</div><div class="stop-body"><div class="stop-time">12:00pm</div><div class="stop-name">Sabaai Sabaai + Hinoki Onsen</div><div class="stop-detail">Wisma Atria · Onsen soak + 90min couples massage</div></div></div>
+        <div class="stop"><div class="stop-icon">🌆</div><div class="stop-body"><div class="stop-time">3:00pm</div><div class="stop-name">VUE, Level 19</div><div class="stop-detail">OUE Bayfront · Truffle uni somen, skyline views</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Full indulgence</span><span class="tag">Dempsey + Orchard</span></div>
+    </div>
+
+    <div class="card" data-cat="🎨 Create" style="--card-accent: linear-gradient(90deg,#c77dff,#6bcb77); --cat-color: #c77dff;" data-anim="15">
+      <div class="card-num">15</div>
+      <div class="card-header-row">
+        <div class="card-cat">🎨 Create</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Cocktail Chemists</div>
+      <div class="card-desc">Mix your own drinks in a masterclass, then eat somewhere stunning.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🧪</div><div class="stop-body"><div class="stop-time">10:00am</div><div class="stop-name">Kulnari (Cocktail Masterclass)</div><div class="stop-detail">Circular Rd · Mixology class with the Kulnari team ★4.8</div></div></div>
+        <div class="stop"><div class="stop-icon">🌆</div><div class="stop-body"><div class="stop-time">1:00pm</div><div class="stop-name">Artemis Grill, Level 40</div><div class="stop-detail">CapitaGreen · City skyline views, executive lunch set</div></div></div>
+        <div class="stop"><div class="stop-icon">💆</div><div class="stop-body"><div class="stop-time">3:30pm</div><div class="stop-time">Adeva Spa, Paragon</div><div class="stop-detail">Couples massage finale</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">CBD-based</span><span class="tag">Skills to keep</span></div>
+    </div>
+
+    <div class="card" data-cat="🔥 Wild" style="--card-accent: linear-gradient(90deg,#ff9f43,#c77dff); --cat-color: #ff9f43;" data-anim="16">
+      <div class="card-num">16</div>
+      <div class="card-header-row">
+        <div class="card-cat">🔥 Wild</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Murder Mystery Walk</div>
+      <div class="card-desc">Solve a murder together while wandering around the city. Who knew crime could be this fun.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🔍</div><div class="stop-body"><div class="stop-time">9:30am</div><div class="stop-name">HIDDEN Singapore (Murder Mystery)</div><div class="stop-detail">Framed Murder Mystery at National Gallery · 1.5hr walking game</div></div></div>
+        <div class="stop"><div class="stop-icon">🍽️</div><div class="stop-body"><div class="stop-time">12:00pm</div><div class="stop-name">LeVeL33, Marina Blvd</div><div class="stop-detail">Lunch · Brewery with Marina Bay views ★4.4</div></div></div>
+        <div class="stop"><div class="stop-icon">💆</div><div class="stop-body"><div class="stop-time">2:30pm</div><div class="stop-name">i Spa Concorde</div><div class="stop-detail">24hr, open anytime, highly rated therapists</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Mental + physical</span><span class="tag">City loop</span></div>
+    </div>
+
+    <div class="card" data-cat="🍽️ Food" style="--card-accent: linear-gradient(90deg,#ff9f43,#ffd93d); --cat-color: #ff9f43;" data-anim="17">
+      <div class="card-num">17</div>
+      <div class="card-header-row">
+        <div class="card-cat">🍽️ Food</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Dessert Dimension</div>
+      <div class="card-desc">Go on a full dessert crawl. Life is short, eat sugar first.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🥐</div><div class="stop-body"><div class="stop-time">9:30am</div><div class="stop-name">L'éclair Pâtisserie</div><div class="stop-detail">Clemenceau Ave · French pastries, lemon scallop pasta</div></div></div>
+        <div class="stop"><div class="stop-icon">🍫</div><div class="stop-body"><div class="stop-time">12:00pm</div><div class="stop-name">CHOCOELF, South Bridge</div><div class="stop-detail">Pistachio kunafa chocolate, nanyang coffee bars</div></div></div>
+        <div class="stop"><div class="stop-icon">🧁</div><div class="stop-body"><div class="stop-time">2:00pm</div><div class="stop-name">Ginger.Lily High Tea, Hilton</div><div class="stop-detail">One of SG's best high teas ★4.8</div></div></div>
+        <div class="stop"><div class="stop-icon">🍨</div><div class="stop-body"><div class="stop-time">4:30pm</div><div class="stop-name">Homm Dessert, Raffles City</div><div class="stop-detail">Mango Sticky Rice Bingsu to finish</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Zero regrets</span><span class="tag">City loop</span><span class="tag">Sweet tooth day</span></div>
+    </div>
+
+    <div class="card" data-cat="🧘 Chill" style="--card-accent: linear-gradient(90deg,#4d96ff,#6bcb77); --cat-color: #4d96ff;" data-anim="18">
+      <div class="card-num">18</div>
+      <div class="card-header-row">
+        <div class="card-cat">🧘 Chill</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Rooftop + Pottery</div>
+      <div class="card-desc">Make something slow, eat somewhere high, dissolve in a spa chair.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🏺</div><div class="stop-body"><div class="stop-time">9:30am</div><div class="stop-name">PotteryPlease! Queensway</div><div class="stop-detail">2hr pottery painting session ★4.9, chill and meditative</div></div></div>
+        <div class="stop"><div class="stop-icon">🌆</div><div class="stop-body"><div class="stop-time">12:30pm</div><div class="stop-name">Kaarla, Level 51 CapitaSpring</div><div class="stop-detail">Wood-fire lunch, sky garden with best city views</div></div></div>
+        <div class="stop"><div class="stop-icon">💆</div><div class="stop-body"><div class="stop-time">3:00pm</div><div class="stop-name">Head Spa, Orchard Central</div><div class="stop-detail">Korean scalp + hair treatment ★4.9</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Artsy + luxe</span><span class="tag">Rain-safe</span></div>
+    </div>
+
+    <div class="card" data-cat="🌊 Outdoor" style="--card-accent: linear-gradient(90deg,#6bcb77,#4d96ff); --cat-color: #6bcb77;" data-anim="19">
+      <div class="card-num">19</div>
+      <div class="card-header-row">
+        <div class="card-cat">🌊 Outdoor</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Bird Paradise + Dempsey</div>
+      <div class="card-desc">Walk through tropical aviaries at golden hour, then eat somewhere lush and leafy.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🦜</div><div class="stop-body"><div class="stop-time">9:00am</div><div class="stop-name">Bird Paradise, Mandai</div><div class="stop-detail">10 walk-through aviaries, 9000+ reviews ★4.7</div></div></div>
+        <div class="stop"><div class="stop-icon">🌿</div><div class="stop-body"><div class="stop-time">12:00pm</div><div class="stop-name">Chopsuey Café, Dempsey</div><div class="stop-detail">Asian fusion, patio seating, very romantic lunch</div></div></div>
+        <div class="stop"><div class="stop-icon">💆</div><div class="stop-body"><div class="stop-time">2:30pm</div><div class="stop-name">Sabaai Sabaai, Wisma Atria</div><div class="stop-detail">90min Thai massage to close it all out</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Nature-forward</span><span class="tag">Mandai + Dempsey</span></div>
+    </div>
+
+    <div class="card" data-cat="💣 Smash" style="--card-accent: linear-gradient(90deg,#ff6b6b,#4d96ff); --cat-color: #ff6b6b;" data-anim="20">
+      <div class="card-num">20</div>
+      <div class="card-header-row">
+        <div class="card-cat">💣 Smash</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Smash + Shark + Spa</div>
+      <div class="card-desc">The Sentosa hat-trick. Destroy, dine with sharks, dissolve.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">💥</div><div class="stop-body"><div class="stop-time">12:00pm</div><div class="stop-name">The Fragment Room</div><div class="stop-detail">MacPherson · Start the afternoon with destruction</div></div></div>
+        <div class="stop"><div class="stop-icon">🐟</div><div class="stop-body"><div class="stop-time">2:00pm</div><div class="stop-name">OCEAN Restaurant, RWS</div><div class="stop-detail">6-course lunch inside the aquarium</div></div></div>
+        <div class="stop"><div class="stop-icon">🌺</div><div class="stop-body"><div class="stop-time">4:30pm</div><div class="stop-name">Adeva Spa, Paragon</div><div class="stop-detail">Couples massage to close</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Late start</span><span class="tag">Most dramatic arc</span></div>
+    </div>
+
+    <div class="card" data-cat="🍹 Drinks" style="--card-accent: linear-gradient(90deg,#c77dff,#ff6eb4); --cat-color: #ff6eb4;" data-anim="21">
+      <div class="card-num">21</div>
+      <div class="card-header-row">
+        <div class="card-cat">🍹 Drinks</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">KTV for Two</div>
+      <div class="card-desc">Private karaoke room, just you two, no audience. Belt it out. You both deserve this.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🍳</div><div class="stop-body"><div class="stop-time">9:30am</div><div class="stop-name">Lola's, Holland Village</div><div class="stop-detail">Slow brunch, pistachio latte, pulled pork eggs benedict</div></div></div>
+        <div class="stop"><div class="stop-icon">💆</div><div class="stop-body"><div class="stop-time">11:30am</div><div class="stop-name">Sabaai Sabaai Thai Spa</div><div class="stop-detail">90min couples massage ★4.9</div></div></div>
+        <div class="stop"><div class="stop-icon">🎤</div><div class="stop-body"><div class="stop-time">2:30pm</div><div class="stop-name">Teo Heng / K Bowling Club KTV</div><div class="stop-detail">Private room for two, cheap, deeply fun</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Surprisingly intimate</span><span class="tag">Holland V + Orchard</span></div>
+    </div>
+
+    <div class="card" data-cat="🎨 Create" style="--card-accent: linear-gradient(90deg,#ffd93d,#c77dff); --cat-color: #c77dff;" data-anim="22">
+      <div class="card-num">22</div>
+      <div class="card-header-row">
+        <div class="card-cat">🎨 Create</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Wheel Throw + Coffee Roast</div>
+      <div class="card-desc">Two creation experiences back to back. Make a bowl. Then make the beans that go in the cup beside it.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🏺</div><div class="stop-body"><div class="stop-time">9:30am</div><div class="stop-name">Am I Addicted, Orchard Central</div><div class="stop-detail">2hr wheel throwing · Pick up pieces in 4 weeks</div></div></div>
+        <div class="stop"><div class="stop-icon">☕</div><div class="stop-body"><div class="stop-time">12:30pm</div><div class="stop-name">The Sundowner</div><div class="stop-detail">Upper Bukit Timah · Coffee bean roasting experience ★5.0</div></div></div>
+        <div class="stop"><div class="stop-icon">🌿</div><div class="stop-body"><div class="stop-time">3:00pm</div><div class="stop-name">Arbora, Mount Faber</div><div class="stop-detail">Hilltop dining with gorgeous sunset view ★4.8</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Artisan vibes</span><span class="tag">Western SG</span></div>
+    </div>
+
+    <div class="card" data-cat="🔥 Wild" style="--card-accent: linear-gradient(90deg,#ff6b6b,#ffd93d); --cat-color: #ff6b6b;" data-anim="23">
+      <div class="card-num">23</div>
+      <div class="card-header-row">
+        <div class="card-cat">🔥 Wild</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Lava Floor Lunch Sky</div>
+      <div class="card-desc">Digital cardio chaos, Michelin lunch, sky view. Three settings, one incredible day.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🔥</div><div class="stop-body"><div class="stop-time">11:00am</div><div class="stop-name">INMERS Floor is Lava</div><div class="stop-detail">City Square Mall · 30min squid game energy ★5.0</div></div></div>
+        <div class="stop"><div class="stop-icon">🌿</div><div class="stop-body"><div class="stop-time">12:30pm</div><div class="stop-name">Marguerite, Flower Dome</div><div class="stop-detail">Michelin-starred lunch inside a literal garden dome</div></div></div>
+        <div class="stop"><div class="stop-icon">🌆</div><div class="stop-body"><div class="stop-time">3:30pm</div><div class="stop-name">LeVeL33, Marina Blvd</div><div class="stop-detail">Craft beer, panoramic views, late afternoon chill</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">High energy to low</span><span class="tag">City loop</span></div>
+    </div>
+
+    <div class="card" data-cat="🌊 Outdoor" style="--card-accent: linear-gradient(90deg,#4d96ff,#c77dff); --cat-color: #4d96ff;" data-anim="24">
+      <div class="card-num">24</div>
+      <div class="card-header-row">
+        <div class="card-cat">🌊 Outdoor</div>
+        <div class="budget-badge budget-$$$">$$$</div>
+      </div>
+      <div class="card-title">River Wonders + Rooftop</div>
+      <div class="card-desc">Pandas, manatees, and a boat ride in the morning. Sky-high dinner vibes after.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🦦</div><div class="stop-body"><div class="stop-time">9:00am</div><div class="stop-name">River Wonders, Mandai</div><div class="stop-detail">Giant pandas + river cruise ★4.5, 12k reviews</div></div></div>
+        <div class="stop"><div class="stop-icon">💆</div><div class="stop-body"><div class="stop-time">12:30pm</div><div class="stop-name">Head Spa, Orchard Central</div><div class="stop-detail">Post-walk scalp treatment — genuinely blissful</div></div></div>
+        <div class="stop"><div class="stop-icon">🌆</div><div class="stop-body"><div class="stop-time">3:30pm</div><div class="stop-name">VUE, OUE Bayfront</div><div class="stop-detail">Level 19 · Uni somen, skyline cocktails, 4:30pm close Sat</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Mandai + CBD</span><span class="tag">Full day</span></div>
+    </div>
+
+    <div class="card" data-cat="🧘 Chill" style="--card-accent: linear-gradient(90deg,#6bcb77,#ffd93d); --cat-color: #6bcb77;" data-anim="25">
+      <div class="card-num">25</div>
+      <div class="card-header-row">
+        <div class="card-cat">🧘 Chill</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">The Korean Day</div>
+      <div class="card-desc">Full Korean energy. Head spa, Korean cooking, Korean dessert.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🧖</div><div class="stop-body"><div class="stop-time">9:30am</div><div class="stop-name">Head Spa, Orchard Central</div><div class="stop-detail">Korean scalp treatment ★4.9, wake up every follicle</div></div></div>
+        <div class="stop"><div class="stop-icon">👨‍🍳</div><div class="stop-body"><div class="stop-time">12:00pm</div><div class="stop-name">Pots & Pans, Centrepoint</div><div class="stop-detail">Korean cuisine class — make it, eat it</div></div></div>
+        <div class="stop"><div class="stop-icon">🍨</div><div class="stop-body"><div class="stop-time">3:30pm</div><div class="stop-name">Homm Dessert, Raffles City</div><div class="stop-detail">Mango sticky rice bingsu — Thai but also Korean energy</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Orchard-based</span><span class="tag">Very chill</span><span class="tag">Rain-safe</span></div>
+    </div>
+
+    <div class="card" data-cat="🍹 Drinks" style="--card-accent: linear-gradient(90deg,#ff6eb4,#ff9f43); --cat-color: #ff6eb4;" data-anim="26">
+      <div class="card-num">26</div>
+      <div class="card-header-row">
+        <div class="card-cat">🍹 Drinks</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Harbour Drinks & Murder</div>
+      <div class="card-desc">Solve a mystery around the CBD on foot, then find the speakeasy as your reward.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🔍</div><div class="stop-body"><div class="stop-time">9:30am</div><div class="stop-name">HIDDEN SG — Chinatown Trail</div><div class="stop-detail">90min walking mystery game through the streets</div></div></div>
+        <div class="stop"><div class="stop-icon">🍜</div><div class="stop-body"><div class="stop-time">12:00pm</div><div class="stop-name">Madame Ooze, South Bridge</div><div class="stop-detail">Cozy café, best coffee in SG per many regulars</div></div></div>
+        <div class="stop"><div class="stop-icon">🍸</div><div class="stop-body"><div class="stop-time">2:30pm</div><div class="stop-name">Taylor Adam, Raffles Place</div><div class="stop-detail">Speakeasy bar in the CBD ★4.7, try the Burma Royal</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">CBD loop</span><span class="tag">Walkable</span><span class="tag">Story-driven</span></div>
+    </div>
+
+    <div class="card" data-cat="🔥 Wild" style="--card-accent: linear-gradient(90deg,#c77dff,#ff6b6b); --cat-color: #ff6b6b;" data-anim="27">
+      <div class="card-num">27</div>
+      <div class="card-header-row">
+        <div class="card-cat">🔥 Wild</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Axe + Paint + Speakeasy</div>
+      <div class="card-desc">Physical. Creative. Secret. Three acts, zero overlap.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🪓</div><div class="stop-body"><div class="stop-time">9:30am</div><div class="stop-name">STUMPS Axe Throwing</div><div class="stop-detail">Tanjong Pagar · Settle who's the better aim once and for all</div></div></div>
+        <div class="stop"><div class="stop-icon">🎨</div><div class="stop-body"><div class="stop-time">11:30am</div><div class="stop-time">12:30pm</div><div class="stop-name">Café de Paris, 313 Somerset</div><div class="stop-detail">Lunch + guided canvas painting session ★4.5</div></div></div>
+        <div class="stop"><div class="stop-icon">🕯️</div><div class="stop-body"><div class="stop-time">3:30pm</div><div class="stop-name">The Other Room</div><div class="stop-detail">Marriott Orchard · Speakeasy, reverse G&T, moody vibes</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Fully indoors</span><span class="tag">Orchard loop</span></div>
+    </div>
+
+    <div class="card" data-cat="🍽️ Food" style="--card-accent: linear-gradient(90deg,#ffd93d,#ff9f43); --cat-color: #ffd93d;" data-anim="28">
+      <div class="card-num">28</div>
+      <div class="card-header-row">
+        <div class="card-cat">🍽️ Food</div>
+        <div class="budget-badge budget-$$$">$$$</div>
+      </div>
+      <div class="card-title">The Height Seekers</div>
+      <div class="card-desc">Spend the day above the clouds. Every meal has a view that drops jaws.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🌅</div><div class="stop-body"><div class="stop-time">11:30am</div><div class="stop-name">Artemis Grill, Level 40</div><div class="stop-detail">CapitaGreen · European, city panorama, set lunch ★4.6</div></div></div>
+        <div class="stop"><div class="stop-icon">💆</div><div class="stop-body"><div class="stop-time">2:30pm</div><div class="stop-name">i Spa, Concorde</div><div class="stop-detail">Orchard · Couples massage</div></div></div>
+        <div class="stop"><div class="stop-icon">🌇</div><div class="stop-body"><div class="stop-time">4:30pm</div><div class="stop-name">CÉ LA VI, MBS Rooftop</div><div class="stop-detail">Level 57 Marina Bay Sands · Sunset drinks with city skyline</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Views all day</span><span class="tag">CBD + Marina</span></div>
+    </div>
+
+    <div class="card" data-cat="🧘 Chill" style="--card-accent: linear-gradient(90deg,#4d96ff,#c77dff); --cat-color: #4d96ff;" data-anim="29">
+      <div class="card-num">29</div>
+      <div class="card-header-row">
+        <div class="card-cat">🧘 Chill</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Garden Lovers</div>
+      <div class="card-desc">Green, lush, and slow. For the couple who loves nature more than noise.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🌸</div><div class="stop-body"><div class="stop-time">9:00am</div><div class="stop-time">9:00am</div><div class="stop-name">Botanic Gardens</div><div class="stop-detail">Lake loop walk + Heritage Trees trail, totally free</div></div></div>
+        <div class="stop"><div class="stop-icon">🌿</div><div class="stop-body"><div class="stop-time">11:30am</div><div class="stop-name">Marguerite, Flower Dome</div><div class="stop-detail">Lunch inside the temperature-controlled dome, Michelin-starred</div></div></div>
+        <div class="stop"><div class="stop-icon">💆</div><div class="stop-body"><div class="stop-time">2:30pm</div><div class="stop-name">Sabaai Sabaai, Wisma Atria</div><div class="stop-detail">Couples massage ★4.9, then home</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Very romantic</span><span class="tag">Nature-forward</span></div>
+    </div>
+
+    <div class="card" data-cat="🌊 Outdoor" style="--card-accent: linear-gradient(90deg,#6bcb77,#ffd93d); --cat-color: #6bcb77;" data-anim="30">
+      <div class="card-num">30</div>
+      <div class="card-header-row">
+        <div class="card-cat">🌊 Outdoor</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Mount Faber Adventure</div>
+      <div class="card-desc">Cable car over the city, hilltop dining, then float in a spa. Vertical romance.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🚡</div><div class="stop-body"><div class="stop-time">9:30am</div><div class="stop-name">Mount Faber Cable Car</div><div class="stop-detail">Ride to Sentosa + back, sea and city views</div></div></div>
+        <div class="stop"><div class="stop-icon">🍽️</div><div class="stop-body"><div class="stop-time">12:00pm</div><div class="stop-name">Arbora, Mount Faber Peak</div><div class="stop-detail">Hilltop dining, chilli crab, satay, gorgeous views ★4.8</div></div></div>
+        <div class="stop"><div class="stop-icon">💆</div><div class="stop-body"><div class="stop-time">2:30pm</div><div class="stop-name">Adeva Spa, Paragon</div><div class="stop-detail">Couples reflexology + massage, Orchard</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Southern SG</span><span class="tag">Good weather needed</span></div>
+    </div>
+
+    <div class="card" data-cat="🎨 Create" style="--card-accent: linear-gradient(90deg,#ff6eb4,#c77dff); --cat-color: #c77dff;" data-anim="31">
+      <div class="card-num">31</div>
+      <div class="card-header-row">
+        <div class="card-cat">🎨 Create</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Weave + Wine</div>
+      <div class="card-desc">Learn macramé or loom weaving, then eat and drink beautifully.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🧵</div><div class="stop-body"><div class="stop-time">9:30am</div><div class="stop-name">Artloom SG</div><div class="stop-detail">Macramé & weaving studio ★4.9 · Macpherson area</div></div></div>
+        <div class="stop"><div class="stop-icon">🍽️</div><div class="stop-body"><div class="stop-time">1:00pm</div><div class="stop-name">Chopsuey Café, Dempsey</div><div class="stop-detail">Asian fusion lunch on the colonial patio ★4.5</div></div></div>
+        <div class="stop"><div class="stop-icon">🍸</div><div class="stop-body"><div class="stop-time">3:30pm</div><div class="stop-name">Oriental Elixir</div><div class="stop-detail">River Valley · Apothecary gin bar, bespoke cocktails</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Craft-forward</span><span class="tag">Unusual combo</span></div>
+    </div>
+
+    <div class="card" data-cat="💣 Smash" style="--card-accent: linear-gradient(90deg,#ff9f43,#ff6b6b); --cat-color: #ff6b6b;" data-anim="32">
+      <div class="card-num">32</div>
+      <div class="card-header-row">
+        <div class="card-cat">💣 Smash</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Rage, Recharge, Repeat</div>
+      <div class="card-desc">Destroy. Eat with the fishes. Melt in a spa. Three acts, one legendary day.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">💥</div><div class="stop-body"><div class="stop-time">9:30am</div><div class="stop-name">Fragment Room</div><div class="stop-detail">MacPherson · Duo smash + add a TV for max chaos</div></div></div>
+        <div class="stop"><div class="stop-icon">👨‍🍳</div><div class="stop-body"><div class="stop-time">12:00pm</div><div class="stop-name">D'Open Kitchen, Shenton</div><div class="stop-detail">Masterchef-style couple cooking battle ★4.9</div></div></div>
+        <div class="stop"><div class="stop-icon">🌺</div><div class="stop-body"><div class="stop-time">3:30pm</div><div class="stop-name">Head Spa, Orchard Central</div><div class="stop-detail">End with the most relaxing head treatment in SG</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">CBD loop</span><span class="tag">High energy + low</span></div>
+    </div>
+
+    <div class="card" data-cat="🍹 Drinks" style="--card-accent: linear-gradient(90deg,#ffd93d,#ff6eb4); --cat-color: #ff6eb4;" data-anim="33">
+      <div class="card-num">33</div>
+      <div class="card-header-row">
+        <div class="card-cat">🍹 Drinks</div>
+        <div class="budget-badge budget-$$$">$$$</div>
+      </div>
+      <div class="card-title">Sky High & Secret</div>
+      <div class="card-desc">Two of the most dramatic drinking spots in Singapore, one day.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🌿</div><div class="stop-body"><div class="stop-time">9:30am</div><div class="stop-name">Lola's, Holland V</div><div class="stop-detail">Slow brunch to set the tone</div></div></div>
+        <div class="stop"><div class="stop-icon">💆</div><div class="stop-body"><div class="stop-time">11:30am</div><div class="stop-name">Sabaai Sabaai</div><div class="stop-detail">90min couples massage ★4.9</div></div></div>
+        <div class="stop"><div class="stop-icon">🌆</div><div class="stop-body"><div class="stop-time">3:00pm</div><div class="stop-name">CÉ LA VI, MBS Level 57</div><div class="stop-detail">Sunset cocktails at the top of Marina Bay Sands</div></div></div>
+        <div class="stop"><div class="stop-icon">🕯️</div><div class="stop-body"><div class="stop-time">5:00pm</div><div class="stop-name">The Backdrop, Voco Orchard</div><div class="stop-detail">Speakeasy — scan QR to enter. Cocktails are ★</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Drinks-heavy</span><span class="tag">Late finish</span></div>
+    </div>
+
+    <div class="card" data-cat="🍽️ Food" style="--card-accent: linear-gradient(90deg,#6bcb77,#ffd93d); --cat-color: #ffd93d;" data-anim="34">
+      <div class="card-num">34</div>
+      <div class="card-header-row">
+        <div class="card-cat">🍽️ Food</div>
+        <div class="budget-badge budget-$$">$$</div>
+      </div>
+      <div class="card-title">Hawker to Haute</div>
+      <div class="card-desc">Start authentic, end elevated. Singapore's full culinary range in one day.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🍜</div><div class="stop-body"><div class="stop-time">9:00am</div><div class="stop-name">Tiong Bahru Market</div><div class="stop-detail">Char siew + kaya toast + kopi. Local royalty.</div></div></div>
+        <div class="stop"><div class="stop-icon">💆</div><div class="stop-body"><div class="stop-time">11:00am</div><div class="stop-name">Adeva Spa, Paragon</div><div class="stop-detail">90min couples treatment before the main event</div></div></div>
+        <div class="stop"><div class="stop-icon">🌿</div><div class="stop-body"><div class="stop-time">2:00pm</div><div class="stop-name">Marguerite, Gardens by the Bay</div><div class="stop-detail">Michelin-star lunch inside a flower dome</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Local + global</span><span class="tag">Full contrast day</span></div>
+    </div>
+
+    <div class="card" data-cat="🌊 Outdoor" style="--card-accent: linear-gradient(90deg,#4d96ff,#6bcb77); --cat-color: #4d96ff;" data-anim="35">
+      <div class="card-num">35</div>
+      <div class="card-header-row">
+        <div class="card-cat">🌊 Outdoor</div>
+        <div class="budget-badge budget-$$$">$$$</div>
+      </div>
+      <div class="card-title">The Southern Islands Escape</div>
+      <div class="card-desc">Most people never go. White sand, crystal water, zero crowds. This is the best-kept secret in Singapore.</div>
+      <div class="stops">
+        <div class="stop"><div class="stop-icon">🏝️</div><div class="stop-body"><div class="stop-time">9:00am</div><div class="stop-name">Zenith Yacht Charters</div><div class="stop-detail">Keppel Bay · Private yacht to Lazarus Island, BBQ on board</div></div></div>
+        <div class="stop"><div class="stop-icon">🏖️</div><div class="stop-body"><div class="stop-time">11:00am</div><div class="stop-name">Lazarus Island</div><div class="stop-detail">Swim, snorkel, just the two of you on the sand</div></div></div>
+        <div class="stop"><div class="stop-icon">🐟</div><div class="stop-body"><div class="stop-time">2:30pm</div><div class="stop-name">OCEAN Restaurant, RWS</div><div class="stop-detail">End at the aquarium — you were in the ocean, now eat next to it</div></div></div>
+      </div>
+      <div class="card-tags"><span class="tag">Full Splurge</span><span class="tag">Weather dependent</span><span class="tag">Unmissable</span></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<script>
+// Animate cards on load
+document.querySelectorAll('.card').forEach((card, i) => {
+  card.style.animationDelay = (i * 0.04) + 's';
+});
+
+function filterCards(cat, btn) {
+  // update pills
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+
+  const cards = document.querySelectorAll('.card');
+  let visible = 0;
+  cards.forEach(card => {
+    const match = cat === 'All' || card.dataset.cat === cat;
+    card.classList.toggle('hidden', !match);
+    if (match) {
+      visible++;
+      // re-trigger animation
+      card.style.animation = 'none';
+      card.offsetHeight;
+      card.style.animation = '';
+      card.style.animationDelay = (visible * 0.04) + 's';
+    }
+  });
+
+  document.getElementById('visibleCount').textContent = visible;
+
+  // empty state
+  let empty = document.querySelector('.empty');
+  if (visible === 0) {
+    if (!empty) {
+      empty = document.createElement('div');
+      empty.className = 'empty';
+      empty.textContent = 'No combos found for this filter.';
+      document.getElementById('cardGrid').appendChild(empty);
+    }
+  } else {
+    if (empty) empty.remove();
+  }
+}
+
+// back to top
+window.addEventListener('scroll', () => {
+  document.getElementById('backTop').classList.toggle('visible', window.scrollY > 400);
+});
+</script>
+</body>
+</html>

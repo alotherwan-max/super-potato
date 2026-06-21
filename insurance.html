@@ -382,8 +382,8 @@
   </div>
   <div class="kpi-row">
     <div class="kpi kpi-green"><div class="kpi-accent"></div><div class="kpi-label">Monthly salary</div><div class="kpi-val maskable" id="f-salary" data-amount="$8,000" data-pct="100%">$8,000</div><div class="kpi-note">Take-home</div></div>
-    <div class="kpi kpi-red"><div class="kpi-accent"></div><div class="kpi-label">Total outgoings</div><div class="kpi-val maskable" id="f-outgoings" data-amount="~$4,800" data-pct="~60%">~$4,800</div><div class="kpi-note">Fixed + variable</div></div>
-    <div class="kpi kpi-green"><div class="kpi-accent"></div><div class="kpi-label">Monthly surplus</div><div class="kpi-val maskable" id="f-surplus-kpi" data-amount="~$3,200" data-pct="~40%">~$3,200</div><div class="kpi-note">~40% savings rate</div></div>
+    <div class="kpi kpi-red"><div class="kpi-accent"></div><div class="kpi-label">Total outgoings</div><div class="kpi-val maskable" id="f-outgoings" data-amount="~$4,890" data-pct="~61%">~$4,890</div><div class="kpi-note">Fixed + variable</div></div>
+    <div class="kpi kpi-green"><div class="kpi-accent"></div><div class="kpi-label">Monthly surplus</div><div class="kpi-val maskable" id="f-surplus-kpi" data-amount="~$3,110" data-pct="~39%">~$3,110</div><div class="kpi-note">~39% savings rate</div></div>
     <div class="kpi kpi-amber"><div class="kpi-accent"></div><div class="kpi-label">Insurance (annual)</div><div class="kpi-val maskable" id="f-insurance-annual" data-amount="$2,559" data-pct="~2.7%">$2,559</div><div class="kpi-note">Active cash premiums only</div></div>
     <div class="kpi" id="healthScoreCard" style="overflow:visible"><div class="kpi-accent" style="background:var(--green)"></div><div class="kpi-label">Financial Health</div><div style="color:var(--ink-muted);font-size:12px;margin-top:.5rem">—</div><div class="kpi-note">Populate data to score</div></div>
   </div>
@@ -396,11 +396,11 @@
         <span class="maskable" id="f-cf-salary" data-amount="+$8,000" data-pct="100%">+$8,000</span>
         <span class="maskable" id="f-cf-insurance" data-amount="$213" data-pct="2.7%">$213</span>
         <span class="maskable" id="f-cf-car" data-amount="$1,044" data-pct="13%">$1,044</span>
-        <span class="maskable" id="f-cf-helper" data-amount="$700" data-pct="8.8%">$700</span>
+        <span class="maskable" id="f-cf-helper" data-amount="$760" data-pct="9.5%">$760</span>
         <span class="maskable" id="f-cf-groceries" data-amount="$1,000" data-pct="12.5%">$1,000</span>
         <span class="maskable" id="f-cf-utilities" data-amount="$400" data-pct="5%">$400</span>
-        <span class="maskable" id="f-cf-subs" data-amount="$119" data-pct="1.5%">$119</span>
-        <span class="maskable" id="f-cf-surplus" data-amount="~$3,200" data-pct="~40%">~$3,200</span>
+        <span class="maskable" id="f-cf-subs" data-amount="$149" data-pct="1.9%">$149</span>
+        <span class="maskable" id="f-cf-surplus" data-amount="~$3,110" data-pct="~39%">~$3,110</span>
       </div>
     </div>
     <div class="card">
@@ -478,8 +478,8 @@
       <div class="action-item"><div class="action-num">4</div><div class="action-text"><strong>Confirm Great SP Series 12 payout</strong> — matured Feb 2026, $10,192 should have been received</div></div>
       <div class="action-item"><div class="action-num">5</div><div class="action-text"><strong>Check insurance claims</strong> for Feb 2026 private hospital birth bills ($4,837 + $3,553)</div></div>
       <div class="action-item"><div class="action-num">6</div><div class="action-text"><strong>Retire Income 5 projected payout</strong> — confirm non-guaranteed component with GE</div></div>
-      <div class="action-item"><div class="action-num">7</div><div class="action-text"><strong>Review M1 plan</strong> when contract is up — $29.51/mo, cheaper alternatives available</div></div>
-      <div class="action-item"><div class="action-num">8</div><div class="action-text"><strong>Consider investing surplus</strong> — ~$3,200/mo available; CPF top-up, SSBs or ETFs</div></div>
+      <div class="action-item"><div class="action-num">7</div><div class="action-text"><strong>Review subscriptions</strong> — M1 $29.51/mo + Claude Pro $29.98/mo confirmed; review other streaming when contracts end</div></div>
+      <div class="action-item"><div class="action-num">8</div><div class="action-text"><strong>Consider investing surplus</strong> — ~$3,110/mo available; CPF top-up, SSBs or ETFs</div></div>
     </div>
   </div>
   <p style="font-size:11px;color:var(--ink-muted);text-align:center;padding-bottom:2rem">For personal reference only · Based on statements reviewed June 2026 · Not financial advice</p>
@@ -820,7 +820,7 @@ function applyAuditEdits(){
 function switchTab(id,btn){document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.getElementById('tab-'+id).classList.add('active');btn.classList.add('active');if(id==='overview'&&!window._chartDone){renderChart();window._chartDone=true}if(id==='retire'){initRetire()}}
 
 // ===== Spending chart =====
-function renderChart(){new Chart(document.getElementById('spendChart').getContext('2d'),{type:'doughnut',data:{labels:['Insurance','Car','Groceries+Baby','Helper','Utilities','Subscriptions'],datasets:[{data:[213,1044,1000,700,400,119],backgroundColor:['#c8914a','#6b7db3','#2d6a4f','#4a90b8','#9b7b4a','#aaaacc'],borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` S$${ctx.parsed.toLocaleString()} / mo`}}}}})}
+function renderChart(){new Chart(document.getElementById('spendChart').getContext('2d'),{type:'doughnut',data:{labels:['Insurance','Car','Groceries+Baby','Helper','Utilities','Subscriptions'],datasets:[{data:[213,1044,1000,760,400,149],backgroundColor:['#c8914a','#6b7db3','#2d6a4f','#4a90b8','#9b7b4a','#aaaacc'],borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` S$${ctx.parsed.toLocaleString()} / mo`}}}}})}
 
 // ===== Privacy toggle =====
 let privacyOn=false;

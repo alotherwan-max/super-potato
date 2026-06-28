@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chinese Calendar - Best Dates for Moving & Renovation</title>
+<style>
+  body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; background: #fdf6ec; color: #2c1810; }
+  h1 { color: #8b0000; text-align: center; margin-bottom: 8px; }
+  .subtitle { text-align: center; color: #666; margin-bottom: 30px; font-size: 14px; }
+  .input-section { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 24px; }
+  .input-section h2 { margin-top: 0; font-size: 16px; color: #8b0000; }
+  label { display: inline-block; margin-right: 8px; font-weight: bold; }
+  select { padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; margin-right: 16px; }
+  button { background: #8b0000; color: white; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; font-size: 14px; }
+  button:hover { background: #a00000; }
+  .results { display: none; }
+  .month-block { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+  .month-title { font-weight: bold; font-size: 16px; color: #8b0000; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 6px; }
+  .category { margin-bottom: 10px; }
+  .category-label { font-weight: bold; font-size: 13px; color: #555; margin-bottom: 4px; }
+  .dates { display: flex; flex-wrap: wrap; gap: 6px; }
+  .date-chip { background: #e8f5e9; border: 1px solid #a5d6a7; color: #1b5e20; padding: 3px 10px; border-radius: 12px; font-size: 13px; }
+  .date-chip.reno { background: #fff3e0; border-color: #ffcc80; color: #7c4f00; }
+  .date-chip.bad { background: #fce4ec; border-color: #f48fb1; color: #880e4f; }
+  .legend { display: flex; gap: 16px; margin-bottom: 16px; font-size: 13px; }
+  .legend span { display: flex; align-items: center; gap: 5px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .dot.move { background: #66bb6a; }
+  .dot.reno { background: #ffa726; }
+  .dot.bad { background: #ef5350; }
+  .note { font-size: 12px; color: #888; margin-top: 16px; text-align: center; }
+  .year-select { margin-bottom: 12px; }
+</style>
+</head>
+<body>
+
+<h1>🏠 Chinese Calendar Auspicious Dates</h1>
+<p class="subtitle">Find the best dates for moving in and renovation based on traditional Chinese almanac (黄历)</p>
+
+<div class="input-section">
+  <h2>Your Details</h2>
+  <div class="year-select">
+    <label>Birth Year:</label>
+    <select id="birthYear"></select>
+    <label>Birth Month:</label>
+    <select id="birthMonth">
+      <option value="1">January</option><option value="2">February</option>
+      <option value="3">March</option><option value="4">April</option>
+      <option value="5">May</option><option value="6">June</option>
+      <option value="7">July</option><option value="8">August</option>
+      <option value="9">September</option><option value="10">October</option>
+      <option value="11">November</option><option value="12">December</option>
+    </select>
+  </div>
+  <div>
+    <label>View Year:</label>
+    <select id="viewYear"></select>
+    <button onclick="calculate()">Find Auspicious Dates</button>
+  </div>
+</div>
+
+<div class="results" id="results">
+  <div class="legend">
+    <span><span class="dot move"></span> Good for Moving In</span>
+    <span><span class="dot reno"></span> Good for Renovation</span>
+    <span><span class="dot bad"></span> Avoid (Clash with your zodiac)</span>
+  </div>
+  <div id="calendarOutput"></div>
+  <p class="note">Based on traditional Chinese almanac principles. Dates marked "avoid" conflict with your birth year zodiac animal. Always consult a feng shui master for important decisions.</p>
+</div>
+
+<script>
+// Populate year selects
+const birthYearEl = document.getElementById('birthYear');
+const viewYearEl = document.getElementById('viewYear');
+for (let y = 1940; y <= 2010; y++) {
+  const o = document.createElement('option');
+  o.value = y; o.textContent = y;
+  if (y === 1990) o.selected = true;
+  birthYearEl.appendChild(o);
+}
+const currentYear = new Date().getFullYear();
+for (let y = currentYear; y <= currentYear + 2; y++) {
+  const o = document.createElement('option');
+  o.value = y; o.textContent = y;
+  viewYearEl.appendChild(o);
+}
+
+const ZODIAC = ['Rat','Ox','Tiger','Rabbit','Dragon','Snake','Horse','Goat','Monkey','Rooster','Dog','Pig'];
+const ZODIAC_ZH = ['鼠','牛','虎','兔','龙','蛇','马','羊','猴','鸡','狗','猪'];
+
+// Clash animals: each zodiac clashes with the one 6 positions away
+const CLASHES = { 0:6, 1:7, 2:8, 3:9, 4:10, 5:11, 6:0, 7:1, 8:2, 9:3, 10:4, 11:5 };
+
+// 12 day officers cycle (建除十二神) — simplified, starting Jan 1 2025 = day 0 offset
+// Auspicious officers: 开(Open), 成(Full/Success), 收(Receive), 定(Stable), 执(Execute)
+// For moving: 开,成 are best; For reno start: 开,执 are best
+const OFFICERS = ['建','除','满','平','定','执','破','危','成','收','开','闭'];
+const GOOD_MOVE = [8, 10, 7]; // 成,开,收
+const GOOD_RENO = [10, 5, 1]; // 开,执,除
+
+// Stems/Branches for year animal
+function getZodiacIndex(year) {
+  return (year - 4) % 12;
+}
+
+// Day of year
+function dayOfYear(date) {
+  const start = new Date(date.getFullYear(), 0, 0);
+  return Math.floor((date - start) / 86400000);
+}
+
+// Get officer for a given date (simplified cycle anchored to known reference)
+// Jan 1 2025 = 成 (index 8) based on traditional calendar approximation
+function getOfficer(date) {
+  const ref = new Date(2025, 0, 1);
+  const diff = Math.floor((date - ref) / 86400000);
+  return ((8 + diff) % 12 + 12) % 12;
+}
+
+// Day stem index (10 stems cycle, Jan 1 2025 = Jia/甲 = 0)
+const STEMS = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+function getStem(date) {
+  const ref = new Date(2025, 0, 1);
+  const diff = Math.floor((date - ref) / 86400000);
+  return ((0 + diff) % 10 + 10) % 10;
+}
+
+// Day branch index (12 branches cycle, Jan 1 2025 = Zi/子 = 0 = Rat)
+function getBranch(date) {
+  const ref = new Date(2025, 0, 1);
+  const diff = Math.floor((date - ref) / 86400000);
+  return ((0 + diff) % 12 + 12) % 12;
+}
+
+const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function calculate() {
+  const birthYear = parseInt(document.getElementById('birthYear').value);
+  const viewYear = parseInt(document.getElementById('viewYear').value);
+  const userZodiac = getZodiacIndex(birthYear);
+  const clashZodiac = CLASHES[userZodiac];
+
+  let html = `<p style="margin-bottom:16px;font-size:14px;">Your zodiac: <strong>${ZODIAC[userZodiac]} (${ZODIAC_ZH[userZodiac]})</strong> — avoiding days that clash with <strong>${ZODIAC[clashZodiac]} (${ZODIAC_ZH[clashZodiac]})</strong></p>`;
+
+  for (let month = 0; month < 12; month++) {
+    const daysInMonth = new Date(viewYear, month + 1, 0).getDate();
+    const moveDates = [], renoDates = [], avoidDates = [];
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const date = new Date(viewYear, month, day);
+      const branch = getBranch(date);
+      const officer = getOfficer(date);
+      const stem = getStem(date);
+
+      if (branch === clashZodiac) {
+        avoidDates.push(day);
+      } else if (GOOD_MOVE.includes(officer)) {
+        moveDates.push(day);
+      } else if (GOOD_RENO.includes(officer)) {
+        renoDates.push(day);
+      }
+    }
+
+    html += `<div class="month-block">
+      <div class="month-title">${MONTH_NAMES[month]} ${viewYear}</div>
+      <div class="category">
+        <div class="category-label">✅ Best for Moving In</div>
+        <div class="dates">${moveDates.length ? moveDates.map(d=>`<span class="date-chip">${d}</span>`).join('') : '<em style="color:#aaa;font-size:13px;">None this month</em>'}</div>
+      </div>
+      <div class="category">
+        <div class="category-label">🔨 Best for Renovation Start</div>
+        <div class="dates">${renoDates.length ? renoDates.map(d=>`<span class="date-chip reno">${d}</span>`).join('') : '<em style="color:#aaa;font-size:13px;">None this month</em>'}</div>
+      </div>
+      <div class="category">
+        <div class="category-label">⚠️ Avoid (Clash Day)</div>
+        <div class="dates">${avoidDates.length ? avoidDates.map(d=>`<span class="date-chip bad">${d}</span>`).join('') : '<em style="color:#aaa;font-size:13px;">None this month</em>'}</div>
+      </div>
+    </div>`;
+  }
+
+  document.getElementById('calendarOutput').innerHTML = html;
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

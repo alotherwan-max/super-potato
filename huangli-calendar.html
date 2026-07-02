@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="zh-SG">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>黄历吉日 · 装修搬家择日</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&display=swap');
+
+:root {
+  --paper: #F2E8C8;
+  --paper-dark: #E8D9A8;
+  --paper-crease: #DCC98A;
+  --red: #AA1A1A;
+  --red-dark: #7A0F0F;
+  --ink: #1C1008;
+  --ink-mid: #3A2A10;
+  --gold: #8B6510;
+  --gold-light: #C49A20;
+  --grid: #B8A060;
+  --best-bg: #FFF0E0;
+  --good-bg: #F0F8E8;
+  --avoid-bg: #F8EDED;
+  --stamp-red: #C41010;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #2C1A08;
+  font-family: 'Noto Serif SC', 'SimSun', '宋体', serif;
+  color: var(--ink);
+  min-height: 100vh;
+  padding: 16px;
+}
+
+/* ── OUTER FRAME ── */
+.page-frame {
+  max-width: 780px;
+  margin: 0 auto;
+  background: var(--paper);
+  border: 6px double #7A5C18;
+  box-shadow:
+    0 0 0 2px #3A2A10,
+    8px 8px 0 0 #1A0C02,
+    inset 0 0 40px rgba(180,140,60,0.15);
+  position: relative;
+}
+
+/* ── HEADER BANNER ── */
+.header-banner {
+  background: var(--red);
+  padding: 0;
+  border-bottom: 4px double #7A0F0F;
+  position: relative;
+}
+.header-inner {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 2px solid #7A0F0F;
+}
+.header-side {
+  background: var(--red-dark);
+  width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  writing-mode: vertical-rl;
+  font-size: 13px;
+  color: #F5D87A;
+  letter-spacing: 4px;
+  font-weight: 600;
+  padding: 12px 0;
+}
+.header-center {
+  flex: 1;
+  text-align: center;
+  padding: 18px 12px 14px;
+}
+.title-main {
+  font-size: 42px;
+  font-weight: 900;
+  color: #F5D87A;
+  letter-spacing: 8px;
+  line-height: 1;
+  text-shadow: 2px 2px 0 #7A0F0F;
+}
+.title-sub {
+  font-size: 15px;
+  color: #FFECB0;
+  letter-spacing: 6px;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(255,220,100,0.4);
+}
+.header-deco {
+  background: var(--red);
+  text-align: center;
+  padding: 6px;
+  font-size: 15px;
+  color: #F5D87A;
+  letter-spacing: 12px;
+  border-top: 1px solid rgba(255,220,100,0.3);
+}
+
+/* ── TRUST BAND ── */
+.trust-band {
+  background: var(--ink);
+  color: #F5D87A;
+  text-align: center;
+  padding: 8px 16px;
+  font-size: 13px;
+  letter-spacing: 2px;
+  border-bottom: 3px solid var(--gold);
+}
+
+/* ── SELECTOR SECTION ── */
+.selector-section {
+  padding: 20px 24px 16px;
+  border-bottom: 2px solid var(--grid);
+  background: var(--paper-dark);
+}
+.selector-label {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--red);
+  margin-bottom: 12px;
+  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.selector-label::before, .selector-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--grid);
+}
+.selector-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+.sel-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 120px; }
+.sel-group label {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink-mid);
+  letter-spacing: 1px;
+}
+
+select {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 20px;
+  padding: 10px 14px;
+  background: #FFFBF0;
+  border: 2px solid var(--grid);
+  color: var(--ink);
+  border-radius: 0;
+  width: 100%;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath fill='%23AA1A1A' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 32px;
+}
+select:focus { outline: 3px solid var(--red); }
+
+.btn-query {
+  background: var(--red);
+  color: #F5D87A;
+  border: 3px solid var(--red-dark);
+  font-family: 'Noto Serif SC', serif;
+  font-size: 22px;
+  font-weight: 900;
+  padding: 10px 28px;
+  cursor: pointer;
+  letter-spacing: 4px;
+  flex-shrink: 0;
+  transition: background 0.15s;
+  box-shadow: 3px 3px 0 var(--red-dark);
+  white-space: nowrap;
+}
+.btn-query:hover { background: var(--red-dark); transform: translate(1px,1px); box-shadow: 2px 2px 0 var(--red-dark); }
+.btn-query:active { transform: translate(3px,3px); box-shadow: none; }
+
+/* ── LEGEND ── */
+.legend-bar {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--grid);
+}
+.legend-item {
+  flex: 1;
+  text-align: center;
+  padding: 8px 4px;
+  font-size: 14px;
+  font-weight: 700;
+  border-right: 1px solid var(--grid);
+  letter-spacing: 1px;
+}
+.legend-item:last-child { border-right: none; }
+.leg-best { background: #FFF0D0; color: var(--red); }
+.leg-good { background: #EEF8E8; color: #1A5C10; }
+.leg-avoid { background: #F8EDED; color: #8B1A1A; }
+.leg-normal { background: var(--paper); color: var(--ink-mid); }
+
+/* ── CALENDAR GRID ── */
+.cal-section { padding: 16px 20px 20px; }
+
+.cal-month-title {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--red);
+  letter-spacing: 4px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--grid);
+}
+
+.weekday-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border: 2px solid var(--ink);
+  border-bottom: none;
+}
+.wday-cell {
+  text-align: center;
+  padding: 8px 0;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border-right: 1px solid var(--ink);
+  background: var(--ink);
+  color: #F5D87A;
+}
+.wday-cell:last-child { border-right: none; }
+.wday-cell.sun { color: #FF9090; }
+.wday-cell.sat { color: #90C8FF; }
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border: 2px solid var(--ink);
+  border-top: none;
+}
+
+.cal-cell {
+  border-right: 1px solid var(--grid);
+  border-bottom: 1px solid var(--grid);
+  min-height: 90px;
+  padding: 6px 7px;
+  position: relative;
+  cursor: default;
+  transition: opacity 0.1s;
+  background: var(--paper);
+}
+.cal-cell:nth-child(7n) { border-right: none; }
+
+.cal-cell.empty {
+  background: var(--paper-crease);
+  opacity: 0.5;
+}
+
+.cal-cell.day-best { background: #FFF3D8; }
+.cal-cell.day-good { background: #EFF8EB; }
+.cal-cell.day-avoid { background: #F9ECEC; }
+
+.cal-cell.clickable { cursor: pointer; }
+.cal-cell.clickable:hover { filter: brightness(0.95); }
+.cal-cell.selected { outline: 3px solid var(--red); outline-offset: -3px; }
+
+/* Date number */
+.cell-num {
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1;
+  display: block;
+}
+.num-best { color: var(--red); }
+.num-good { color: #1A5C10; }
+.num-avoid { color: #8B8B8B; }
+.num-normal { color: var(--ink); }
+.num-sun { color: #B02020; }
+
+/* Lunar date */
+.cell-lunar {
+  font-size: 12px;
+  color: var(--ink-mid);
+  display: block;
+  margin-top: 2px;
+  letter-spacing: 0.5px;
+}
+
+/* Ganzhi */
+.cell-gz {
+  font-size: 11px;
+  color: var(--gold);
+  display: block;
+}
+
+/* Activity icons */
+.cell-icons {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  right: 5px;
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+}
+.icon-tag {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 0;
+  letter-spacing: 0.5px;
+}
+.tag-reno { background: var(--red); color: #F5D87A; }
+.tag-move { background: #1A5C10; color: #D8F5D8; }
+
+/* STAMP overlay for best days */
+.stamp {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 32px;
+  height: 32px;
+  border: 2.5px solid var(--stamp-red);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 900;
+  color: var(--stamp-red);
+  transform: rotate(-15deg);
+  opacity: 0.85;
+  letter-spacing: 0;
+}
+.stamp-x {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  font-size: 22px;
+  font-weight: 900;
+  color: #B0B0B0;
+  opacity: 0.5;
+  line-height: 1;
+}
+
+/* Ghost month warning */
+.ghost-warning {
+  background: repeating-linear-gradient(
+    45deg, #F8ECEC, #F8ECEC 10px, #F2E0E0 10px, #F2E0E0 20px
+  );
+  border: 2px solid #B02020;
+  margin: 0 0 12px 0;
+  padding: 14px 16px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #8B0000;
+  text-align: center;
+  letter-spacing: 1px;
+  line-height: 1.8;
+}
+
+/* ── DETAIL PANEL ── */
+.detail-panel {
+  display: none;
+  border-top: 2px solid var(--grid);
+  padding: 18px 22px;
+  background: #FFFBF0;
+}
+.detail-panel.show { display: block; }
+
+.detail-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--red);
+  margin-bottom: 12px;
+  letter-spacing: 2px;
+  border-bottom: 1px solid var(--grid);
+  padding-bottom: 8px;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.detail-item { display: flex; flex-direction: column; gap: 3px; }
+.detail-item .dk { font-size: 13px; color: var(--gold); font-weight: 700; letter-spacing: 1px; }
+.detail-item .dv { font-size: 17px; font-weight: 700; color: var(--ink); }
+
+.verdict-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.verdict-pill {
+  font-size: 16px;
+  font-weight: 700;
+  padding: 8px 18px;
+  letter-spacing: 2px;
+  border: 2px solid;
+}
+.pill-ok-reno { background: #FFF0D0; color: var(--red); border-color: var(--red); }
+.pill-ok-move { background: #EFF8EB; color: #1A5C10; border-color: #1A5C10; }
+.pill-no-reno { background: #F0F0F0; color: #888; border-color: #BDBDBD; }
+.pill-no-move { background: #F0F0F0; color: #888; border-color: #BDBDBD; }
+.pill-avoid-all { background: #F8ECEC; color: #8B0000; border-color: #B02020; }
+
+.detail-reason {
+  font-size: 14px;
+  color: var(--ink-mid);
+  line-height: 2;
+  background: var(--paper-dark);
+  padding: 12px 14px;
+  border-left: 4px solid var(--red);
+}
+
+/* ── SUMMARY TABLE ── */
+.summary-section {
+  border-top: 2px solid var(--grid);
+  padding: 16px 22px 20px;
+  background: var(--paper-dark);
+}
+.summary-title {
+  font-size: 17px;
+  font-weight: 900;
+  color: var(--red);
+  letter-spacing: 3px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+.sum-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.sum-table th, .sum-table td {
+  border: 1px solid var(--grid);
+  padding: 8px 10px;
+  text-align: center;
+}
+.sum-table thead th {
+  background: var(--ink);
+  color: #F5D87A;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.sum-table tbody tr:nth-child(even) { background: rgba(200,176,96,0.1); }
+.sum-table .best-row { color: var(--red); font-weight: 700; }
+.sum-table .good-row { color: #1A5C10; font-weight: 700; }
+.sum-table .avoid-row { color: #888; }
+
+/* ── ALMANAC NOTES ── */
+.almanac-notes {
+  border-top: 3px double var(--grid);
+  padding: 16px 22px;
+  background: var(--paper);
+}
+.notes-title {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--red);
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.notes-body {
+  font-size: 13px;
+  color: var(--ink-mid);
+  line-height: 2.2;
+  column-count: 2;
+  column-gap: 20px;
+  column-rule: 1px solid var(--grid);
+}
+.notes-body p { margin-bottom: 6px; break-inside: avoid; }
+
+/* ── FOOTER ── */
+.page-footer {
+  background: var(--ink);
+  color: #B0904A;
+  text-align: center;
+  padding: 10px;
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 520px) {
+  body { padding: 0; }
+  .title-main { font-size: 30px; letter-spacing: 4px; }
+  .header-side { display: none; }
+  .cal-cell { min-height: 72px; padding: 4px 4px; }
+  .cell-num { font-size: 20px; }
+  .cell-lunar, .cell-gz { font-size: 10px; }
+  .stamp { width: 24px; height: 24px; font-size: 9px; }
+  .detail-grid { grid-template-columns: 1fr; }
+  .notes-body { column-count: 1; }
+  .selector-row { flex-direction: column; }
+  .btn-query { width: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="page-frame">
+
+  <!-- HEADER -->
+  <div class="header-banner">
+    <div class="header-inner">
+      <div class="header-side">通书黄历</div>
+      <div class="header-center">
+        <div class="title-main">黄历择吉日</div>
+        <div class="title-sub">装修动土 · 入宅搬家 · 专用历书</div>
+      </div>
+      <div class="header-side" style="transform:scaleX(-1)">通书黄历</div>
+    </div>
+    <div class="header-deco">❖ &nbsp; 依据建除十二神 · 天干地支 · 农历古法推算 &nbsp; ❖</div>
+  </div>
+
+  <!-- TRUST BAND -->
+  <div class="trust-band">
+    此历书依照传统黄历古法，按建除、五行、吉神凶煞逐日推算，与坊间通书一致
+  </div>
+
+  <!-- SELECTOR -->
+  <div class="selector-section">
+    <div class="selector-label">请选择年份与月份</div>
+    <div class="selector-row">
+      <div class="sel-group">
+        <label>年份</label>
+        <select id="selYear"></select>
+      </div>
+      <div class="sel-group">
+        <label>月份</label>
+        <select id="selMonth">
+          <option value="1">一月</option>
+          <option value="2">二月</option>
+          <option value="3">三月</option>
+          <option value="4">四月</option>
+          <option value="5">五月</option>
+          <option value="6">六月</option>
+          <option value="7">七月</option>
+          <option value="8">八月</option>
+          <option value="9">九月</option>
+          <option value="10">十月</option>
+          <option value="11">十一月</option>
+          <option value="12">十二月</option>
+        </select>
+      </div>
+      <button class="btn-query" onclick="buildCalendar()">查　吉　日</button>
+    </div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend-bar">
+    <div class="legend-item leg-best">◉ 大吉 — 宜装修搬家</div>
+    <div class="legend-item leg-good">○ 吉日 — 可选</div>
+    <div class="legend-item leg-avoid">✕ 忌日 — 不宜</div>
+    <div class="legend-item leg-normal">平日</div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div class="cal-section">
+    <div class="cal-month-title" id="calTitle">请选择月份查询</div>
+    <div id="ghostWarning"></div>
+    <div class="weekday-header">
+      <div class="wday-cell sun">日</div>
+      <div class="wday-cell">一</div>
+      <div class="wday-cell">二</div>
+      <div class="wday-cell">三</div>
+      <div class="wday-cell">四</div>
+      <div class="wday-cell">五</div>
+      <div class="wday-cell sat">六</div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+
+  <!-- DETAIL PANEL -->
+  <div class="detail-panel" id="detailPanel">
+    <div class="detail-title" id="detailTitle"></div>
+    <div class="detail-grid" id="detailGrid"></div>
+    <div class="verdict-row" id="verdictRow"></div>
+    <div class="detail-reason" id="detailReason"></div>
+  </div>
+
+  <!-- SUMMARY TABLE -->
+  <div class="summary-section" id="summarySection" style="display:none">
+    <div class="summary-title">本月吉日一览</div>
+    <table class="sum-table" id="sumTable"></table>
+  </div>
+
+  <!-- ALMANAC NOTES -->
+  <div class="almanac-notes">
+    <div class="notes-title">❖ 择日须知 ❖</div>
+    <div class="notes-body">
+      <p>【建除十二神】每日轮流值日，建、除、满、平、定、执、破、危、成、收、开、闭，各有宜忌。除、平、定、成、开为吉日，适合动土装修与入宅搬家。</p>
+      <p>【破日忌日】每月初五、十四、廿三为「破日」，诸事不宜，尤忌动土搬迁，须严格避开。</p>
+      <p>【农历七月】俗称「鬼月」，民间传统认为此月不宜开工动土、入宅搬家，宜等鬼月过后再行。</p>
+      <p>【天干地支】以日干推算五行生克，甲乙丙丁日多属吉，庚辛壬癸日须谨慎参考其他条件。</p>
+      <p>【朔日望日】初一（朔日）不宜搬家，十五（望日/满月）为吉，诸事顺遂，适合入宅。</p>
+      <p>【参阅通书】本历书推算依据与坊间《通书》黄历一致，如有疑问可对照购自书局之通书核实。</p>
+    </div>
+  </div>
+
+  <div class="page-footer">依据中华传统历法推算 · 仅供参考 · 如有疑虑请参阅坊间通书</div>
+</div>
+
+<script>
+// ── LUNAR ENGINE ──────────────────────────────────────────────────────────────
+const lunarNewYear = {
+  2024: [2024, 1, 10],
+  2025: [2025, 0, 29],
+  2026: [2026, 1, 17],
+  2027: [2027, 1,  6],
+  2028: [2028, 0, 26],
+  2029: [2029, 1, 13]
+};
+
+// Month lengths per lunar year [months array, leap month (0=none)]
+const lunarYearData = {
+  2024: { months: [30,29,30,29,30,29,30,30,29,30,29,30], leap: 0 },
+  2025: { months: [29,30,29,30,29,30,29,30,30,29,30,29,30], leap: 6 },
+  2026: { months: [30,29,30,29,30,29,30,29,30,30,29,30], leap: 0 },
+  2027: { months: [29,30,29,30,29,30,29,30,29,30,29,30], leap: 0 },
+  2028: { months: [30,29,30,29,30,29,30,29,30,29,30,30], leap: 0 },
+  2029: { months: [29,30,29,30,29,30,29,30,29,30,29,30], leap: 0 }
+};
+
+function lnyDate(y) {
+  const d = lunarNewYear[y];
+  return d ? new Date(d[0], d[1], d[2]) : new Date(y, 1, 10);
+}
+
+function getLunarDate(date) {
+  const gYear = date.getFullYear();
+  let lunarYear = gYear;
+  if (date < lnyDate(gYear)) lunarYear = gYear - 1;
+
+  const start = lnyDate(lunarYear);
+  let dayOff = Math.round((date - start) / 86400000);
+  if (dayOff < 0) { lunarYear--; dayOff = Math.round((date - lnyDate(lunarYear)) / 86400000); }
+
+  const yd = lunarYearData[lunarYear] || lunarYearData[2025];
+  const months = yd.months;
+
+  let lm = 1, ld = dayOff + 1;
+  for (let i = 0; i < months.length; i++) {
+    if (ld <= months[i]) break;
+    ld -= months[i]; lm++;
+  }
+  return { lunarYear, lunarMonth: lm, lunarDay: ld };
+}
+
+const CN = ['','初一','初二','初三','初四','初五','初六','初七','初八','初九','初十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十','廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'];
+const CN_M = ['','正月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+
+function lunarStr(lunar) {
+  if (lunar.lunarDay === 1) return CN_M[lunar.lunarMonth];
+  return CN[lunar.lunarDay];
+}
+
+// ── GANZHI ───────────────────────────────────────────────────────────────────
+const STEMS   = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
+const BRANCHES= ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const REF = new Date(2025, 0, 1);
+const RS = 4, RB = 8; // 戊申
+
+function ganzhi(date) {
+  const d = Math.round((date - REF) / 86400000);
+  return STEMS[((RS+d)%10+10)%10] + BRANCHES[((RB+d)%12+12)%12];
+}
+
+// ── TWELVE OFFICERS ───────────────────────────────────────────────────────────
+const OFFICERS = [
+  { zh:'建', name:'建日', reno:false, move:false, desc:'不宜动土，宜祈福' },
+  { zh:'除', name:'除日', reno:true,  move:true,  desc:'扫除旧气，宜装修入宅' },
+  { zh:'满', name:'满日', reno:false, move:false, desc:'忌迁移，不利搬家' },
+  { zh:'平', name:'平日', reno:false, move:true,  desc:'平稳之日，宜入宅' },
+  { zh:'定', name:'定日', reno:true,  move:true,  desc:'诸事稳定，宜动土入宅' },
+  { zh:'执', name:'执日', reno:false, move:false, desc:'宜固执守旧，不宜搬动' },
+  { zh:'破', name:'破日', reno:false, move:false, desc:'月破之日，百事不宜' },
+  { zh:'危', name:'危日', reno:false, move:false, desc:'危险之日，不宜动作' },
+  { zh:'成', name:'成日', reno:true,  move:true,  desc:'大吉！诸事皆成，宜装修搬家' },
+  { zh:'收', name:'收日', reno:false, move:false, desc:'宜收成，不宜迁移' },
+  { zh:'开', name:'开日', reno:true,  move:true,  desc:'开启新局，宜动土入宅' },
+  { zh:'闭', name:'闭日', reno:false, move:false, desc:'闭塞之日，不宜开工' }
+];
+const REF_OFF = 7; // 危 on 2025-01-01
+
+function getOfficer(date) {
+  const d = Math.round((date - REF) / 86400000);
+  return OFFICERS[((REF_OFF + d) % 12 + 12) % 12];
+}
+
+// ── SCORING ───────────────────────────────────────────────────────────────────
+const GOOD_STEMS_RENO = new Set(['甲','乙','丙','丁','庚','辛']);
+const GOOD_STEMS_MOVE = new Set(['甲','乙','丙','丁','壬','癸']);
+
+function scoreDay(date) {
+  const lunar = getLunarDate(date);
+  const gz = ganzhi(date);
+  const stem = gz[0];
+  const officer = getOfficer(date);
+  const lm = lunar.lunarMonth, ld = lunar.lunarDay;
+
+  const isGhost  = lm === 7;
+  const isPo     = ld === 5 || ld === 14 || ld === 23;
+  const isShuò   = ld === 1;
+  const isWàng   = ld === 15;
+
+  let reno = 0, move = 0;
+  const reasons = [];
+
+  if (isGhost) {
+    return { reno:-2, move:-2, lunar, gz, officer, isGhost, isPo, isShuò, isWàng,
+      reasons:['农历七月（鬼月），民间传统严忌动土搬家，建议待八月后再择日'] };
+  }
+  if (isPo) {
+    return { reno:-1, move:-1, lunar, gz, officer, isGhost, isPo, isShuò, isWàng,
+      reasons:['今日为「破日」（初五、十四、廿三），黄历明载诸事不宜，严忌动土搬迁'] };
+  }
+
+  // Officer
+  if (officer.reno) { reno += 2; reasons.push(`建除值日「${officer.zh}」：${officer.desc}`); }
+  else if (!officer.move) { reasons.push(`建除值日「${officer.zh}」：${officer.desc}`); }
+  if (officer.move) { move += 2; }
+
+  // Stem
+  if (GOOD_STEMS_RENO.has(stem)) { reno += 1; reasons.push(`日干「${stem}」属吉，利于动土装修`); }
+  if (GOOD_STEMS_MOVE.has(stem)) { move += 1; }
+
+  // Moon
+  if (isWàng) { reno += 1; move += 1; reasons.push('十五望日（满月），阴阳调和，诸事顺遂，大吉'); }
+  if (isShuò) { move -= 1; reasons.push('初一朔日，阴气偏重，不宜入宅搬家'); }
+
+  if (reasons.length === 0) reasons.push(`建除值日「${officer.zh}」：${officer.desc}`);
+
+  return { reno, move, lunar, gz, officer, isGhost, isPo, isShuò, isWàng, reasons };
+}
+
+function classify(score) {
+  if (score.reno < 0 || score.move < 0) return 'avoid';
+  if (score.reno >= 3 || score.move >= 3) return 'best';
+  if (score.reno >= 2 || score.move >= 2) return 'good';
+  return 'normal';
+}
+
+// ── CALENDAR BUILD ────────────────────────────────────────────────────────────
+const MO_ZH = ['','一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+const YEAR_ZH_MAP = { 2024:'甲辰年', 2025:'乙巳年', 2026:'丙午年', 2027:'丁未年', 2028:'戊申年', 2029:'己酉年' };
+
+let currentData = [];
+
+function buildCalendar() {
+  const year  = parseInt(document.getElementById('selYear').value);
+  const month = parseInt(document.getElementById('selMonth').value);
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const firstDay = new Date(year, month - 1, 1).getDay(); // 0=Sun
+
+  // Title
+  const yz = YEAR_ZH_MAP[year] || year+'年';
+  document.getElementById('calTitle').textContent = `${yz} ${MO_ZH[month]}`;
+
+  // Ghost month warning
+  let ghostMonths = [];
+  for (let d = 1; d <= daysInMonth; d++) {
+    const sc = scoreDay(new Date(year, month-1, d));
+    if (sc.lunar.lunarMonth === 7) { ghostMonths.push(d); }
+  }
+  const gw = document.getElementById('ghostWarning');
+  if (ghostMonths.length > 0) {
+    gw.innerHTML = `<div class="ghost-warning">⚠️ 注意：本月包含农历七月（鬼月）日期，动土与搬家须严加注意<br>农历七月：${ghostMonths[0]}日至${ghostMonths[ghostMonths.length-1]}日，建议避开</div>`;
+  } else { gw.innerHTML = ''; }
+
+  // Build grid
+  currentData = [];
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+
+  // Empty cells before first day
+  for (let i = 0; i < firstDay; i++) {
+    const el = document.createElement('div');
+    el.className = 'cal-cell empty';
+    grid.appendChild(el);
+  }
+
+  const bestList = [], goodList = [];
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(year, month-1, d);
+    const score = scoreDay(date);
+    const cls = classify(score);
+    const dow = date.getDay();
+    currentData.push({ d, date, score, cls });
+
+    if (cls === 'best') bestList.push(d);
+    if (cls === 'good') goodList.push(d);
+
+    const cell = document.createElement('div');
+    const cellClass = cls === 'best' ? 'day-best' : cls === 'good' ? 'day-good' : cls === 'avoid' ? 'day-avoid' : '';
+    cell.className = `cal-cell ${cellClass} clickable`;
+    cell.dataset.day = d;
+    cell.onclick = () => showDetail(d);
+
+    // Number colour
+    let numCls = 'num-normal';
+    if (dow === 0) numCls = 'num-sun';
+    else if (cls === 'best') numCls = 'num-best';
+    else if (cls === 'good') numCls = 'num-good';
+    else if (cls === 'avoid') numCls = 'num-avoid';
+
+    // Stamp / X
+    let overlay = '';
+    if (cls === 'best') overlay = `<div class="stamp">大吉</div>`;
+    else if (cls === 'avoid') overlay = `<div class="stamp-x">✕</div>`;
+
+    // Activity tags
+    let tags = '';
+    if (cls !== 'avoid') {
+      if (score.reno >= 2) tags += `<span class="icon-tag tag-reno">装修</span>`;
+      if (score.move >= 2) tags += `<span class="icon-tag tag-move">搬家</span>`;
+    }
+
+    cell.innerHTML = `
+      ${overlay}
+      <span class="cell-num ${numCls}">${d}</span>
+      <span class="cell-lunar">${lunarStr(score.lunar)}</span>
+      <span class="cell-gz">${score.gz} ${score.officer.zh}</span>
+      <div class="cell-icons">${tags}</div>
+    `;
+    grid.appendChild(cell);
+  }
+
+  // Hide detail
+  document.getElementById('detailPanel').classList.remove('show');
+
+  // Summary
+  buildSummary(bestList, goodList, year, month);
+}
+
+function showDetail(d) {
+  // Deselect all, select clicked
+  document.querySelectorAll('.cal-cell').forEach(c => c.classList.remove('selected'));
+  document.querySelector(`.cal-cell[data-day="${d}"]`)?.classList.add('selected');
+
+  const entry = currentData.find(x => x.d === d);
+  if (!entry) return;
+  const { score, cls, date } = entry;
+
+  const weekdays = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+  const panel = document.getElementById('detailPanel');
+  const lunar = score.lunar;
+
+  document.getElementById('detailTitle').textContent =
+    `${date.getFullYear()}年${date.getMonth()+1}月${d}日 · ${weekdays[date.getDay()]} · 农历${CN_M[lunar.lunarMonth]}${CN[lunar.lunarDay]}`;
+
+  document.getElementById('detailGrid').innerHTML = `
+    <div class="detail-item"><div class="dk">干支</div><div class="dv">${score.gz}日</div></div>
+    <div class="detail-item"><div class="dk">建除值日</div><div class="dv">${score.officer.name}</div></div>
+    <div class="detail-item"><div class="dk">装修动土</div><div class="dv">${score.reno >= 2 ? '✔ 宜' : score.reno < 0 ? '✘ 忌' : '— 一般'}</div></div>
+    <div class="detail-item"><div class="dk">入宅搬家</div><div class="dv">${score.move >= 2 ? '✔ 宜' : score.move < 0 ? '✘ 忌' : '— 一般'}</div></div>
+  `;
+
+  let verdicts = '';
+  if (cls === 'avoid') {
+    verdicts = `<div class="verdict-pill pill-avoid-all">✘ 此日严忌装修搬家</div>`;
+  } else {
+    verdicts += score.reno >= 2
+      ? `<div class="verdict-pill pill-ok-reno">✔ 宜装修动土</div>`
+      : `<div class="verdict-pill pill-no-reno">— 不特别宜装修</div>`;
+    verdicts += score.move >= 2
+      ? `<div class="verdict-pill pill-ok-move">✔ 宜入宅搬家</div>`
+      : `<div class="verdict-pill pill-no-move">— 不特别宜搬家</div>`;
+  }
+  document.getElementById('verdictRow').innerHTML = verdicts;
+  document.getElementById('detailReason').innerHTML = score.reasons.map(r => `• ${r}`).join('<br>');
+
+  panel.classList.add('show');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function buildSummary(bestList, goodList, year, month) {
+  const sec = document.getElementById('summarySection');
+  if (bestList.length + goodList.length === 0) { sec.style.display = 'none'; return; }
+  sec.style.display = 'block';
+
+  const tbl = document.getElementById('sumTable');
+  let rows = `<thead><tr><th>类别</th><th>日期</th><th>宜</th></tr></thead><tbody>`;
+  bestList.forEach(d => {
+    const e = currentData.find(x => x.d === d);
+    const acts = [];
+    if (e.score.reno >= 2) acts.push('装修');
+    if (e.score.move >= 2) acts.push('搬家');
+    rows += `<tr class="best-row"><td>◉ 大吉</td><td>${month}月${d}日</td><td>${acts.join('、')}</td></tr>`;
+  });
+  goodList.forEach(d => {
+    const e = currentData.find(x => x.d === d);
+    const acts = [];
+    if (e.score.reno >= 2) acts.push('装修');
+    if (e.score.move >= 2) acts.push('搬家');
+    rows += `<tr class="good-row"><td>○ 吉日</td><td>${month}月${d}日</td><td>${acts.join('、')}</td></tr>`;
+  });
+  rows += '</tbody>';
+  tbl.innerHTML = rows;
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+window.onload = function() {
+  const ySel = document.getElementById('selYear');
+  const now = new Date();
+  const cy = now.getFullYear();
+  for (let y = cy; y <= cy + 3; y++) {
+    const o = document.createElement('option');
+    o.value = y;
+    o.textContent = `${y}年 （${YEAR_ZH_MAP[y] || ''}）`;
+    ySel.appendChild(o);
+  }
+  document.getElementById('selMonth').value = now.getMonth() + 1;
+  buildCalendar();
+};
+</script>
+</body>
+</html>

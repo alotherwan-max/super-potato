@@ -47,6 +47,26 @@ body {
   position: relative;
 }
 
+/* ── LANGUAGE TOGGLE ── */
+.lang-toggle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 20;
+  background: var(--ink);
+  color: #F5D87A;
+  border: 2px solid var(--gold);
+  font-family: 'Noto Serif SC', serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 16px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  border-radius: 3px;
+  transition: background 0.15s;
+}
+.lang-toggle:hover { background: var(--red-dark); }
+
 /* ── HEADER BANNER ── */
 .header-banner {
   background: var(--red);
@@ -505,72 +525,62 @@ select:focus { outline: 3px solid var(--red); }
   .notes-body { column-count: 1; }
   .selector-row { flex-direction: column; }
   .btn-query { width: 100%; }
+  .lang-toggle { top: 6px; right: 6px; font-size: 11px; padding: 5px 12px; }
 }
 </style>
 </head>
 <body>
 <div class="page-frame">
 
+  <button class="lang-toggle" id="langToggle" onclick="toggleLang()">EN</button>
+
   <!-- HEADER -->
   <div class="header-banner">
     <div class="header-inner">
       <div class="header-side">通书黄历</div>
       <div class="header-center">
-        <div class="title-main">黄历择吉日</div>
-        <div class="title-sub">装修动土 · 入宅搬家 · 专用历书</div>
+        <div class="title-main" id="titleMain">黄历择吉日</div>
+        <div class="title-sub" id="titleSub">装修动土 · 入宅搬家 · 专用历书</div>
       </div>
       <div class="header-side" style="transform:scaleX(-1)">通书黄历</div>
     </div>
-    <div class="header-deco">❖ &nbsp; 依据建除十二神 · 天干地支 · 农历古法推算 &nbsp; ❖</div>
+    <div class="header-deco" id="headerDeco">❖ &nbsp; 依据建除十二神 · 天干地支 · 农历古法推算 &nbsp; ❖</div>
   </div>
 
   <!-- TRUST BAND -->
-  <div class="trust-band">
+  <div class="trust-band" id="trustBand">
     此历书依照传统黄历古法，按建除、五行、吉神凶煞逐日推算，与坊间通书一致
   </div>
 
   <!-- SELECTOR -->
   <div class="selector-section">
-    <div class="selector-label">请选择年份与月份</div>
+    <div class="selector-label" id="selectorLabel">请选择年份与月份</div>
     <div class="selector-row">
       <div class="sel-group">
-        <label>年份</label>
+        <label id="labelYear">年份</label>
         <select id="selYear"></select>
       </div>
       <div class="sel-group">
-        <label>月份</label>
-        <select id="selMonth">
-          <option value="1">一月</option>
-          <option value="2">二月</option>
-          <option value="3">三月</option>
-          <option value="4">四月</option>
-          <option value="5">五月</option>
-          <option value="6">六月</option>
-          <option value="7">七月</option>
-          <option value="8">八月</option>
-          <option value="9">九月</option>
-          <option value="10">十月</option>
-          <option value="11">十一月</option>
-          <option value="12">十二月</option>
-        </select>
+        <label id="labelMonth">月份</label>
+        <select id="selMonth"></select>
       </div>
-      <button class="btn-query" onclick="buildCalendar()">查　吉　日</button>
+      <button class="btn-query" id="btnQuery" onclick="buildCalendar()">查　吉　日</button>
     </div>
   </div>
 
   <!-- LEGEND -->
   <div class="legend-bar">
-    <div class="legend-item leg-best">◉ 大吉 — 宜装修搬家</div>
-    <div class="legend-item leg-good">○ 吉日 — 可选</div>
-    <div class="legend-item leg-avoid">✕ 忌日 — 不宜</div>
-    <div class="legend-item leg-normal">平日</div>
+    <div class="legend-item leg-best" id="legBest">◉ 大吉 — 宜装修搬家</div>
+    <div class="legend-item leg-good" id="legGood">○ 吉日 — 可选</div>
+    <div class="legend-item leg-avoid" id="legAvoid">✕ 忌日 — 不宜</div>
+    <div class="legend-item leg-normal" id="legNormal">平日</div>
   </div>
 
   <!-- CALENDAR -->
   <div class="cal-section">
     <div class="cal-month-title" id="calTitle">请选择月份查询</div>
     <div id="ghostWarning"></div>
-    <div class="weekday-header">
+    <div class="weekday-header" id="weekdayHeader">
       <div class="wday-cell sun">日</div>
       <div class="wday-cell">一</div>
       <div class="wday-cell">二</div>
@@ -592,27 +602,133 @@ select:focus { outline: 3px solid var(--red); }
 
   <!-- SUMMARY TABLE -->
   <div class="summary-section" id="summarySection" style="display:none">
-    <div class="summary-title">本月吉日一览</div>
+    <div class="summary-title" id="summaryTitle">本月吉日一览</div>
     <table class="sum-table" id="sumTable"></table>
   </div>
 
   <!-- ALMANAC NOTES -->
   <div class="almanac-notes">
-    <div class="notes-title">❖ 择日须知 ❖</div>
+    <div class="notes-title" id="notesTitle">❖ 择日须知 ❖</div>
     <div class="notes-body">
-      <p>【建除十二神】每日轮流值日，建、除、满、平、定、执、破、危、成、收、开、闭，各有宜忌。除、平、定、成、开为吉日，适合动土装修与入宅搬家。</p>
-      <p>【破日忌日】每月初五、十四、廿三为「破日」，诸事不宜，尤忌动土搬迁，须严格避开。</p>
-      <p>【农历七月】俗称「鬼月」，民间传统认为此月不宜开工动土、入宅搬家，宜等鬼月过后再行。</p>
-      <p>【天干地支】以日干推算五行生克，甲乙丙丁日多属吉，庚辛壬癸日须谨慎参考其他条件。</p>
-      <p>【朔日望日】初一（朔日）不宜搬家，十五（望日/满月）为吉，诸事顺遂，适合入宅。</p>
-      <p>【参阅通书】本历书推算依据与坊间《通书》黄历一致，如有疑问可对照购自书局之通书核实。</p>
+      <p id="note1">【建除十二神】每日轮流值日，建、除、满、平、定、执、破、危、成、收、开、闭，各有宜忌。除、平、定、成、开为吉日，适合动土装修与入宅搬家。</p>
+      <p id="note2">【破日忌日】每月初五、十四、廿三为「破日」，诸事不宜，尤忌动土搬迁，须严格避开。</p>
+      <p id="note3">【农历七月】俗称「鬼月」，民间传统认为此月不宜开工动土、入宅搬家，宜等鬼月过后再行。</p>
+      <p id="note4">【天干地支】以日干推算五行生克，甲乙丙丁日多属吉，庚辛壬癸日须谨慎参考其他条件。</p>
+      <p id="note5">【朔日望日】初一（朔日）不宜搬家，十五（望日/满月）为吉，诸事顺遂，适合入宅。</p>
+      <p id="note6">【参阅通书】本历书推算依据与坊间《通书》黄历一致，如有疑问可对照购自书局之通书核实。</p>
     </div>
   </div>
 
-  <div class="page-footer">依据中华传统历法推算 · 仅供参考 · 如有疑虑请参阅坊间通书</div>
+  <div class="page-footer" id="pageFooter">依据中华传统历法推算 · 仅供参考 · 如有疑虑请参阅坊间通书</div>
 </div>
 
 <script>
+// ── I18N ─────────────────────────────────────────────────────────────────────
+const I18N = {
+  zh: {
+    pageTitle: '黄历吉日 · 装修搬家择日',
+    htmlLang: 'zh-SG',
+    titleMain: '黄历择吉日',
+    titleSub: '装修动土 · 入宅搬家 · 专用历书',
+    headerDeco: '❖  依据建除十二神 · 天干地支 · 农历古法推算  ❖',
+    trustBand: '此历书依照传统黄历古法，按建除、五行、吉神凶煞逐日推算，与坊间通书一致',
+    selectorLabel: '请选择年份与月份',
+    labelYear: '年份',
+    labelMonth: '月份',
+    btnQuery: '查　吉　日',
+    legBest: '◉ 大吉 — 宜装修搬家',
+    legGood: '○ 吉日 — 可选',
+    legAvoid: '✕ 忌日 — 不宜',
+    legNormal: '平日',
+    notesTitle: '❖ 择日须知 ❖',
+    note1: '【建除十二神】每日轮流值日，建、除、满、平、定、执、破、危、成、收、开、闭，各有宜忌。除、平、定、成、开为吉日，适合动土装修与入宅搬家。',
+    note2: '【破日忌日】每月初五、十四、廿三为「破日」，诸事不宜，尤忌动土搬迁，须严格避开。',
+    note3: '【农历七月】俗称「鬼月」，民间传统认为此月不宜开工动土、入宅搬家，宜等鬼月过后再行。',
+    note4: '【天干地支】以日干推算五行生克，甲乙丙丁日多属吉，庚辛壬癸日须谨慎参考其他条件。',
+    note5: '【朔日望日】初一（朔日）不宜搬家，十五（望日/满月）为吉，诸事顺遂，适合入宅。',
+    note6: '【参阅通书】本历书推算依据与坊间《通书》黄历一致，如有疑问可对照购自书局之通书核实。',
+    footer: '依据中华传统历法推算 · 仅供参考 · 如有疑虑请参阅坊间通书',
+    summaryTitle: '本月吉日一览',
+    sumCategory: '类别', sumDate: '日期', sumGood: '宜',
+    bestLabel: '◉ 大吉', goodLabel: '○ 吉日',
+    detailGz: '干支', detailOfficer: '建除值日', detailReno: '装修动土', detailMove: '入宅搬家',
+    valYes: '✔ 宜', valNo: '✘ 忌', valNeutral: '— 一般',
+    pillAvoidAll: '✘ 此日严忌装修搬家',
+    pillOkReno: '✔ 宜装修动土', pillNoReno: '— 不特别宜装修',
+    pillOkMove: '✔ 宜入宅搬家', pillNoMove: '— 不特别宜搬家',
+    tagReno: '装修', tagMove: '搬家',
+    stampBest: '大吉',
+    toggleLabel: 'EN',
+    weekdaysShort: ['日','一','二','三','四','五','六'],
+    weekdaysFull: ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],
+    listSep: '、',
+    ghostWarning: (first, last) => `⚠️ 注意：本月包含农历七月（鬼月）日期，动土与搬家须严加注意<br>农历七月：${first}日至${last}日，建议避开`,
+    reasonGhost: '农历七月（鬼月），民间传统严忌动土搬家，建议待八月后再择日',
+    reasonPo: '今日为「破日」（初五、十四、廿三），黄历明载诸事不宜，严忌动土搬迁',
+    reasonWang: '十五望日（满月），阴阳调和，诸事顺遂，大吉',
+    reasonShuo: '初一朔日，阴气偏重，不宜入宅搬家',
+    officerLine: (officer) => `建除值日「${officer.zh}」：${officer.desc}`,
+    stemLine: (stem) => `日干「${stem}」属吉，利于动土装修`,
+    calTitle: (year, month) => `${YEAR_ZH_MAP[year] || year + '年'} ${MO_ZH[month]}`,
+    detailTitle: (date, d, dow, lunar) => `${date.getFullYear()}年${date.getMonth()+1}月${d}日 · ${I18N.zh.weekdaysFull[dow]} · 农历${CN_M[lunar.lunarMonth]}${CN[lunar.lunarDay]}`,
+    gzDay: (gz) => `${gz}日`,
+    sumDateStr: (month, d) => `${month}月${d}日`,
+    yearOption: (y) => `${y}年 （${YEAR_ZH_MAP[y] || ''}）`,
+  },
+  en: {
+    pageTitle: 'Auspicious Days · Renovation & Moving Calendar',
+    htmlLang: 'en',
+    titleMain: 'Auspicious Day Finder',
+    titleSub: 'Renovation · Moving House · Special Calendar',
+    headerDeco: '❖  Based on the 12 Day Officers · Stems & Branches · Lunar Calculation  ❖',
+    trustBand: 'This almanac follows traditional methods — day officers, five elements, auspicious/inauspicious spirits — consistent with printed Tong Shu almanacs',
+    selectorLabel: 'Select Year and Month',
+    labelYear: 'Year',
+    labelMonth: 'Month',
+    btnQuery: 'Find Good Days',
+    legBest: '◉ Excellent — good for renovation/moving',
+    legGood: '○ Good day — optional',
+    legAvoid: '✕ Avoid — not recommended',
+    legNormal: 'Normal day',
+    notesTitle: '❖ Notes on Date Selection ❖',
+    note1: '[The 12 Day Officers] Each day is ruled by one of 12 officers — Establish, Remove, Full, Balance, Stabilize, Hold, Break, Danger, Success, Receive, Open, Close — each with its own dos and don’ts. Remove, Balance, Stabilize, Success and Open are auspicious, suitable for renovation and moving in.',
+    note2: '[Break Days] The 5th, 14th and 23rd of each lunar month are "Break Days" — the almanac marks them unfavorable for everything, especially groundbreaking and moving; these should be strictly avoided.',
+    note3: '[7th Lunar Month] Commonly known as "Ghost Month." Tradition holds this month is unsuitable for groundbreaking or moving house — better to wait until it passes.',
+    note4: '[Heavenly Stems] The day stem determines the five-element interactions. Jiǎ, Yǐ, Bǐng and Dīng days are generally auspicious; Gēng, Xīn, Rén and Guǐ days call for extra care with other conditions.',
+    note5: '[New Moon & Full Moon] The 1st day (new moon) is unsuitable for moving house; the 15th day (full moon) is auspicious — everything flows smoothly, good for moving in.',
+    note6: '[Consult a Tong Shu] This almanac’s calculations follow the same method as printed Tong Shu almanacs — cross-check with a purchased almanac if in doubt.',
+    footer: 'Calculated from traditional Chinese calendar methods · For reference only · Consult a printed almanac if in doubt',
+    summaryTitle: 'This Month’s Good Days',
+    sumCategory: 'Category', sumDate: 'Date', sumGood: 'Good for',
+    bestLabel: '◉ Excellent', goodLabel: '○ Good',
+    detailGz: 'Ganzhi', detailOfficer: 'Day Officer', detailReno: 'Renovation', detailMove: 'Moving In',
+    valYes: '✔ Yes', valNo: '✘ Avoid', valNeutral: '— Neutral',
+    pillAvoidAll: '✘ Strictly avoid renovation/moving today',
+    pillOkReno: '✔ Good for renovation', pillNoReno: '— Not especially good for renovation',
+    pillOkMove: '✔ Good for moving in', pillNoMove: '— Not especially good for moving',
+    tagReno: 'Reno', tagMove: 'Move',
+    stampBest: 'Best',
+    toggleLabel: '中文',
+    weekdaysShort: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+    weekdaysFull: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
+    listSep: ', ',
+    ghostWarning: (first, last) => `⚠️ Note: This month includes "Ghost Month" (7th lunar month) dates — take extra care with groundbreaking and moving.<br>Ghost Month: day ${first} to day ${last}, best avoided`,
+    reasonGhost: 'This falls in the 7th lunar month ("Ghost Month"). Tradition strongly advises against groundbreaking or moving — better to wait until the 8th month.',
+    reasonPo: 'Today is a "Break Day" (the 5th, 14th or 23rd) — the almanac marks it unfavorable for everything; groundbreaking and moving are strictly avoided.',
+    reasonWang: 'The 15th day (full moon) — yin and yang in harmony, everything flows smoothly. Highly auspicious.',
+    reasonShuo: 'The 1st day (new moon) — yin energy is strong; not advisable for moving house.',
+    officerLine: (officer) => `Day officer "${officer.en}": ${officer.descEn}`,
+    stemLine: (stem) => `The day stem "${stem}" (${STEM_PINYIN[stem]}) is auspicious, favorable for renovation`,
+    calTitle: (year, month) => `${MO_EN[month]} ${year} · ${YEAR_EN_MAP[year] || ''}`,
+    detailTitle: (date, d, dow, lunar) => `${MO_EN[date.getMonth()+1]} ${d}, ${date.getFullYear()} · ${I18N.en.weekdaysFull[dow]} · Lunar Mo.${lunar.lunarMonth} Day ${lunar.lunarDay}`,
+    gzDay: (gz) => `${gz} Day`,
+    sumDateStr: (month, d) => `${MO_EN[month]} ${d}`,
+    yearOption: (y) => `${y} (${YEAR_EN_MAP[y] || ''})`,
+  }
+};
+
+let currentLang = 'zh';
+
 // ── LUNAR ENGINE ──────────────────────────────────────────────────────────────
 const lunarNewYear = {
   2024: [2024, 1, 10],
@@ -661,7 +777,15 @@ function getLunarDate(date) {
 const CN = ['','初一','初二','初三','初四','初五','初六','初七','初八','初九','初十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十','廿一','廿二','廿三','廿四','廿五','廿六','廿七','廿八','廿九','三十'];
 const CN_M = ['','正月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
 
-function lunarStr(lunar) {
+function ordinal(n) {
+  const s = ['th','st','nd','rd'], v = n % 100;
+  return n + (s[(v - 20) % 10] || s[v] || s[0]);
+}
+
+function lunarStr(lunar, lang) {
+  if (lang === 'en') {
+    return lunar.lunarDay === 1 ? `Mo.${lunar.lunarMonth}` : ordinal(lunar.lunarDay);
+  }
   if (lunar.lunarDay === 1) return CN_M[lunar.lunarMonth];
   return CN[lunar.lunarDay];
 }
@@ -669,6 +793,7 @@ function lunarStr(lunar) {
 // ── GANZHI ───────────────────────────────────────────────────────────────────
 const STEMS   = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];
 const BRANCHES= ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const STEM_PINYIN = { '甲':'Jiǎ', '乙':'Yǐ', '丙':'Bǐng', '丁':'Dīng', '戊':'Wù', '己':'Jǐ', '庚':'Gēng', '辛':'Xīn', '壬':'Rén', '癸':'Guǐ' };
 const REF = new Date(2025, 0, 1);
 const RS = 4, RB = 8; // 戊申
 
@@ -679,18 +804,18 @@ function ganzhi(date) {
 
 // ── TWELVE OFFICERS ───────────────────────────────────────────────────────────
 const OFFICERS = [
-  { zh:'建', name:'建日', reno:false, move:false, desc:'不宜动土，宜祈福' },
-  { zh:'除', name:'除日', reno:true,  move:true,  desc:'扫除旧气，宜装修入宅' },
-  { zh:'满', name:'满日', reno:false, move:false, desc:'忌迁移，不利搬家' },
-  { zh:'平', name:'平日', reno:false, move:true,  desc:'平稳之日，宜入宅' },
-  { zh:'定', name:'定日', reno:true,  move:true,  desc:'诸事稳定，宜动土入宅' },
-  { zh:'执', name:'执日', reno:false, move:false, desc:'宜固执守旧，不宜搬动' },
-  { zh:'破', name:'破日', reno:false, move:false, desc:'月破之日，百事不宜' },
-  { zh:'危', name:'危日', reno:false, move:false, desc:'危险之日，不宜动作' },
-  { zh:'成', name:'成日', reno:true,  move:true,  desc:'大吉！诸事皆成，宜装修搬家' },
-  { zh:'收', name:'收日', reno:false, move:false, desc:'宜收成，不宜迁移' },
-  { zh:'开', name:'开日', reno:true,  move:true,  desc:'开启新局，宜动土入宅' },
-  { zh:'闭', name:'闭日', reno:false, move:false, desc:'闭塞之日，不宜开工' }
+  { zh:'建', name:'建日', en:'Establish', enShort:'Est',   reno:false, move:false, desc:'不宜动土，宜祈福', descEn:'Not suitable for groundbreaking; good for prayers and blessings' },
+  { zh:'除', name:'除日', en:'Remove',    enShort:'Rmv',   reno:true,  move:true,  desc:'扫除旧气，宜装修入宅', descEn:'Clears old energy; good for renovation and moving in' },
+  { zh:'满', name:'满日', en:'Full',      enShort:'Full',  reno:false, move:false, desc:'忌迁移，不利搬家', descEn:'Avoid relocation; unfavorable for moving' },
+  { zh:'平', name:'平日', en:'Balance',   enShort:'Bal',   reno:false, move:true,  desc:'平稳之日，宜入宅', descEn:'A stable day; good for moving in' },
+  { zh:'定', name:'定日', en:'Stabilize', enShort:'Stb',   reno:true,  move:true,  desc:'诸事稳定，宜动土入宅', descEn:'Everything settled; good for groundbreaking and moving in' },
+  { zh:'执', name:'执日', en:'Hold',      enShort:'Hold',  reno:false, move:false, desc:'宜固执守旧，不宜搬动', descEn:'Favor maintaining the status quo; avoid relocation' },
+  { zh:'破', name:'破日', en:'Break',     enShort:'Brk',   reno:false, move:false, desc:'月破之日，百事不宜', descEn:'A "Breaking" day; unfavorable for everything' },
+  { zh:'危', name:'危日', en:'Danger',    enShort:'Dgr',   reno:false, move:false, desc:'危险之日，不宜动作', descEn:'A dangerous day; avoid taking action' },
+  { zh:'成', name:'成日', en:'Success',   enShort:'Suc',   reno:true,  move:true,  desc:'大吉！诸事皆成，宜装修搬家', descEn:'Very auspicious! Everything succeeds; good for renovation and moving' },
+  { zh:'收', name:'收日', en:'Receive',   enShort:'Rcv',   reno:false, move:false, desc:'宜收成，不宜迁移', descEn:'Good for gathering; avoid relocation' },
+  { zh:'开', name:'开日', en:'Open',      enShort:'Open',  reno:true,  move:true,  desc:'开启新局，宜动土入宅', descEn:'A new beginning; good for groundbreaking and moving in' },
+  { zh:'闭', name:'闭日', en:'Close',     enShort:'Cls',   reno:false, move:false, desc:'闭塞之日，不宜开工', descEn:'A closed day; avoid starting new work' }
 ];
 const REF_OFF = 7; // 危 on 2025-01-01
 
@@ -710,39 +835,27 @@ function scoreDay(date) {
   const officer = getOfficer(date);
   const lm = lunar.lunarMonth, ld = lunar.lunarDay;
 
-  const isGhost  = lm === 7;
-  const isPo     = ld === 5 || ld === 14 || ld === 23;
-  const isShuò   = ld === 1;
-  const isWàng   = ld === 15;
-
-  let reno = 0, move = 0;
-  const reasons = [];
+  const isGhost = lm === 7;
+  const isPo    = ld === 5 || ld === 14 || ld === 23;
+  const isShuo  = ld === 1;
+  const isWang  = ld === 15;
 
   if (isGhost) {
-    return { reno:-2, move:-2, lunar, gz, officer, isGhost, isPo, isShuò, isWàng,
-      reasons:['农历七月（鬼月），民间传统严忌动土搬家，建议待八月后再择日'] };
+    return { reno:-2, move:-2, lunar, gz, stem, officer, isGhost, isPo, isShuo, isWang };
   }
   if (isPo) {
-    return { reno:-1, move:-1, lunar, gz, officer, isGhost, isPo, isShuò, isWàng,
-      reasons:['今日为「破日」（初五、十四、廿三），黄历明载诸事不宜，严忌动土搬迁'] };
+    return { reno:-1, move:-1, lunar, gz, stem, officer, isGhost, isPo, isShuo, isWang };
   }
 
-  // Officer
-  if (officer.reno) { reno += 2; reasons.push(`建除值日「${officer.zh}」：${officer.desc}`); }
-  else if (!officer.move) { reasons.push(`建除值日「${officer.zh}」：${officer.desc}`); }
-  if (officer.move) { move += 2; }
+  let reno = 0, move = 0;
+  if (officer.reno) reno += 2;
+  if (officer.move) move += 2;
+  if (GOOD_STEMS_RENO.has(stem)) reno += 1;
+  if (GOOD_STEMS_MOVE.has(stem)) move += 1;
+  if (isWang) { reno += 1; move += 1; }
+  if (isShuo) { move -= 1; }
 
-  // Stem
-  if (GOOD_STEMS_RENO.has(stem)) { reno += 1; reasons.push(`日干「${stem}」属吉，利于动土装修`); }
-  if (GOOD_STEMS_MOVE.has(stem)) { move += 1; }
-
-  // Moon
-  if (isWàng) { reno += 1; move += 1; reasons.push('十五望日（满月），阴阳调和，诸事顺遂，大吉'); }
-  if (isShuò) { move -= 1; reasons.push('初一朔日，阴气偏重，不宜入宅搬家'); }
-
-  if (reasons.length === 0) reasons.push(`建除值日「${officer.zh}」：${officer.desc}`);
-
-  return { reno, move, lunar, gz, officer, isGhost, isPo, isShuò, isWàng, reasons };
+  return { reno, move, lunar, gz, stem, officer, isGhost, isPo, isShuo, isWang };
 }
 
 function classify(score) {
@@ -752,21 +865,102 @@ function classify(score) {
   return 'normal';
 }
 
+function getReasons(score, lang) {
+  const t = I18N[lang];
+  if (score.isGhost) return [t.reasonGhost];
+  if (score.isPo) return [t.reasonPo];
+
+  const reasons = [];
+  const officerLine = t.officerLine(score.officer);
+  if (score.officer.reno || !score.officer.move) reasons.push(officerLine);
+  if (GOOD_STEMS_RENO.has(score.stem)) reasons.push(t.stemLine(score.stem));
+  if (score.isWang) reasons.push(t.reasonWang);
+  if (score.isShuo) reasons.push(t.reasonShuo);
+  if (reasons.length === 0) reasons.push(officerLine);
+  return reasons;
+}
+
 // ── CALENDAR BUILD ────────────────────────────────────────────────────────────
 const MO_ZH = ['','一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+const MO_EN = ['','January','February','March','April','May','June','July','August','September','October','November','December'];
 const YEAR_ZH_MAP = { 2024:'甲辰年', 2025:'乙巳年', 2026:'丙午年', 2027:'丁未年', 2028:'戊申年', 2029:'己酉年' };
+const YEAR_EN_MAP = { 2024:'Jiǎ-Chén Year', 2025:'Yǐ-Sì Year', 2026:'Bǐng-Wǔ Year', 2027:'Dīng-Wèi Year', 2028:'Wù-Shēn Year', 2029:'Jǐ-Yǒu Year' };
 
 let currentData = [];
 
+function renderMonthOptions() {
+  const sel = document.getElementById('selMonth');
+  const prev = sel.value;
+  const names = currentLang === 'zh' ? MO_ZH : MO_EN;
+  sel.innerHTML = '';
+  for (let m = 1; m <= 12; m++) {
+    const o = document.createElement('option');
+    o.value = m;
+    o.textContent = names[m];
+    sel.appendChild(o);
+  }
+  sel.value = prev || (new Date().getMonth() + 1);
+}
+
+function renderYearOptions() {
+  const sel = document.getElementById('selYear');
+  const prev = sel.value;
+  const t = I18N[currentLang];
+  const cy = new Date().getFullYear();
+  sel.innerHTML = '';
+  for (let y = cy; y <= cy + 3; y++) {
+    const o = document.createElement('option');
+    o.value = y;
+    o.textContent = t.yearOption(y);
+    sel.appendChild(o);
+  }
+  sel.value = prev || cy;
+}
+
+function renderWeekdays() {
+  const t = I18N[currentLang];
+  document.querySelectorAll('#weekdayHeader .wday-cell').forEach((cell, i) => {
+    cell.textContent = t.weekdaysShort[i];
+  });
+}
+
+function applyStaticTranslations() {
+  const t = I18N[currentLang];
+  document.documentElement.lang = t.htmlLang;
+  document.title = t.pageTitle;
+  document.getElementById('titleMain').textContent = t.titleMain;
+  document.getElementById('titleSub').textContent = t.titleSub;
+  document.getElementById('headerDeco').innerHTML = t.headerDeco;
+  document.getElementById('trustBand').textContent = t.trustBand;
+  document.getElementById('selectorLabel').textContent = t.selectorLabel;
+  document.getElementById('labelYear').textContent = t.labelYear;
+  document.getElementById('labelMonth').textContent = t.labelMonth;
+  document.getElementById('btnQuery').textContent = t.btnQuery;
+  document.getElementById('legBest').textContent = t.legBest;
+  document.getElementById('legGood').textContent = t.legGood;
+  document.getElementById('legAvoid').textContent = t.legAvoid;
+  document.getElementById('legNormal').textContent = t.legNormal;
+  document.getElementById('notesTitle').textContent = t.notesTitle;
+  document.getElementById('note1').textContent = t.note1;
+  document.getElementById('note2').textContent = t.note2;
+  document.getElementById('note3').textContent = t.note3;
+  document.getElementById('note4').textContent = t.note4;
+  document.getElementById('note5').textContent = t.note5;
+  document.getElementById('note6').textContent = t.note6;
+  document.getElementById('pageFooter').textContent = t.footer;
+  document.getElementById('summaryTitle').textContent = t.summaryTitle;
+  document.getElementById('langToggle').textContent = t.toggleLabel;
+}
+
 function buildCalendar() {
+  const t = I18N[currentLang];
   const year  = parseInt(document.getElementById('selYear').value);
   const month = parseInt(document.getElementById('selMonth').value);
   const daysInMonth = new Date(year, month, 0).getDate();
   const firstDay = new Date(year, month - 1, 1).getDay(); // 0=Sun
 
   // Title
-  const yz = YEAR_ZH_MAP[year] || year+'年';
-  document.getElementById('calTitle').textContent = `${yz} ${MO_ZH[month]}`;
+  document.getElementById('calTitle').textContent = t.calTitle(year, month);
 
   // Ghost month warning
   let ghostMonths = [];
@@ -776,7 +970,7 @@ function buildCalendar() {
   }
   const gw = document.getElementById('ghostWarning');
   if (ghostMonths.length > 0) {
-    gw.innerHTML = `<div class="ghost-warning">⚠️ 注意：本月包含农历七月（鬼月）日期，动土与搬家须严加注意<br>农历七月：${ghostMonths[0]}日至${ghostMonths[ghostMonths.length-1]}日，建议避开</div>`;
+    gw.innerHTML = `<div class="ghost-warning">${t.ghostWarning(ghostMonths[0], ghostMonths[ghostMonths.length-1])}</div>`;
   } else { gw.innerHTML = ''; }
 
   // Build grid
@@ -818,21 +1012,25 @@ function buildCalendar() {
 
     // Stamp / X
     let overlay = '';
-    if (cls === 'best') overlay = `<div class="stamp">大吉</div>`;
-    else if (cls === 'avoid') overlay = `<div class="stamp-x">✕</div>`;
+    if (cls === 'best') {
+      const fs = currentLang === 'en' ? '9px' : '11px';
+      overlay = `<div class="stamp" style="font-size:${fs}">${t.stampBest}</div>`;
+    } else if (cls === 'avoid') overlay = `<div class="stamp-x">✕</div>`;
 
     // Activity tags
     let tags = '';
     if (cls !== 'avoid') {
-      if (score.reno >= 2) tags += `<span class="icon-tag tag-reno">装修</span>`;
-      if (score.move >= 2) tags += `<span class="icon-tag tag-move">搬家</span>`;
+      if (score.reno >= 2) tags += `<span class="icon-tag tag-reno">${t.tagReno}</span>`;
+      if (score.move >= 2) tags += `<span class="icon-tag tag-move">${t.tagMove}</span>`;
     }
+
+    const gzLabel = currentLang === 'zh' ? score.officer.zh : score.officer.enShort;
 
     cell.innerHTML = `
       ${overlay}
       <span class="cell-num ${numCls}">${d}</span>
-      <span class="cell-lunar">${lunarStr(score.lunar)}</span>
-      <span class="cell-gz">${score.gz} ${score.officer.zh}</span>
+      <span class="cell-lunar">${lunarStr(score.lunar, currentLang)}</span>
+      <span class="cell-gz">${score.gz} ${gzLabel}</span>
       <div class="cell-icons">${tags}</div>
     `;
     grid.appendChild(cell);
@@ -846,6 +1044,7 @@ function buildCalendar() {
 }
 
 function showDetail(d) {
+  const t = I18N[currentLang];
   // Deselect all, select clicked
   document.querySelectorAll('.cal-cell').forEach(c => c.classList.remove('selected'));
   document.querySelector(`.cal-cell[data-day="${d}"]`)?.classList.add('selected');
@@ -854,75 +1053,82 @@ function showDetail(d) {
   if (!entry) return;
   const { score, cls, date } = entry;
 
-  const weekdays = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
   const panel = document.getElementById('detailPanel');
   const lunar = score.lunar;
 
-  document.getElementById('detailTitle').textContent =
-    `${date.getFullYear()}年${date.getMonth()+1}月${d}日 · ${weekdays[date.getDay()]} · 农历${CN_M[lunar.lunarMonth]}${CN[lunar.lunarDay]}`;
+  document.getElementById('detailTitle').textContent = t.detailTitle(date, d, date.getDay(), lunar);
 
   document.getElementById('detailGrid').innerHTML = `
-    <div class="detail-item"><div class="dk">干支</div><div class="dv">${score.gz}日</div></div>
-    <div class="detail-item"><div class="dk">建除值日</div><div class="dv">${score.officer.name}</div></div>
-    <div class="detail-item"><div class="dk">装修动土</div><div class="dv">${score.reno >= 2 ? '✔ 宜' : score.reno < 0 ? '✘ 忌' : '— 一般'}</div></div>
-    <div class="detail-item"><div class="dk">入宅搬家</div><div class="dv">${score.move >= 2 ? '✔ 宜' : score.move < 0 ? '✘ 忌' : '— 一般'}</div></div>
+    <div class="detail-item"><div class="dk">${t.detailGz}</div><div class="dv">${t.gzDay(score.gz)}</div></div>
+    <div class="detail-item"><div class="dk">${t.detailOfficer}</div><div class="dv">${currentLang === 'zh' ? score.officer.name : score.officer.en}</div></div>
+    <div class="detail-item"><div class="dk">${t.detailReno}</div><div class="dv">${score.reno >= 2 ? t.valYes : score.reno < 0 ? t.valNo : t.valNeutral}</div></div>
+    <div class="detail-item"><div class="dk">${t.detailMove}</div><div class="dv">${score.move >= 2 ? t.valYes : score.move < 0 ? t.valNo : t.valNeutral}</div></div>
   `;
 
   let verdicts = '';
   if (cls === 'avoid') {
-    verdicts = `<div class="verdict-pill pill-avoid-all">✘ 此日严忌装修搬家</div>`;
+    verdicts = `<div class="verdict-pill pill-avoid-all">${t.pillAvoidAll}</div>`;
   } else {
     verdicts += score.reno >= 2
-      ? `<div class="verdict-pill pill-ok-reno">✔ 宜装修动土</div>`
-      : `<div class="verdict-pill pill-no-reno">— 不特别宜装修</div>`;
+      ? `<div class="verdict-pill pill-ok-reno">${t.pillOkReno}</div>`
+      : `<div class="verdict-pill pill-no-reno">${t.pillNoReno}</div>`;
     verdicts += score.move >= 2
-      ? `<div class="verdict-pill pill-ok-move">✔ 宜入宅搬家</div>`
-      : `<div class="verdict-pill pill-no-move">— 不特别宜搬家</div>`;
+      ? `<div class="verdict-pill pill-ok-move">${t.pillOkMove}</div>`
+      : `<div class="verdict-pill pill-no-move">${t.pillNoMove}</div>`;
   }
   document.getElementById('verdictRow').innerHTML = verdicts;
-  document.getElementById('detailReason').innerHTML = score.reasons.map(r => `• ${r}`).join('<br>');
+  document.getElementById('detailReason').innerHTML = getReasons(score, currentLang).map(r => `• ${r}`).join('<br>');
 
   panel.classList.add('show');
   panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 function buildSummary(bestList, goodList, year, month) {
+  const t = I18N[currentLang];
   const sec = document.getElementById('summarySection');
   if (bestList.length + goodList.length === 0) { sec.style.display = 'none'; return; }
   sec.style.display = 'block';
 
   const tbl = document.getElementById('sumTable');
-  let rows = `<thead><tr><th>类别</th><th>日期</th><th>宜</th></tr></thead><tbody>`;
+  let rows = `<thead><tr><th>${t.sumCategory}</th><th>${t.sumDate}</th><th>${t.sumGood}</th></tr></thead><tbody>`;
   bestList.forEach(d => {
     const e = currentData.find(x => x.d === d);
     const acts = [];
-    if (e.score.reno >= 2) acts.push('装修');
-    if (e.score.move >= 2) acts.push('搬家');
-    rows += `<tr class="best-row"><td>◉ 大吉</td><td>${month}月${d}日</td><td>${acts.join('、')}</td></tr>`;
+    if (e.score.reno >= 2) acts.push(t.tagReno);
+    if (e.score.move >= 2) acts.push(t.tagMove);
+    rows += `<tr class="best-row"><td>${t.bestLabel}</td><td>${t.sumDateStr(month, d)}</td><td>${acts.join(t.listSep)}</td></tr>`;
   });
   goodList.forEach(d => {
     const e = currentData.find(x => x.d === d);
     const acts = [];
-    if (e.score.reno >= 2) acts.push('装修');
-    if (e.score.move >= 2) acts.push('搬家');
-    rows += `<tr class="good-row"><td>○ 吉日</td><td>${month}月${d}日</td><td>${acts.join('、')}</td></tr>`;
+    if (e.score.reno >= 2) acts.push(t.tagReno);
+    if (e.score.move >= 2) acts.push(t.tagMove);
+    rows += `<tr class="good-row"><td>${t.goodLabel}</td><td>${t.sumDateStr(month, d)}</td><td>${acts.join(t.listSep)}</td></tr>`;
   });
   rows += '</tbody>';
   tbl.innerHTML = rows;
 }
 
+// ── LANGUAGE TOGGLE ──────────────────────────────────────────────────────────
+function setLang(lang) {
+  currentLang = lang;
+  applyStaticTranslations();
+  renderMonthOptions();
+  renderYearOptions();
+  renderWeekdays();
+  buildCalendar();
+}
+
+function toggleLang() {
+  setLang(currentLang === 'zh' ? 'en' : 'zh');
+}
+
 // ── INIT ─────────────────────────────────────────────────────────────────────
 window.onload = function() {
-  const ySel = document.getElementById('selYear');
-  const now = new Date();
-  const cy = now.getFullYear();
-  for (let y = cy; y <= cy + 3; y++) {
-    const o = document.createElement('option');
-    o.value = y;
-    o.textContent = `${y}年 （${YEAR_ZH_MAP[y] || ''}）`;
-    ySel.appendChild(o);
-  }
-  document.getElementById('selMonth').value = now.getMonth() + 1;
+  renderYearOptions();
+  renderMonthOptions();
+  document.getElementById('selMonth').value = new Date().getMonth() + 1;
+  applyStaticTranslations();
   buildCalendar();
 };
 </script>

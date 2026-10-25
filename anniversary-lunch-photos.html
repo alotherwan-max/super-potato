@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dating Anniversary Lunch</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Layout: one calm column. A featured top pick, then a ranked list, then a "call first" group. Photos load from the source sites, with links to more. */
+:root {
+  --bg: #F2F5F3; --surface: #FFFFFF; --fg: #15241F; --muted: #55665F; --line: #D5DED9;
+  --accent: #8A2F5B; --accent-fg: #FFFFFF; --soft: #F1E4EB; --ok: #2E6B4B; --warn: #8A5A12;
+  --font-display: 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0E1613; --surface: #16221D; --fg: #E8EFEB; --muted: #9FB0A8; --line: #2A3A33;
+    --accent: #E58AB4; --accent-fg: #1A0C13; --soft: #2A1B24; --ok: #7CCBA0; --warn: #E2B867;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 17px; line-height: 1.5;
+  padding: 32px max(16px, env(safe-area-inset-right, 0px)) 48px max(16px, env(safe-area-inset-left, 0px));
+}
+main { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(2rem, 7vw, 2.8rem); font-weight: 700; }
+h2 { font-size: 1.15rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+h3 { font-size: 1.3rem; font-weight: 700; }
+p { margin: 0; }
+.eyebrow { font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+header { display: flex; flex-direction: column; gap: 10px; }
+.sub { color: var(--muted); max-width: 52ch; }
+section { display: flex; flex-direction: column; gap: 14px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.card.top { border-color: var(--accent); box-shadow: 0 0 0 3px var(--soft); }
+.head { display: flex; align-items: baseline; gap: 12px; }
+.rank { font-family: var(--font-display); font-weight: 700; color: var(--accent); font-size: 1.3rem; min-width: 1.4ch; }
+.area { color: var(--muted); font-size: 0.95rem; }
+.photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.photos figure { margin: 0; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.photos img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; background: var(--soft); display: block; }
+.photos figcaption { font-size: 0.8rem; color: var(--muted); }
+.photos figcaption a { color: inherit; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font-size: 0.85rem; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.chip.ok { color: var(--ok); border-color: var(--ok); }
+.chip.warn { color: var(--warn); border-color: var(--warn); }
+.links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.links a { font-size: 0.95rem; font-weight: 600; text-decoration: none; color: var(--accent); border: 1px solid var(--accent); border-radius: 8px; padding: 8px 12px; min-height: 40px; display: inline-flex; align-items: center; }
+.links a:hover, .links a:focus-visible { background: var(--accent); color: var(--accent-fg); outline: none; }
+.links a.solid { background: var(--accent); color: var(--accent-fg); }
+.note { background: var(--soft); border-radius: 10px; padding: 14px 16px; font-size: 0.95rem; }
+footer { color: var(--muted); font-size: 0.9rem; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="eyebrow">Monday 26 October 2026</p>
+    <h1>Our anniversary lunch</h1>
+    <p class="sub">Our shortlist, in the order I would book. Photos are from the restaurants' own write-ups where I found them, with links to see more. Everything here is open Monday lunch unless it says to call first.</p>
+  </header>
+
+  <section>
+    <h2>The top pick</h2>
+    <article class="card top">
+      <div class="head"><span class="rank">1</span><h3>Forage</h3></div>
+      <p class="area">Mandai Rainforest Resort</p>
+      <div class="photos">
+        <figure>
+          <img src="https://media.timeout.com/images/106319899/750/422/image.jpg" alt="Forage at Mandai" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('figure').hidden=true">
+          <figcaption>Photo: Banyan Tree, via <a href="https://www.timeout.com/singapore/news/dine-with-lake-and-forest-views-at-singapores-newest-harvest-to-table-restaurant-091725" target="_blank" rel="noopener">Time Out</a></figcaption>
+        </figure>
+      </div>
+      <p>Reservoir and forest views from the dining room, and reviews call it one of the most beautiful restaurants in Singapore. A two-course lunch, with online booking and walk-ins welcome.</p>
+      <div class="chips"><span class="chip ok">Open Monday</span><span class="chip">Views</span><span class="chip">Indoor</span></div>
+      <div class="links">
+        <a class="solid" href="https://www.google.com/search?tbm=isch&q=Forage+Mandai+Rainforest+Resort+lunch" target="_blank" rel="noopener">More photos of the food</a>
+        <a href="https://www.google.com/search?tbm=isch&q=Forage+Mandai+Rainforest+Resort+dining+room+view" target="_blank" rel="noopener">Photos of the view</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Forage+Mandai+Rainforest+Resort+Singapore" target="_blank" rel="noopener">Map</a>
+      </div>
+    </article>
+  </section>
+
+  <section>
+    <h2>Other good options</h2>
+
+    <article class="card">
+      <div class="head"><span class="rank">2</span><h3>An Omakase</h3></div>
+      <p class="area">Keong Saik Road</p>
+      <div class="photos">
+        <figure>
+          <img src="https://eatbook.sg/wp-content/uploads/2024/01/AN-OMAKASE-SUSHI-1024x1024.jpg" alt="Sushi at An Omakase" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('figure').hidden=true">
+          <figcaption>Photo: @anomakase.sg, via <a href="https://eatbook.sg/an-omakase/" target="_blank" rel="noopener">Eatbook</a></figcaption>
+        </figure>
+        <figure>
+          <img src="https://eatbook.sg/wp-content/uploads/2024/01/AN-OMAKASE-UNI-1024x1024.jpg" alt="Uni at An Omakase" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('figure').hidden=true">
+          <figcaption>Photo: Pauline Ng, via <a href="https://eatbook.sg/an-omakase/" target="_blank" rel="noopener">Eatbook</a></figcaption>
+        </figure>
+        <figure>
+          <img src="https://eatbook.sg/wp-content/uploads/2024/01/an-omakase-fish.jpg" alt="Fish at An Omakase" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('figure').hidden=true">
+          <figcaption>Photo: Peggy Ho, via <a href="https://eatbook.sg/an-omakase/" target="_blank" rel="noopener">Eatbook</a></figcaption>
+        </figure>
+      </div>
+      <p>An intimate hidden-door sushi counter, rated about 4.7 from over 600 Google reviews. Book the full lunch omakase rather than the smaller set.</p>
+      <div class="chips"><span class="chip ok">Mon lunch 12pm to 3pm</span><span class="chip">Last seating 1.30pm</span><span class="chip">Japanese</span></div>
+      <div class="links">
+        <a class="solid" href="https://www.google.com/search?tbm=isch&q=An+Omakase+Keong+Saik+Road+lunch+omakase" target="_blank" rel="noopener">More photos</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=An+Omakase+Keong+Saik+Road+Singapore" target="_blank" rel="noopener">Map</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="head"><span class="rank">3</span><h3>La Nonna</h3></div>
+      <p class="area">Holland Village, 26 Lorong Mambong</p>
+      <p>Known for handmade pasta and an Italian wine list, with good service. More cozy than formal.</p>
+      <div class="chips"><span class="chip ok">Weekday lunch 11.30am to 2.30pm</span><span class="chip">Italian</span></div>
+      <div class="links">
+        <a class="solid" href="https://www.google.com/search?tbm=isch&q=La+Nonna+Holland+Village+handmade+pasta" target="_blank" rel="noopener">Photos of the pasta</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=La+Nonna+26+Lorong+Mambong+Singapore" target="_blank" rel="noopener">Map</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="head"><span class="rank">4</span><h3>Lawry's The Prime Rib</h3></div>
+      <p class="area">Mandarin Gallery, Orchard Road, level 4</p>
+      <div class="photos">
+        <figure>
+          <img src="https://robbreport.com.sg/storage/2018/07/FEAT_LawrysAnni_MAIN_2-1024x585.jpg" alt="Roasted prime rib at Lawry's" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('figure').hidden=true">
+          <figcaption>Photo via <a href="https://robbreport.com.sg/restaurant-review-lawrys-the-prime-rib-at-mandarin-gallery-singapore/" target="_blank" rel="noopener">Robb Report Singapore</a></figcaption>
+        </figure>
+      </div>
+      <p>A special-occasion steakhouse with tall windows over Orchard Road, rated 4.6 on Tripadvisor from over 3,000 reviews. It is in the busy Orchard area, so allow for the crowds.</p>
+      <div class="chips"><span class="chip ok">Open Monday 11.30am to 10pm</span><span class="chip">Steak</span></div>
+      <div class="links">
+        <a class="solid" href="https://www.google.com/search?tbm=isch&q=Lawry%27s+The+Prime+Rib+Singapore+prime+rib" target="_blank" rel="noopener">More photos</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Lawry%27s+The+Prime+Rib+Mandarin+Gallery+Singapore" target="_blank" rel="noopener">Map</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="head"><span class="rank">5</span><h3>Culina Bistro</h3></div>
+      <p class="area">COMO Dempsey</p>
+      <p>Pick your cut at the butchery counter and it is cooked at the bistro. Good steak reviews, though a few say lunch is overpriced and service can be slow.</p>
+      <div class="chips"><span class="chip warn">Check Monday hours</span><span class="chip">Steak</span></div>
+      <div class="links">
+        <a class="solid" href="https://www.google.com/search?tbm=isch&q=Culina+Bistro+COMO+Dempsey+ribeye" target="_blank" rel="noopener">Photos of the ribeye</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Culina+Bistro+COMO+Dempsey+Singapore" target="_blank" rel="noopener">Map</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <div class="head"><span class="rank">6</span><h3>Georges at Changi Sailing Club</h3></div>
+      <p class="area">Changi</p>
+      <p>A rustic seaside spot with burgers and fish and chips. Relaxed and good for a view, but more casual than the others.</p>
+      <div class="chips"><span class="chip ok">Open Monday 11.30am to 9.30pm</span><span class="chip">Casual</span></div>
+      <div class="links">
+        <a class="solid" href="https://www.google.com/search?tbm=isch&q=Georges+Changi+Sailing+Club+fish+and+chips" target="_blank" rel="noopener">Photos of the food</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Georges+Changi+Sailing+Club+Singapore" target="_blank" rel="noopener">Map</a>
+      </div>
+    </article>
+  </section>
+
+  <section>
+    <h2>Call before going</h2>
+
+    <article class="card">
+      <h3>Gary's</h3>
+      <p class="area">Rochester Park, 41 Rochester Drive</p>
+      <p>Italian-Japanese dishes in a colonial bungalow with an air-conditioned balcony. Sources disagree on whether it is open Mondays.</p>
+      <div class="links">
+        <a href="https://www.google.com/search?tbm=isch&q=Gary%27s+Rochester+Park+Singapore+food" target="_blank" rel="noopener">Photos of the food</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Gary%27s+41+Rochester+Drive+Singapore" target="_blank" rel="noopener">Map</a>
+      </div>
+    </article>
+
+    <article class="card">
+      <h3>Raku Sushi</h3>
+      <p class="area">Icon Village</p>
+      <p>Omakase lunch, but I could not confirm current Monday hours or the lunch menu. Call to check first.</p>
+      <div class="links">
+        <a href="https://www.google.com/search?tbm=isch&q=Raku+Sushi+Icon+Village+omakase" target="_blank" rel="noopener">Photos of the omakase</a>
+        <a href="https://www.google.com/maps/search/?api=1&query=Raku+Sushi+Icon+Village+Singapore" target="_blank" rel="noopener">Map</a>
+      </div>
+    </article>
+  </section>
+
+  <p class="note">Haze check: a third-party tracker showed PSI around 82 (moderate) for Monday. Look at haze.gov.sg in the morning before heading out.</p>
+
+  <footer>Photos belong to the credited sources and load from their sites, so they need an internet connection and may disappear if a site moves them. Hours come from restaurant sites and listings and may have changed, so confirm before you go.</footer>
+</main>
+</body>
+</html>

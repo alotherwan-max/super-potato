@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Official Visit Approval Authority™</title>
+<title>Visit Suraj &amp; Hannah</title>
 <style>
   :root { --g:#16a34a; --bg:#fff7ed; --ink:#1f2937; }
   * { box-sizing: border-box; }
@@ -15,6 +15,10 @@
   button:active { transform:scale(.97); }
   #q { width:100%; padding:12px; border-radius:12px; border:2px solid #e5e7eb; font-size:1rem; margin-bottom:12px; }
   #result { display:none; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-bottom:14px; }
+  .chip { background:#ffedd5; border:2px solid #fdba74; border-radius:999px; padding:6px 12px; font-size:.9rem; cursor:pointer; }
+  .chip:active { transform:scale(.96); }
+  #why { font-size:.95rem; opacity:.75; margin:2px 0 0; }
   .approved { font-size: clamp(2.2rem, 11vw, 3.4rem); font-weight:900; color:var(--g); letter-spacing:2px; margin:6px 0; animation: pop .5s ease; transform:rotate(-3deg); border:5px solid var(--g); display:inline-block; padding:4px 18px; border-radius:10px; }
   @keyframes pop { 0%{transform:scale(0) rotate(-20deg)} 70%{transform:scale(1.2) rotate(-3deg)} 100%{transform:scale(1) rotate(-3deg)} }
   #gif { width:100%; border-radius:14px; margin:14px 0 8px; min-height:120px; background:#f3f4f6; }
@@ -25,18 +29,24 @@
 </style>
 </head>
 <body>
-  <h1>🏛️ Official Visit Approval Authority™</h1>
-  <p class="sub">Department of Dropping By Unannounced</p>
+  <h1>🏠 Visit Suraj &amp; Hannah</h1>
+  <p class="sub">Official Approval Authority™ · Dept. of Dropping By</p>
 
   <div class="card">
     <div id="ask">
-      <input id="q" placeholder="Reason for visit (e.g. free food)" maxlength="80">
+      <input id="q" placeholder="Reason for visit" maxlength="80">
+      <div class="chips">
+        <span class="chip">🍵 Drink Teh</span>
+        <span class="chip">🧸 Play toys</span>
+        <span class="chip">💼 Discuss Atomy business plans</span>
+      </div>
       <button id="go">Request Permission to Come Over</button>
     </div>
 
     <div id="result">
       <div class="approved">APPROVED</div>
       <img id="gif" alt="celebration gif">
+      <div id="why"></div>
       <div id="msg"></div>
       <button id="again">Ask again (same answer 😌)</button>
     </div>
@@ -94,10 +104,13 @@ function confetti() {
 function approve() {
   $("ask").style.display = "none";
   $("result").style.display = "block";
+  const why = $("q").value.trim();
+  $("why").textContent = why ? "Reason: " + why + " ✔ (excellent reason)" : "";
   $("msg").textContent = messages[Math.floor(Math.random()*messages.length)];
   loadGif();
   confetti();
 }
+document.querySelectorAll(".chip").forEach(c => c.onclick = () => { $("q").value = c.textContent.replace(/^\S+\s/, ""); });
 $("go").onclick = approve;
 $("q").addEventListener("keydown", e => { if (e.key === "Enter") approve(); });
 $("again").onclick = () => { $("result").style.display = "none"; $("ask").style.display = "block"; $("q").value = ""; };

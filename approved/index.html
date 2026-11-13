@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Official Visit Approval Authority™</title>
+<style>
+  :root { --g:#16a34a; --bg:#fff7ed; --ink:#1f2937; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--ink); text-align:center; min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:24px 16px 40px; }
+  h1 { font-size: clamp(1.3rem, 5vw, 2rem); margin: 8px 0 4px; }
+  .sub { opacity:.7; margin:0 0 20px; font-size:.95rem; }
+  .card { background:#fff; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,.12); padding:24px; width:100%; max-width:460px; }
+  button { font-size:1.1rem; font-weight:700; border:0; border-radius:14px; padding:14px 22px; cursor:pointer; background:#f97316; color:#fff; width:100%; transition:transform .1s; }
+  button:active { transform:scale(.97); }
+  #q { width:100%; padding:12px; border-radius:12px; border:2px solid #e5e7eb; font-size:1rem; margin-bottom:12px; }
+  #result { display:none; }
+  .approved { font-size: clamp(2.2rem, 11vw, 3.4rem); font-weight:900; color:var(--g); letter-spacing:2px; margin:6px 0; animation: pop .5s ease; transform:rotate(-3deg); border:5px solid var(--g); display:inline-block; padding:4px 18px; border-radius:10px; }
+  @keyframes pop { 0%{transform:scale(0) rotate(-20deg)} 70%{transform:scale(1.2) rotate(-3deg)} 100%{transform:scale(1) rotate(-3deg)} }
+  #gif { width:100%; border-radius:14px; margin:14px 0 8px; min-height:120px; background:#f3f4f6; }
+  #msg { font-weight:600; margin:8px 0 14px; }
+  .fine { font-size:.72rem; opacity:.55; margin-top:18px; max-width:460px; }
+  .confetti { position:fixed; top:-20px; font-size:1.6rem; animation: fall linear forwards; pointer-events:none; }
+  @keyframes fall { to { transform: translateY(110vh) rotate(540deg); } }
+</style>
+</head>
+<body>
+  <h1>🏛️ Official Visit Approval Authority™</h1>
+  <p class="sub">Department of Dropping By Unannounced</p>
+
+  <div class="card">
+    <div id="ask">
+      <input id="q" placeholder="Reason for visit (e.g. free food)" maxlength="80">
+      <button id="go">Request Permission to Come Over</button>
+    </div>
+
+    <div id="result">
+      <div class="approved">APPROVED</div>
+      <img id="gif" alt="celebration gif">
+      <div id="msg"></div>
+      <button id="again">Ask again (same answer 😌)</button>
+    </div>
+  </div>
+
+  <p class="fine">Processing time: 0.0001 seconds. Denial rate: 0%. Appeals are not necessary and also not possible. Please bring snacks. Shoes optional. Kids loudly welcome.</p>
+
+<script>
+const messages = [
+  "The committee deliberated for 0 seconds. Come on over!",
+  "Our legal team said yes. Our legal team is me. Yes.",
+  "Approved! The door was never locked anyway.",
+  "Access granted. Please don't judge the dishes.",
+  "You didn't even need to ask. But I respect the paperwork.",
+  "Approved! Warning: you may be handed a baby/toddler on arrival.",
+  "Yes. Also, is there any food coming with you?",
+  "Request approved. The kettle is already on."
+];
+const tags = ["celebration","happy dance","yes","party","approved","applause","thumbs up","victory dance","excited"];
+// Fallback GIFs in case the live GIF fetch fails
+const fallbacks = [
+  "https://media.giphy.com/media/g9582DNuQppxC/giphy.gif",
+  "https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif",
+  "https://media.giphy.com/media/YTbZzCkRQCEJa/giphy.gif"
+];
+const $ = id => document.getElementById(id);
+
+async function loadGif() {
+  const gif = $("gif");
+  const tag = tags[Math.floor(Math.random()*tags.length)];
+  gif.removeAttribute("src");
+  try {
+    const r = await fetch("https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&rating=g&tag=" + encodeURIComponent(tag));
+    const j = await r.json();
+    gif.src = j.data.images.downsized_medium.url;
+  } catch (e) {
+    gif.src = fallbacks[Math.floor(Math.random()*fallbacks.length)];
+  }
+  gif.onerror = () => { gif.onerror = null; gif.src = fallbacks[0]; };
+}
+
+function confetti() {
+  const bits = ["🎉","🎊","✅","🥳","🍕","☕","✨"];
+  for (let i=0;i<40;i++) {
+    const s = document.createElement("span");
+    s.className = "confetti";
+    s.textContent = bits[Math.floor(Math.random()*bits.length)];
+    s.style.left = Math.random()*100 + "vw";
+    s.style.animationDuration = (2 + Math.random()*2.5) + "s";
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 5000);
+  }
+}
+
+function approve() {
+  $("ask").style.display = "none";
+  $("result").style.display = "block";
+  $("msg").textContent = messages[Math.floor(Math.random()*messages.length)];
+  loadGif();
+  confetti();
+}
+$("go").onclick = approve;
+$("q").addEventListener("keydown", e => { if (e.key === "Enter") approve(); });
+$("again").onclick = () => { $("result").style.display = "none"; $("ask").style.display = "block"; $("q").value = ""; };
+</script>
+</body>
+</html>

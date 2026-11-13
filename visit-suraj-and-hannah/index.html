@@ -65,27 +65,21 @@ const messages = [
   "Yes. Also, is there any food coming with you?",
   "Request approved. The kettle is already on."
 ];
-const tags = ["celebration","happy dance","yes","party","approved","applause","thumbs up","victory dance","excited"];
-// Fallback GIFs in case the live GIF fetch fails
-const fallbacks = [
-  "https://media.giphy.com/media/g9582DNuQppxC/giphy.gif",
-  "https://media.giphy.com/media/artj92V8o75VPL7AeQ/giphy.gif",
-  "https://media.giphy.com/media/YTbZzCkRQCEJa/giphy.gif"
-];
+// GIF IDs taken from real GIPHY pages (stamp of approval, happy dances, "come on yes", PG Tips tea monkey)
+const ids = ["WeVzII91Fz59BotSvX","Rc6pdiTPyXAJdgBz0T","RBmIQX7L1Yy6NxAse7","248jRFwtXRiTjSW9iN","OLN0JOQMbJkPNJcd9v","3qU6LBUpPJ2p0rqgUu","3o6Zt3YmoI5e6l59Pq"];
 const $ = id => document.getElementById(id);
+let last = -1;
 
-async function loadGif() {
+function loadGif() {
   const gif = $("gif");
-  const tag = tags[Math.floor(Math.random()*tags.length)];
-  gif.removeAttribute("src");
-  try {
-    const r = await fetch("https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&rating=g&tag=" + encodeURIComponent(tag));
-    const j = await r.json();
-    gif.src = j.data.images.downsized_medium.url;
-  } catch (e) {
-    gif.src = fallbacks[Math.floor(Math.random()*fallbacks.length)];
-  }
-  gif.onerror = () => { gif.onerror = null; gif.src = fallbacks[0]; };
+  let tries = 0;
+  let i;
+  do { i = Math.floor(Math.random()*ids.length); } while (i === last && ids.length > 1);
+  last = i;
+  const show = n => { gif.src = "https://media.giphy.com/media/" + ids[n] + "/giphy.gif"; };
+  gif.onerror = () => { if (++tries < ids.length) { i = (i + 1) % ids.length; show(i); } else { gif.style.display = "none"; } };
+  gif.style.display = "block";
+  show(i);
 }
 
 function confetti() {
